@@ -325,4 +325,4 @@ node build/index.js -t streamable
 
 ## 📄 License
 
-MIT@[AntV](https://github.com/antvis).
+MIT@[RealTimeX](https://realtimex.ai).
