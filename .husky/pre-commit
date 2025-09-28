@@ -1,3 +1,4 @@
 #!/bin/sh
-echo "Running lint-staged"
-npx lint-staged
+# Temporarily skip linting in pre-commit (requested)
+echo "Skipping lint-staged (temporarily disabled)"
+exit 0
