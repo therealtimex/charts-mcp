@@ -6,7 +6,6 @@ on:
       - realtimex
     paths:
       - 'package.json'
-  push:
     tags:
       - 'v*'
   workflow_dispatch:
