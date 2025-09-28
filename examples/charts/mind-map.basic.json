@@ -1,0 +1,13 @@
+{
+  "title": "Project Plan",
+  "data": {
+    "name": "Project",
+    "children": [
+      { "name": "Scope", "children": [ { "name": "Features" }, { "name": "Milestones" } ] },
+      { "name": "Team", "children": [ { "name": "Design" }, { "name": "Engineering" } ] },
+      { "name": "Risks", "children": [ { "name": "Budget" }, { "name": "Timeline" } ] }
+    ]
+  },
+  "width": 800,
+  "height": 600
+}

@@ -1,0 +1,16 @@
+{
+  "title": "Île-de-France Departments",
+  "data": {
+    "name": "Île-de-France",
+    "dataType": "enum",
+    "dataLabel": "Department",
+    "colors": ["#4ECDC4", "#A5D8FF"],
+    "showAllSubdistricts": true,
+    "subdistricts": [
+      { "name": "Paris", "dataValue": "Capital" },
+      { "name": "Seine-et-Marne", "dataValue": "Department" }
+    ]
+  },
+  "width": 1000,
+  "height": 800
+}

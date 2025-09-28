@@ -1,0 +1,15 @@
+{
+  "title": "Scores Distribution",
+  "axisXTitle": "Group",
+  "axisYTitle": "Score",
+  "data": [
+    { "category": "A", "value": 72 },
+    { "category": "A", "value": 68 },
+    { "category": "A", "value": 75 },
+    { "category": "B", "value": 80 },
+    { "category": "B", "value": 85 },
+    { "category": "B", "value": 77 }
+  ],
+  "width": 600,
+  "height": 400
+}

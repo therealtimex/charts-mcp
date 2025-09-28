@@ -1,0 +1,11 @@
+{
+  "title": "Sales and Profit",
+  "axisXTitle": "Year",
+  "categories": ["2019", "2020", "2021", "2022"],
+  "series": [
+    { "type": "column", "data": [92, 99, 102, 114], "axisYTitle": "Sales (k)" },
+    { "type": "line", "data": [0.055, 0.06, 0.062, 0.07], "axisYTitle": "Profit Ratio" }
+  ],
+  "width": 640,
+  "height": 400
+}

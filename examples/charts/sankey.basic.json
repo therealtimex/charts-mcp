@@ -1,0 +1,11 @@
+{
+  "title": "User Journey",
+  "data": [
+    { "source": "Landing", "target": "Product", "value": 50000 },
+    { "source": "Product", "target": "Cart", "value": 35000 },
+    { "source": "Cart", "target": "Checkout", "value": 25000 },
+    { "source": "Checkout", "target": "Purchase", "value": 15000 }
+  ],
+  "width": 700,
+  "height": 420
+}

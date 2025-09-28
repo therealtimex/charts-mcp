@@ -11,6 +11,7 @@ import {
 } from "./services";
 import { callTool } from "./utils/callTool";
 import { getDisabledTools } from "./utils/env";
+import { startRendererServer } from "./renderer/server";
 
 /**
  * Creates and configures an MCP server for chart generation.
@@ -18,7 +19,7 @@ import { getDisabledTools } from "./utils/env";
 export function createServer(): Server {
   const server = new Server(
     {
-      name: "mcp-server-chart",
+      name: "charts-mcp",
       version: "0.8.x",
     },
     {
@@ -29,6 +30,8 @@ export function createServer(): Server {
   );
 
   setupToolHandlers(server);
+  // Start built-in renderer proxy so returned URLs can be local
+  startRendererServer();
 
   server.onerror = (error) => console.error("[MCP Error]", error);
   process.on("SIGINT", async () => {

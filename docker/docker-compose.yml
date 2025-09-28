@@ -1,4 +1,4 @@
-name: mcp-server-chart
+name: charts-mcp
 services:
   sse:
     restart: unless-stopped
@@ -8,7 +8,7 @@ services:
     ports:
       - "1123:1123"
     volumes:
-      - ./sse:/mcp-server-chart/sse
+      - ./sse:/charts-mcp/sse
 
   streamable:
     restart: unless-stopped
@@ -18,4 +18,4 @@ services:
     ports:
       - "1122:1122"
     volumes:
-      - ./streamable:/mcp-server-chart/streamable
+      - ./streamable:/charts-mcp/streamable

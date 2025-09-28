@@ -4,6 +4,12 @@
   "inputSchema": {
     "type": "object",
     "properties": {
+      "format": {
+        "enum": ["html", "png"],
+        "type": "string",
+        "default": "html",
+        "description": "Output format: \"png\" or \"html\" (default)."
+      },
       "title": {
         "type": "string",
         "description": "The map title should not exceed 16 characters. The content should be consistent with the information the map wants to convey and should be accurate, rich, creative, and attractive."

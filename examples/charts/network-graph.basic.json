@@ -1,0 +1,13 @@
+{
+  "title": "Simple Network",
+  "data": {
+    "nodes": [ { "name": "A" }, { "name": "B" }, { "name": "C" } ],
+    "edges": [
+      { "source": "A", "target": "B", "name": "ab" },
+      { "source": "B", "target": "C", "name": "bc" },
+      { "source": "A", "target": "C", "name": "ac" }
+    ]
+  },
+  "width": 700,
+  "height": 420
+}

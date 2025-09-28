@@ -1,6 +1,6 @@
 # MCP Server Chart  ![](https://badge.mcpx.dev?type=server 'MCP Server')  [![build](https://github.com/antvis/mcp-server-chart/actions/workflows/build.yml/badge.svg)](https://github.com/antvis/mcp-server-chart/actions/workflows/build.yml) [![npm Version](https://img.shields.io/npm/v/@antv/mcp-server-chart.svg)](https://www.npmjs.com/package/@antv/mcp-server-chart) [![smithery badge](https://smithery.ai/badge/@antvis/mcp-server-chart)](https://smithery.ai/server/@antvis/mcp-server-chart) [![npm License](https://img.shields.io/npm/l/@antv/mcp-server-chart.svg)](https://www.npmjs.com/package/@antv/mcp-server-chart) [![Trust Score](https://archestra.ai/mcp-catalog/api/badge/quality/antvis/mcp-server-chart)](https://archestra.ai/mcp-catalog/antvis__mcp-server-chart)
 
-A Model Context Protocol server for generating charts using [AntV](https://github.com/antvis/). We can use this mcp server for _chart generation_ and _data analysis_.
+A Model Context Protocol server for generating charts using [AntV](https://github.com/antvis/). We can use this MCP server for _chart generation_ and _data analysis_.
 
 <a href="https://www.star-history.com/#antvis/mcp-server-chart&Date">
   <img width="512" src="https://api.star-history.com/svg?repos=antvis/mcp-server-chart&type=Date" />
@@ -15,9 +15,12 @@ This is a TypeScript-based MCP server that provides chart generation capabilitie
 - [🚰 Run with SSE or Streamable transport](#-run-with-sse-or-streamable-transport)
 - [🎮 CLI Options](#-cli-options)
 - [⚙️ Environment Variables](#%EF%B8%8F-environment-variables)
+ - [📦 Sample Data](#-sample-data)
   - [VIS_REQUEST_SERVER](#-private-deployment)
+  - [MAP_REQUEST_SERVER](#-private-deployment)
   - [SERVICE_ID](#%EF%B8%8F-generate-records)
   - [DISABLED_TOOLS](#%EF%B8%8F-tool-filtering)
+  - [Built-in Renderer](#built-in-renderer)
 - [📠 Private Deployment](#-private-deployment)
 - [🗺️ Generate Records](#%EF%B8%8F-generate-records)
 - [🎛️ Tool Filtering](#%EF%B8%8F-tool-filtering)
@@ -57,7 +60,7 @@ Now 25+ charts supported.
 1. `generate_word_cloud_chart`: Generate a `word-cloud`, used to display the frequency of words in textual data, with font sizes indicating the frequency of each word.
 
 > [!NOTE]
-> The above geographic visualization chart generation tool uses [AMap service](https://lbs.amap.com/) and currently only supports map generation within China.
+> This server renders charts and maps locally. For maps, it uses Leaflet + OSM tiles and Nominatim for geocoding.
 
 ## 🤖 Usage
 
@@ -66,7 +69,7 @@ To use with `Desktop APP`, such as Claude, VSCode, [Cline](https://cline.bot/mcp
 ```json
 {
   "mcpServers": {
-    "mcp-server-chart": {
+    "charts-mcp": {
       "command": "npx",
       "args": [
         "-y",
@@ -82,7 +85,7 @@ On Window system:
 ```json
 {
   "mcpServers": {
-    "mcp-server-chart": {
+    "charts-mcp": {
       "command": "cmd",
       "args": [
         "/c",
@@ -111,10 +114,10 @@ Run the server with your preferred transport option:
 
 ```bash
 # For SSE transport (default endpoint: /sse)
-mcp-server-chart --transport sse
+charts-mcp --transport sse
 
 # For Streamable transport with custom endpoint
-mcp-server-chart --transport streamable
+charts-mcp --transport streamable
 ```
 
 Then you can access the server at:
@@ -161,33 +164,67 @@ Options:
 
 | Variable | Description | Default | Example |
 |----------|:------------|---------|---------|
-| `VIS_REQUEST_SERVER` | Custom chart generation service URL for private deployment | `https://antv-studio.alipay.com/api/gpt-vis` | `https://your-server.com/api/chart` |
+| `VIS_REQUEST_SERVER` | Chart rendering endpoint | `http://localhost:3210/chart` | `http://localhost:3210/chart` |
+| `MAP_REQUEST_SERVER` | Map rendering endpoint | `http://localhost:3210/map` | `http://localhost:3210/map` |
 | `SERVICE_ID` | Service identifier for chart generation records | - | `your-service-id-123` |
 | `DISABLED_TOOLS` | Comma-separated list of tool names to disable | - | `generate_fishbone_diagram,generate_mind_map` |
+| `RENDER_PORT` | Port for built-in renderer proxy | `3210` | `3210` |
+| `RENDER_INTERACTIVE` | When "true", return interactive HTML by default | - | `true` |
+| `RENDER_FORMAT` | Force default output format for tools | - | `html` or `png` |
+| `UPSTREAM_VIS_REQUEST_SERVER` | Upstream chart renderer (used by built-in proxy) | `https://antv-studio.alipay.com/api/gpt-vis` | `https://your-chart-service/api/gpt-vis` |
+| `UPSTREAM_MAP_REQUEST_SERVER` | Upstream map renderer (used by built-in proxy) | - | `https://your-map-renderer/api/gpt-vis` |
+
+## 📦 Sample Data
+
+Sample JSON payloads live under `examples/` and are validated by tests:
+
+- Charts: `examples/charts/*.basic.json` for all chart types (area, bar, boxplot, column, dual-axes, fishbone-diagram, flow-diagram, funnel, histogram, line, liquid, mind-map, network-graph, organization-chart, pie, radar, sankey, scatter, treemap, venn, violin, word-cloud)`
+- Maps: `examples/maps/pin-map.basic.json`, `examples/maps/path-map.basic.json`, `examples/maps/district-map.basic.json`
+
+Use them as templates for MCP `callTool` arguments.
+
+### Built-in Renderer
+
+This server renders charts and maps locally and serves results via local URLs. To enable it for MCP tools, point envs to the built-in endpoints:
+
+- `VIS_REQUEST_SERVER=http://localhost:3210/chart`
+- `MAP_REQUEST_SERVER=http://localhost:3210/map`
+
+Interactive rendering (HTML) is supported by passing `"format": "html"` in the tool arguments:
+
+- Charts example (generate_bar_chart): add `"format": "html"` alongside other fields.
+- Maps example (pin/path): include `"format": "html"` inside the `input` payload. For example, pin-map arguments:
+  - {"title":"Paris Landmarks","data":["Eiffel Tower","Louvre Museum"],"format":"html"}
+  - District map example (basic): {"title":"Île-de-France Departments","data":{"name":"Île-de-France","dataType":"enum","dataLabel":"Department","subdistricts":[{"name":"Paris","dataValue":"Capital"},{"name":"Seine-et-Marne","dataValue":"Department"}]},"format":"html"}
+
+Notes:
+- HTML pages are served from `http://localhost:3210/pages/<id>.html` and are interactive (G2Plot for charts, Leaflet for maps).
+- PNG results remain the default when `format` is not provided.
 
 
 ### 📠 Private Deployment
 
-`MCP Server Chart` provides a free chart generation service by default. For users with a need for private deployment, they can try using `VIS_REQUEST_SERVER` to customize their own chart generation service.
+`MCP Server Chart` includes a built-in renderer. You can customize ports and public base if needed.
 
 ```json
 {
   "mcpServers": {
-    "mcp-server-chart": {
+    "charts-mcp": {
       "command": "npx",
       "args": [
         "-y",
         "@antv/mcp-server-chart"
       ],
       "env": {
-        "VIS_REQUEST_SERVER": "<YOUR_VIS_REQUEST_SERVER>"
+        "VIS_REQUEST_SERVER": "http://localhost:3210/chart",
+        "MAP_REQUEST_SERVER": "http://localhost:3210/map"
       }
     }
   }
 }
 ```
 
-You can use AntV's project [GPT-Vis-SSR](https://github.com/antvis/GPT-Vis/tree/main/bindings/gpt-vis-ssr) to deploy an HTTP service in a private environment, and then pass the URL address through env `VIS_REQUEST_SERVER`.
+The built-in renderer serves local image URLs under `/assets/*`. No external chart service is required. For maps, tiles/geocoding are fetched from public OSM services by default.
 
 - **Method**: `POST`
 - **Parameter**: Which will be passed to `GPT-Vis-SSR` for rendering. Such as, `{ "type": "line", "data": [{ "time": "2025-05", "value": 512 }, { "time": "2025-06", "value": 1024 }] }`.
@@ -196,8 +233,8 @@ You can use AntV's project [GPT-Vis-SSR](https://github.com/antvis/GPT-Vis/tree/
   - **resultObj**: `string` The chart image url.
   - **errorMessage**: `string` When `success = false`, return the error message.
 
-> [!NOTE]
-> The private deployment solution currently does not support geographic visualization chart generation include 3 tools: `geographic-district-map`, `geographic-path-map`, `geographic-pin-map`.
+> [!TIP]
+> If you do not plan to support map generation, disable map tools via `DISABLED_TOOLS`.
 
 ### 🗺️ Generate Records
 
@@ -212,7 +249,7 @@ Next, you need to add the `SERVICE_ID` environment variable to the MCP server co
 ```json
 {
   "mcpServers": {
-    "AntV Map": {
+    "charts-mcp": {
       "command": "npx",
       "args": [
         "-y",
@@ -237,7 +274,7 @@ You can disable specific chart generation tools using the `DISABLED_TOOLS` envir
 ```json
 {
   "mcpServers": {
-    "mcp-server-chart": {
+    "charts-mcp": {
       "command": "npx",
       "args": [
         "-y",

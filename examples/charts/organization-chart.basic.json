@@ -1,0 +1,22 @@
+{
+  "title": "Org Structure",
+  "data": {
+    "name": "CEO",
+    "description": "Chief Executive Officer",
+    "children": [
+      {
+        "name": "CTO",
+        "description": "Chief Technology Officer",
+        "children": [ { "name": "Dev Manager", "description": "Development" } ]
+      },
+      {
+        "name": "CFO",
+        "description": "Chief Financial Officer",
+        "children": [ { "name": "Accounting Lead" } ]
+      }
+    ]
+  },
+  "orient": "vertical",
+  "width": 800,
+  "height": 600
+}

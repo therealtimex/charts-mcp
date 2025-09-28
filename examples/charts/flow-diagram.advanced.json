@@ -1,0 +1,49 @@
+{
+  "title": "Order Processing Flow",
+  "data": {
+    "nodes": [
+      { "name": "Start" },
+      { "name": "Authenticate User" },
+      { "name": "Browse Catalog" },
+      { "name": "Add to Cart" },
+      { "name": "Check Inventory" },
+      { "name": "Choose Shipping" },
+      { "name": "Enter Address" },
+      { "name": "Select Payment" },
+      { "name": "Process Payment" },
+      { "name": "Fraud Review" },
+      { "name": "Manual Review" },
+      { "name": "Payment Approved" },
+      { "name": "Payment Failed" },
+      { "name": "Prepare Shipment" },
+      { "name": "Ship Order" },
+      { "name": "Send Confirmation" },
+      { "name": "End" },
+      { "name": "Error" }
+    ],
+    "edges": [
+      { "source": "Start", "target": "Authenticate User", "name": "init" },
+      { "source": "Authenticate User", "target": "Browse Catalog", "name": "success" },
+      { "source": "Browse Catalog", "target": "Add to Cart" },
+      { "source": "Add to Cart", "target": "Check Inventory" },
+      { "source": "Check Inventory", "target": "Choose Shipping" },
+      { "source": "Choose Shipping", "target": "Enter Address" },
+      { "source": "Enter Address", "target": "Select Payment" },
+      { "source": "Select Payment", "target": "Process Payment" },
+      { "source": "Process Payment", "target": "Fraud Review" },
+      { "source": "Fraud Review", "target": "Payment Approved", "name": "low risk" },
+      { "source": "Fraud Review", "target": "Manual Review", "name": "high risk" },
+      { "source": "Manual Review", "target": "Payment Approved", "name": "approved" },
+      { "source": "Manual Review", "target": "Payment Failed", "name": "rejected" },
+      { "source": "Payment Approved", "target": "Prepare Shipment" },
+      { "source": "Prepare Shipment", "target": "Ship Order" },
+      { "source": "Ship Order", "target": "Send Confirmation" },
+      { "source": "Send Confirmation", "target": "End" },
+      { "source": "Payment Failed", "target": "Error" }
+    ]
+  },
+  "width": 1000,
+  "height": 600,
+  "format": "html"
+}
+

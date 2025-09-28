@@ -1,0 +1,13 @@
+{
+  "title": "Keywords",
+  "data": [
+    { "text": "AI", "value": 30 },
+    { "text": "Charts", "value": 22 },
+    { "text": "Data", "value": 18 },
+    { "text": "Visualization", "value": 16 },
+    { "text": "Open", "value": 14 },
+    { "text": "Source", "value": 12 }
+  ],
+  "width": 700,
+  "height": 420
+}

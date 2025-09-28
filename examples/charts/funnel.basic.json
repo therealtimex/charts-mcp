@@ -1,0 +1,12 @@
+{
+  "title": "Website Conversion",
+  "data": [
+    { "category": "Visits", "value": 50000 },
+    { "category": "Add to Cart", "value": 35000 },
+    { "category": "Checkout", "value": 25000 },
+    { "category": "Payment", "value": 15000 },
+    { "category": "Purchase", "value": 8000 }
+  ],
+  "width": 600,
+  "height": 400
+}

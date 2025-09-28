@@ -4,6 +4,12 @@
   "inputSchema": {
     "type": "object",
     "properties": {
+      "format": {
+        "enum": ["html", "png"],
+        "type": "string",
+        "default": "html",
+        "description": "Output format: \"png\" or \"html\" (default)."
+      },
       "data": {
         "type": "object",
         "properties": {

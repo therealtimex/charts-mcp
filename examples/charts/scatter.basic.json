@@ -1,0 +1,14 @@
+{
+  "title": "Height vs Weight",
+  "axisXTitle": "Height (cm)",
+  "axisYTitle": "Weight (kg)",
+  "data": [
+    { "x": 160, "y": 55 },
+    { "x": 170, "y": 68 },
+    { "x": 180, "y": 75 },
+    { "x": 165, "y": 62 },
+    { "x": 175, "y": 70 }
+  ],
+  "width": 600,
+  "height": 400
+}

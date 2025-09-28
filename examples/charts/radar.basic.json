@@ -1,0 +1,12 @@
+{
+  "title": "Phone Comparison",
+  "data": [
+    { "name": "Design", "value": 70 },
+    { "name": "Camera", "value": 85 },
+    { "name": "Battery", "value": 78 },
+    { "name": "Performance", "value": 90 },
+    { "name": "Ease of Use", "value": 82 }
+  ],
+  "width": 600,
+  "height": 400
+}

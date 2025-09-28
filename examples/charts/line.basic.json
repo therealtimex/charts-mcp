@@ -1,0 +1,12 @@
+{
+  "title": "Monthly Signups",
+  "axisXTitle": "Month",
+  "axisYTitle": "Users",
+  "data": [
+    { "time": "2025-01", "value": 300 },
+    { "time": "2025-02", "value": 420 },
+    { "time": "2025-03", "value": 500 }
+  ],
+  "width": 600,
+  "height": 400
+}

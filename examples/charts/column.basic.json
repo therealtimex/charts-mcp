@@ -1,0 +1,13 @@
+{
+  "title": "Quarterly Revenue",
+  "axisXTitle": "Quarter",
+  "axisYTitle": "Revenue ($k)",
+  "data": [
+    { "category": "Q1", "value": 120 },
+    { "category": "Q2", "value": 150 },
+    { "category": "Q3", "value": 180 },
+    { "category": "Q4", "value": 210 }
+  ],
+  "width": 600,
+  "height": 400
+}

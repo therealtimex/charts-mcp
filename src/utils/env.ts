@@ -4,10 +4,17 @@ import process from "node:process";
  * Get the VIS_REQUEST_SERVER from environment variables.
  */
 export function getVisRequestServer() {
-  return (
-    process.env.VIS_REQUEST_SERVER ||
-    "https://antv-studio.alipay.com/api/gpt-vis"
-  );
+  const port = Number(process.env.RENDER_PORT) || 3210;
+  return process.env.VIS_REQUEST_SERVER || `http://localhost:${port}/chart`;
+}
+
+/**
+ * Get the MAP_REQUEST_SERVER from environment variables.
+ * This should point to an OSM/Leaflet-based map renderer service.
+ */
+export function getMapRequestServer() {
+  const port = Number(process.env.RENDER_PORT) || 3210;
+  return process.env.MAP_REQUEST_SERVER || `http://localhost:${port}/map`;
 }
 
 /**

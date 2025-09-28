@@ -1,0 +1,13 @@
+{
+  "title": "Root Cause Analysis",
+  "data": {
+    "name": "Root Cause",
+    "children": [
+      { "name": "People", "children": [ { "name": "Training" }, { "name": "Communication" } ] },
+      { "name": "Process", "children": [ { "name": "Steps" }, { "name": "Documentation" } ] },
+      { "name": "Tools", "children": [ { "name": "Availability" }, { "name": "Maintenance" } ] }
+    ]
+  },
+  "width": 800,
+  "height": 500
+}

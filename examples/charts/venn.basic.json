@@ -1,0 +1,13 @@
+{
+  "title": "Set Overlaps",
+  "data": [
+    { "label": "A", "value": 10, "sets": ["A"] },
+    { "label": "B", "value": 12, "sets": ["B"] },
+    { "label": "C", "value": 8,  "sets": ["C"] },
+    { "label": "AB", "value": 5,  "sets": ["A", "B"] },
+    { "label": "AC", "value": 3,  "sets": ["A", "C"] },
+    { "label": "BC", "value": 4,  "sets": ["B", "C"] }
+  ],
+  "width": 600,
+  "height": 400
+}

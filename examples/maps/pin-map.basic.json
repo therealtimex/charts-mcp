@@ -1,0 +1,7 @@
+{
+  "title": "Paris Landmarks",
+  "data": ["Eiffel Tower", "Louvre Museum", "Arc de Triomphe"],
+  "markerPopup": { "type": "image", "width": 40, "height": 40, "borderRadius": 8 },
+  "width": 800,
+  "height": 600
+}

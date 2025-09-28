@@ -1,0 +1,9 @@
+{
+  "title": "Simple Process",
+  "data": {
+    "nodes": [ { "name": "Start" }, { "name": "Process" }, { "name": "End" } ],
+    "edges": [ { "source": "Start", "target": "Process", "name": "step1" }, { "source": "Process", "target": "End", "name": "step2" } ]
+  },
+  "width": 700,
+  "height": 420
+}

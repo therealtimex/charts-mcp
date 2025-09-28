@@ -2,6 +2,7 @@ import { ErrorCode, McpError } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import * as Charts from "../charts";
 import { generateChartUrl, generateMap } from "./generate";
+import { getMapRequestServer } from "./env";
 import { ValidateError } from "./validator";
 
 // Chart type mapping

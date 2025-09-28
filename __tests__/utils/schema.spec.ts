@@ -22,6 +22,12 @@ describe("schema", () => {
         c: {
           type: "boolean",
         },
+        format: {
+          enum: ["html", "png"],
+          type: "string",
+          default: "html",
+          description: 'Output format: "png" or "html" (default).',
+        },
       },
       required: ["a", "b", "c"],
       type: "object",

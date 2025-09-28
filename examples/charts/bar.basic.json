@@ -1,0 +1,12 @@
+{
+  "title": "Revenue by City",
+  "axisXTitle": "City",
+  "axisYTitle": "Revenue ($k)",
+  "data": [
+    { "category": "New York", "value": 120 },
+    { "category": "London", "value": 90 },
+    { "category": "Tokyo", "value": 110 }
+  ],
+  "width": 600,
+  "height": 400
+}

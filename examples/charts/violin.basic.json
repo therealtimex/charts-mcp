@@ -1,0 +1,15 @@
+{
+  "title": "Distribution by Category",
+  "axisXTitle": "Category",
+  "axisYTitle": "Value",
+  "data": [
+    { "category": "A", "value": 12 },
+    { "category": "A", "value": 18 },
+    { "category": "A", "value": 20 },
+    { "category": "B", "value": 15 },
+    { "category": "B", "value": 22 },
+    { "category": "B", "value": 28 }
+  ],
+  "width": 640,
+  "height": 400
+}

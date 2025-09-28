@@ -1,0 +1,9 @@
+{
+  "title": "Disk Usage",
+  "data": [
+    { "name": "System", "value": 70, "children": [ { "name": "Bin", "value": 30 }, { "name": "Lib", "value": 40 } ] },
+    { "name": "Users", "value": 50, "children": [ { "name": "Alice", "value": 20 }, { "name": "Bob", "value": 30 } ] }
+  ],
+  "width": 700,
+  "height": 420
+}

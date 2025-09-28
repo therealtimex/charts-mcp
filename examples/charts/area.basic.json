@@ -1,0 +1,12 @@
+{
+  "title": "Website Traffic",
+  "axisXTitle": "Month",
+  "axisYTitle": "Visitors",
+  "data": [
+    { "time": "Jan", "value": 1200 },
+    { "time": "Feb", "value": 1500 },
+    { "time": "Mar", "value": 1800 }
+  ],
+  "width": 600,
+  "height": 400
+}

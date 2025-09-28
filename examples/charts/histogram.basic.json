@@ -1,0 +1,9 @@
+{
+  "title": "Test Scores",
+  "axisXTitle": "Score",
+  "axisYTitle": "Frequency",
+  "data": [78, 88, 60, 100, 95, 81, 76, 91, 89, 73, 84, 69, 92],
+  "binNumber": 6,
+  "width": 600,
+  "height": 400
+}

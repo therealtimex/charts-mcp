@@ -1,0 +1,8 @@
+{
+  "title": "Rome Walk",
+  "data": [
+    { "data": ["Colosseum", "Roman Forum", "Trevi Fountain"] }
+  ],
+  "width": 800,
+  "height": 600
+}

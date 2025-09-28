@@ -24,7 +24,8 @@
     ]
   },
   "bin": {
-    "mcp-server-chart": "./build/index.js"
+    "mcp-server-chart": "./build/index.js",
+    "charts-mcp": "./build/index.js"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -42,10 +43,12 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@antv/g2plot": "^2.4.32",
     "@modelcontextprotocol/sdk": "^1.11.4",
     "axios": "^1.11.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
+    "puppeteer": "^23.7.0",
     "zod": "^3.25.16",
     "zod-to-json-schema": "^3.24.5"
   },

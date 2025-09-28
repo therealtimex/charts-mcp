@@ -1,6 +1,6 @@
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import axios from "axios";
-import { getServiceIdentifier, getVisRequestServer } from "./env";
+import { getMapRequestServer, getServiceIdentifier, getVisRequestServer } from "./env";
 
 /**
  * Generate a chart URL using the provided configuration.
@@ -21,7 +21,7 @@ export async function generateChartUrl(
     {
       type,
       ...options,
-      source: "mcp-server-chart",
+      source: "charts-mcp",
     },
     {
       headers: {
@@ -57,7 +57,13 @@ export async function generateMap(
   tool: string,
   input: unknown,
 ): Promise<ResponseResult> {
-  const url = getVisRequestServer();
+  const url = getMapRequestServer();
+
+  if (!url) {
+    throw new Error(
+      "MAP_REQUEST_SERVER is not set. Configure it to an OSM/Leaflet-compatible map rendering service.",
+    );
+  }
 
   const response = await axios.post(
     url,
@@ -65,7 +71,7 @@ export async function generateMap(
       serviceId: getServiceIdentifier(),
       tool,
       input,
-      source: "mcp-server-chart",
+      source: "charts-mcp",
     },
     {
       headers: {
@@ -78,5 +84,26 @@ export async function generateMap(
   if (!success) {
     throw new Error(errorMessage);
   }
-  return resultObj;
+
+  const urlStr = String(resultObj);
+
+  return {
+    metadata: { tool, input },
+    content: [
+      {
+        type: "text",
+        text: urlStr,
+      },
+    ],
+    // Provide additional meta in the result
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore - carry custom meta for clients that display it
+    _meta: {
+      description:
+        "Map generation result URL. Open to view the rendered map (PNG or HTML depending on format).",
+      tool,
+      input,
+      url: urlStr,
+    },
+  };
 }

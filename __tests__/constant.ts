@@ -166,7 +166,7 @@ export const MindMapSchema = {
   },
   width: 1000,
   height: 600,
-  source: "mcp-server-chart",
+  source: "charts-mcp",
 };
 
 export const FlowDiagramSchema = {
@@ -261,5 +261,5 @@ export const FlowDiagramSchema = {
   theme: "default",
   width: 800,
   height: 600,
-  source: "mcp-server-chart",
+  source: "charts-mcp",
 };
