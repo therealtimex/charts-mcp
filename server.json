@@ -1,0 +1,16 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-16/server.schema.json",
+  "name": "io.github.therealtimex/charts-mcp",
+  "description": "MCP server for generating charts using AntV. Supports various chart types through MCP tools.",
+  "version": "1.0.1",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@realtimex/charts-mcp",
+      "version": "1.0.1",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}
