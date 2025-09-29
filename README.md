@@ -2,6 +2,8 @@
 
 A Model Context Protocol server for generating charts using [AntV](https://github.com/antvis/). We can use this MCP server for _chart generation_ and _data analysis_.
 
+✓ Server Id 7e8661a3-7e3d-43f8-adef-4be28405a70e
+
 <a href="https://www.star-history.com/#antvis/mcp-server-chart&Date">
   <img width="512" src="https://api.star-history.com/svg?repos=antvis/mcp-server-chart&type=Date" />
 </a>
