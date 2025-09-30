@@ -1,7 +1,7 @@
 {
   "name": "@realtimex/charts-mcp",
   "description": "A Model Context Protocol server for generating charts using AntV. This is a TypeScript-based MCP server that provides chart generation capabilities. It allows you to create various types of charts through MCP tools.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "mcpName": "io.github.therealtimex/charts-mcp",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -25,7 +25,6 @@
     ]
   },
   "bin": {
-    "mcp-server-chart": "./build/index.js",
     "charts-mcp": "./build/index.js"
   },
   "publishConfig": {
