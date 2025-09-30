@@ -1,15 +1,9 @@
 {
   "name": "generate_violin_chart",
-  "description": "Generate a violin chart to show data for statistical summaries among different categories, such as, comparing the distribution of data points across categories.",
+  "description": "Generate a violin chart to show data for statistical summaries among different categories, such as, comparing the distribution of data points across categories. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, a URL to an interactive HTML page (format='html-url'), or a static PNG image URL (format='png') for reports and documents.",
   "inputSchema": {
     "type": "object",
     "properties": {
-      "format": {
-        "enum": ["html", "png"],
-        "type": "string",
-        "default": "html",
-        "description": "Output format: \"png\" or \"html\" (default)."
-      },
       "data": {
         "type": "array",
         "items": {
@@ -28,39 +22,49 @@
               "description": "Optional group for the data point, used for grouping in the violin chart."
             }
           },
-          "required": ["category", "value"]
+          "required": [
+            "category",
+            "value"
+          ]
         },
         "minItems": 1,
         "description": "Data for violin chart, such as, [{ category: '分类一', value: 10 }] or [{ category: '分类二', value: 20, group: '组别一' }]."
       },
-      "theme": {
-        "type": "string",
-        "enum": ["default", "academy", "dark"],
-        "default": "default",
-        "description": "Set the theme for the chart, optional, default is 'default'."
-      },
       "style": {
-        "description": "Custom style configuration for the chart.",
+        "type": "object",
         "properties": {
           "backgroundColor": {
-            "description": "Background color of the chart, such as, '#fff'.",
-            "type": "string"
+            "type": "string",
+            "description": "Background color of the chart, such as, '#fff'."
           },
           "palette": {
-            "description": "Color palette for the chart, it is a collection of colors.",
+            "type": "array",
             "items": {
               "type": "string"
             },
-            "type": "array"
+            "description": "Color palette for the chart, it is a collection of colors."
           },
           "texture": {
+            "type": "string",
+            "enum": [
+              "default",
+              "rough"
+            ],
             "default": "default",
-            "description": "Set the texture for the chart, optional, default is 'default'. 'rough' refers to hand-drawn style.",
-            "enum": ["default", "rough"],
-            "type": "string"
+            "description": "Set the texture for the chart, optional, default is 'default'. 'rough' refers to hand-drawn style."
           }
         },
-        "type": "object"
+        "description": "Custom style configuration for the chart."
+      },
+      "theme": {
+        "type": "string",
+        "enum": [
+          "default",
+          "academy",
+          "dark"
+        ],
+        "default": "default",
+        "description": "Set the theme for the chart, optional, default is 'default'."
       },
       "width": {
         "type": "number",
@@ -86,9 +90,21 @@
         "type": "string",
         "default": "",
         "description": "Set the y-axis title of chart."
+      },
+      "format": {
+        "type": "string",
+        "enum": [
+          "html",
+          "html-url",
+          "png"
+        ],
+        "default": "html",
+        "description": "Output format: 'html' returns an interactive MCP-UI resource (default), 'html-url' returns a URL to an interactive HTML page, 'png' returns a static image URL. MCP-UI resources render directly in compatible clients for better interactivity."
       }
     },
-    "required": ["data"],
+    "required": [
+      "data"
+    ],
     "$schema": "http://json-schema.org/draft-07/schema#"
   }
 }

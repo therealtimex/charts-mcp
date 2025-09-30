@@ -1,15 +1,9 @@
 {
   "name": "generate_liquid_chart",
-  "description": "Generate a liquid chart to visualize a single value as a percentage, such as, the current occupancy rate of a reservoir or the completion percentage of a project.",
+  "description": "Generate a liquid chart to visualize a single value as a percentage, such as, the current occupancy rate of a reservoir or the completion percentage of a project. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, a URL to an interactive HTML page (format='html-url'), or a static PNG image URL (format='png') for reports and documents.",
   "inputSchema": {
     "type": "object",
     "properties": {
-      "format": {
-        "enum": ["html", "png"],
-        "type": "string",
-        "default": "html",
-        "description": "Output format: \"png\" or \"html\" (default)."
-      },
       "percent": {
         "type": "number",
         "minimum": 0,
@@ -18,35 +12,47 @@
       },
       "shape": {
         "type": "string",
-        "enum": ["circle", "rect", "pin", "triangle"],
+        "enum": [
+          "circle",
+          "rect",
+          "pin",
+          "triangle"
+        ],
         "default": "circle",
         "description": "The shape of the liquid chart, can be 'circle', 'rect', 'pin', or 'triangle'. Default is 'circle'."
       },
-      "theme": {
-        "type": "string",
-        "enum": ["default", "academy", "dark"],
-        "default": "default",
-        "description": "Set the theme for the chart, optional, default is 'default'."
-      },
       "style": {
-        "description": "Custom style configuration for the chart.",
+        "type": "object",
         "properties": {
           "backgroundColor": {
-            "description": "Background color of the chart, such as, '#fff'.",
-            "type": "string"
-          },
-          "color": {
-            "description": "Custom color for the liquid chart, if not specified, defaults to the theme color.",
-            "type": "string"
+            "type": "string",
+            "description": "Background color of the chart, such as, '#fff'."
           },
           "texture": {
+            "type": "string",
+            "enum": [
+              "default",
+              "rough"
+            ],
             "default": "default",
-            "description": "Set the texture for the chart, optional, default is 'default'. 'rough' refers to hand-drawn style.",
-            "enum": ["default", "rough"],
-            "type": "string"
+            "description": "Set the texture for the chart, optional, default is 'default'. 'rough' refers to hand-drawn style."
+          },
+          "color": {
+            "type": "string",
+            "description": "Custom color for the liquid chart, if not specified, defaults to the theme color."
           }
         },
-        "type": "object"
+        "description": "Custom style configuration for the chart."
+      },
+      "theme": {
+        "type": "string",
+        "enum": [
+          "default",
+          "academy",
+          "dark"
+        ],
+        "default": "default",
+        "description": "Set the theme for the chart, optional, default is 'default'."
       },
       "width": {
         "type": "number",
@@ -62,9 +68,21 @@
         "type": "string",
         "default": "",
         "description": "Set the title of chart."
+      },
+      "format": {
+        "type": "string",
+        "enum": [
+          "html",
+          "html-url",
+          "png"
+        ],
+        "default": "html",
+        "description": "Output format: 'html' returns an interactive MCP-UI resource (default), 'html-url' returns a URL to an interactive HTML page, 'png' returns a static image URL. MCP-UI resources render directly in compatible clients for better interactivity."
       }
     },
-    "required": ["percent"],
+    "required": [
+      "percent"
+    ],
     "$schema": "http://json-schema.org/draft-07/schema#"
   }
 }

@@ -1,15 +1,9 @@
 {
   "name": "generate_pin_map",
-  "description": "Generate a point map to display the location and distribution of point data on the map, such as the location distribution of attractions, hospitals, supermarkets, etc.",
+  "description": "Generate a point map to display the location and distribution of point data on the map, such as the location distribution of attractions, hospitals, supermarkets, etc. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, a URL to an interactive HTML page (format='html-url'), or a static PNG image URL (format='png') for reports and documents.",
   "inputSchema": {
     "type": "object",
     "properties": {
-      "format": {
-        "enum": ["html", "png"],
-        "type": "string",
-        "default": "html",
-        "description": "Output format: \"png\" or \"html\" (default)."
-      },
       "title": {
         "type": "string",
         "description": "The map title should not exceed 16 characters. The content should be consistent with the information the map wants to convey and should be accurate, rich, creative, and attractive."
@@ -20,7 +14,7 @@
           "type": "string"
         },
         "minItems": 1,
-        "description": "A list of keywords for the names of points of interest (POIs) in Chinese. These POIs usually contain a group of places with similar locations, so the names should be more descriptive, must adding attributives to indicate that they are different places in the same area, such as \"北京市\" is better than \"北京\", \"杭州西湖\" is better than \"西湖\"; in addition, if you can determine that a location may appear in multiple areas, you can be more specific, such as \"杭州西湖的苏堤春晓\" is better than \"苏堤春晓\". The tool will use these keywords to search for specific POIs and query their detailed data, such as latitude and longitude, location photos, etc. For example, [\"西安钟楼\", \"西安大唐不夜城\", \"西安大雁塔\"]."
+        "description": "A list of keywords for the names of points of interest (POIs). These POIs usually contain a group of places with similar locations, so the names should be descriptive and include context to distinguish them, such as \"Eiffel Tower, Paris\" is better than \"Eiffel Tower\", \"Golden Gate Bridge, San Francisco\" is better than \"Golden Gate Bridge\". Be specific when a location name may appear in multiple areas. The tool will use these keywords to search for specific POIs and query their detailed data, such as latitude and longitude, location photos, etc. For example, [\"Statue of Liberty, New York\", \"Times Square, New York\", \"Central Park, New York\"]."
       },
       "markerPopup": {
         "type": "object",
@@ -57,9 +51,22 @@
         "type": "number",
         "default": 1000,
         "description": "Set the height of map, default is 1000."
+      },
+      "format": {
+        "type": "string",
+        "enum": [
+          "html",
+          "html-url",
+          "png"
+        ],
+        "default": "html",
+        "description": "Output format: 'html' returns an interactive MCP-UI resource (default), 'html-url' returns a URL to an interactive HTML page, 'png' returns a static image URL. MCP-UI resources render directly in compatible clients for better interactivity."
       }
     },
-    "required": ["title", "data"],
+    "required": [
+      "title",
+      "data"
+    ],
     "$schema": "http://json-schema.org/draft-07/schema#"
   }
 }
