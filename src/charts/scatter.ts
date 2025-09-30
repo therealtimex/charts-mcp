@@ -47,7 +47,7 @@ const schema = {
 const tool = {
   name: "generate_scatter_chart",
   description:
-    "Generate a scatter chart to show the relationship between two variables, helps discover their relationship or trends, such as, the strength of correlation, data distribution patterns. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, or a static PNG image URL (format='png') for reports and documents.",
+    "Generate a scatter chart to show the relationship between two variables, helps discover their relationship or trends, such as, the strength of correlation, data distribution patterns. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, a URL to an interactive HTML page (format='html-url'), or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 

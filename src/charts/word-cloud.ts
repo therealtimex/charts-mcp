@@ -44,7 +44,7 @@ const schema = {
 const tool = {
   name: "generate_word_cloud_chart",
   description:
-    "Generate a word cloud chart to show word frequency or weight through text size variation, such as, analyzing common words in social media, reviews, or feedback. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, or a static PNG image URL (format='png') for reports and documents.",
+    "Generate a word cloud chart to show word frequency or weight through text size variation, such as, analyzing common words in social media, reviews, or feedback. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, a URL to an interactive HTML page (format='html-url'), or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 

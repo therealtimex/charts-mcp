@@ -63,7 +63,7 @@ const schema = {
 const tool = {
   name: "generate_bar_chart",
   description:
-    "Generate a horizontal bar chart to show data for numerical comparisons among different categories, such as, comparing categorical data and for horizontal comparisons. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, or a static PNG image URL (format='png') for reports and documents.",
+    "Generate a horizontal bar chart to show data for numerical comparisons among different categories, such as, comparing categorical data and for horizontal comparisons. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, a URL to an interactive HTML page (format='html-url'), or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 

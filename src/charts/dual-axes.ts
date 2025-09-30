@@ -65,7 +65,7 @@ const schema = {
 const tool = {
   name: "generate_dual_axes_chart",
   description:
-    "Generate a dual axes chart which is a combination chart that integrates two different chart types, typically combining a bar chart with a line chart to display both the trend and comparison of data, such as, the trend of sales and profit over time. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, or a static PNG image URL (format='png') for reports and documents.",
+    "Generate a dual axes chart which is a combination chart that integrates two different chart types, typically combining a bar chart with a line chart to display both the trend and comparison of data, such as, the trend of sales and profit over time. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, a URL to an interactive HTML page (format='html-url'), or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 

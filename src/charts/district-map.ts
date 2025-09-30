@@ -5,7 +5,7 @@ import { FormatSchema, MapHeightSchema, MapTitleSchema, MapWidthSchema } from ".
 const DistrictNameSchema = z
   .string()
   .describe(
-    'Keywords for the Chinese name of an administrative region (must be within China), and must be one of China, province, city, district, or county. The name should be more specific and add attributive descriptions, for example, "西安市" is better than "西安", "杭州西湖区" is better than "西湖区". It cannot be a specific place name or a vague name, such as "其它".',
+    'Keywords for the name of an administrative region (e.g., country, state, province, city, district, or county). The name should be specific and include descriptive context, for example, "San Francisco, California" is better than "San Francisco", "Tokyo, Japan" is better than "Tokyo". Avoid vague names.',
   );
 
 const StyleSchema = z
@@ -86,7 +86,7 @@ const schema = {
 const tool = {
   name: "generate_district_map",
   description:
-    "Generates regional distribution maps, which are usually used to show the administrative divisions and coverage of a dataset. It is not suitable for showing the distribution of specific locations, such as urban administrative divisions, GDP distribution maps of provinces and cities across the country, etc. This tool is limited to generating data maps within China. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, or a static PNG image URL (format='png') for reports and documents.",
+    "Generates regional distribution maps, which are usually used to show the administrative divisions and coverage of a dataset. It is not suitable for showing the distribution of specific locations, such as urban administrative divisions, GDP distribution maps of provinces and cities across the country, etc. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, a URL to an interactive HTML page (format='html-url'), or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 

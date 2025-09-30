@@ -27,7 +27,7 @@ const schema = {
 const tool = {
   name: "generate_path_map",
   description:
-    "Generate a route map to display the user's planned route, such as travel guide routes. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, or a static PNG image URL (format='png') for reports and documents.",
+    "Generate a route map to display the user's planned route, such as travel guide routes. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, a URL to an interactive HTML page (format='html-url'), or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 

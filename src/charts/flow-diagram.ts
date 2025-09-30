@@ -43,7 +43,7 @@ const schema = {
 const tool = {
   name: "generate_flow_diagram",
   description:
-    "Generate a flow diagram chart to show the steps and decision points of a process or system, such as, scenarios requiring linear process presentation. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, or a static PNG image URL (format='png') for reports and documents.",
+    "Generate a flow diagram chart to show the steps and decision points of a process or system, such as, scenarios requiring linear process presentation. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, a URL to an interactive HTML page (format='html-url'), or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 

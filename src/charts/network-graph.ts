@@ -43,7 +43,7 @@ const schema = {
 const tool = {
   name: "generate_network_graph",
   description:
-    "Generate a network graph chart to show relationships (edges) between entities (nodes), such as, relationships between people in social networks. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, or a static PNG image URL (format='png') for reports and documents.",
+    "Generate a network graph chart to show relationships (edges) between entities (nodes), such as, relationships between people in social networks. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, a URL to an interactive HTML page (format='html-url'), or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 
