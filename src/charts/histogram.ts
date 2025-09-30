@@ -4,6 +4,7 @@ import {
   AxisXTitleSchema,
   AxisYTitleSchema,
   BackgroundColorSchema,
+  FormatSchema,
   HeightSchema,
   PaletteSchema,
   TextureSchema,
@@ -40,13 +41,14 @@ const schema = {
   title: TitleSchema,
   axisXTitle: AxisXTitleSchema,
   axisYTitle: AxisYTitleSchema,
+  format: FormatSchema,
 };
 
 // Histogram chart tool descriptor
 const tool = {
   name: "generate_histogram_chart",
   description:
-    "Generate a histogram chart to show the frequency of data points within a certain range. It can observe data distribution, such as, normal and skewed distributions, and identify data concentration areas and extreme points.",
+    "Generate a histogram chart to show the frequency of data points within a certain range. It can observe data distribution, such as, normal and skewed distributions, and identify data concentration areas and extreme points. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 

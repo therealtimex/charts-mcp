@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { zodToJsonSchema } from "../utils";
-import { MapHeightSchema, MapTitleSchema, MapWidthSchema } from "./base";
+import { FormatSchema, MapHeightSchema, MapTitleSchema, MapWidthSchema } from "./base";
 
 const DistrictNameSchema = z
   .string()
@@ -79,13 +79,14 @@ const schema = {
     ),
   width: MapWidthSchema,
   height: MapHeightSchema,
+  format: FormatSchema,
 };
 
 // https://modelcontextprotocol.io/specification/2025-03-26/server/tools#listing-tools
 const tool = {
   name: "generate_district_map",
   description:
-    "Generates regional distribution maps, which are usually used to show the administrative divisions and coverage of a dataset. It is not suitable for showing the distribution of specific locations, such as urban administrative divisions, GDP distribution maps of provinces and cities across the country, etc. This tool is limited to generating data maps within China.",
+    "Generates regional distribution maps, which are usually used to show the administrative divisions and coverage of a dataset. It is not suitable for showing the distribution of specific locations, such as urban administrative divisions, GDP distribution maps of provinces and cities across the country, etc. This tool is limited to generating data maps within China. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 

@@ -4,6 +4,7 @@ import {
   AxisXTitleSchema,
   AxisYTitleSchema,
   BackgroundColorSchema,
+  FormatSchema,
   HeightSchema,
   PaletteSchema,
   TextureSchema,
@@ -46,12 +47,13 @@ const schema = {
   title: TitleSchema,
   axisXTitle: AxisXTitleSchema,
   axisYTitle: AxisYTitleSchema,
+  format: FormatSchema,
 };
 
 const tool = {
   name: "generate_violin_chart",
   description:
-    "Generate a violin chart to show data for statistical summaries among different categories, such as, comparing the distribution of data points across categories.",
+    "Generate a violin chart to show data for statistical summaries among different categories, such as, comparing the distribution of data points across categories. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 

@@ -4,6 +4,7 @@ import {
   AxisXTitleSchema,
   AxisYTitleSchema,
   BackgroundColorSchema,
+  FormatSchema,
   HeightSchema,
   PaletteSchema,
   TextureSchema,
@@ -45,13 +46,14 @@ const schema = {
   title: TitleSchema,
   axisXTitle: AxisXTitleSchema,
   axisYTitle: AxisYTitleSchema,
+  format: FormatSchema,
 };
 
 // Line chart tool descriptor
 const tool = {
   name: "generate_line_chart",
   description:
-    "Generate a line chart to show trends over time, such as, the ratio of Apple computer sales to Apple's profits changed from 2000 to 2016.",
+    "Generate a line chart to show trends over time, such as, the ratio of Apple computer sales to Apple's profits changed from 2000 to 2016. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 

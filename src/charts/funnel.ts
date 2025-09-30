@@ -2,6 +2,7 @@ import { z } from "zod";
 import { zodToJsonSchema } from "../utils";
 import {
   BackgroundColorSchema,
+  FormatSchema,
   HeightSchema,
   PaletteSchema,
   TextureSchema,
@@ -34,12 +35,13 @@ const schema = {
   width: WidthSchema,
   height: HeightSchema,
   title: TitleSchema,
+  format: FormatSchema,
 };
 
 const tool = {
   name: "generate_funnel_chart",
   description:
-    "Generate a funnel chart to visualize the progressive reduction of data as it passes through stages, such as, the conversion rates of users from visiting a website to completing a purchase.",
+    "Generate a funnel chart to visualize the progressive reduction of data as it passes through stages, such as, the conversion rates of users from visiting a website to completing a purchase. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 

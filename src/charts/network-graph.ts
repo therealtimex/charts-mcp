@@ -3,6 +3,7 @@ import { zodToJsonSchema } from "../utils";
 import { validatedNodeEdgeDataSchema } from "../utils/validator";
 import {
   EdgeSchema,
+  FormatSchema,
   HeightSchema,
   NodeSchema,
   TextureSchema,
@@ -35,13 +36,14 @@ const schema = {
   theme: ThemeSchema,
   width: WidthSchema,
   height: HeightSchema,
+  format: FormatSchema,
 };
 
 // Network graph tool descriptor
 const tool = {
   name: "generate_network_graph",
   description:
-    "Generate a network graph chart to show relationships (edges) between entities (nodes), such as, relationships between people in social networks.",
+    "Generate a network graph chart to show relationships (edges) between entities (nodes), such as, relationships between people in social networks. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 

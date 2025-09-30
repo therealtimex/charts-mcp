@@ -2,6 +2,8 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
+  ListResourcesRequestSchema,
+  ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import * as Charts from "./charts";
 import {
@@ -25,6 +27,7 @@ export function createServer(): Server {
     {
       capabilities: {
         tools: {},
+        resources: {},
       },
     },
   );

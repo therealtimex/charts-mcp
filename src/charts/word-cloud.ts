@@ -2,6 +2,7 @@ import { z } from "zod";
 import { zodToJsonSchema } from "../utils";
 import {
   BackgroundColorSchema,
+  FormatSchema,
   HeightSchema,
   PaletteSchema,
   TextureSchema,
@@ -36,13 +37,14 @@ const schema = {
   width: WidthSchema,
   height: HeightSchema,
   title: TitleSchema,
+  format: FormatSchema,
 };
 
 // Word cloud tool descriptor
 const tool = {
   name: "generate_word_cloud_chart",
   description:
-    "Generate a word cloud chart to show word frequency or weight through text size variation, such as, analyzing common words in social media, reviews, or feedback.",
+    "Generate a word cloud chart to show word frequency or weight through text size variation, such as, analyzing common words in social media, reviews, or feedback. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 

@@ -2,6 +2,7 @@ import { z } from "zod";
 import { zodToJsonSchema } from "../utils";
 import {
   BackgroundColorSchema,
+  FormatSchema,
   HeightSchema,
   PaletteSchema,
   TextureSchema,
@@ -42,13 +43,14 @@ const schema = {
   width: WidthSchema,
   height: HeightSchema,
   title: TitleSchema,
+  format: FormatSchema,
 };
 
 // Pie chart tool descriptor
 const tool = {
   name: "generate_pie_chart",
   description:
-    "Generate a pie chart to show the proportion of parts, such as, market share and budget allocation.",
+    "Generate a pie chart to show the proportion of parts, such as, market share and budget allocation. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 

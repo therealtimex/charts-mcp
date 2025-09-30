@@ -34,3 +34,27 @@ export function getDisabledTools(): string[] {
   }
   return disabledTools.split(",");
 }
+
+/**
+ * Get the render mode: "url" (legacy), "ui-resource" (MCP-UI), or "auto"
+ * Default is "ui-resource" for better UX
+ */
+export function getRenderMode(): "url" | "ui-resource" | "auto" {
+  const mode = process.env.RENDER_MODE?.toLowerCase();
+  if (mode === "url" || mode === "ui-resource" || mode === "auto") {
+    return mode;
+  }
+  return "ui-resource"; // Default to MCP-UI mode
+}
+
+/**
+ * Get the UI resource mode: "auto", "blob", or "server"
+ * Default is "auto" which uses size-based detection
+ */
+export function getUIResourceMode(): "auto" | "blob" | "server" {
+  const mode = process.env.UI_RESOURCE_MODE?.toLowerCase();
+  if (mode === "blob" || mode === "server" || mode === "auto") {
+    return mode;
+  }
+  return "auto";
+}

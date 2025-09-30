@@ -12,6 +12,7 @@
     "prebuild": "rm -rf build/*",
     "build": "tsc && tsc-alias -p tsconfig.json",
     "postbuild": "chmod +x build/index.js",
+    "postinstall": "node scripts/postinstall.js",
     "start": "npx @modelcontextprotocol/inspector node build/index.js",
     "prepare": "husky && npm run build",
     "prepublishOnly": "npm run build",
@@ -31,8 +32,18 @@
     "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
-  "files": ["build"],
-  "keywords": ["antv", "mcp", "data-visualization", "chart", "graph", "map"],
+  "files": [
+    "build",
+    "scripts/postinstall.js"
+  ],
+  "keywords": [
+    "antv",
+    "mcp",
+    "data-visualization",
+    "chart",
+    "graph",
+    "map"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/therealtimex/charts-mcp"
@@ -44,6 +55,7 @@
   "license": "MIT",
   "dependencies": {
     "@antv/g2plot": "^2.4.32",
+    "@mcp-ui/server": "^5.11.0",
     "@modelcontextprotocol/sdk": "^1.11.4",
     "axios": "^1.11.0",
     "cors": "^2.8.5",

@@ -3,6 +3,7 @@ import { zodToJsonSchema } from "../utils";
 import { validatedNodeEdgeDataSchema } from "../utils/validator";
 import {
   EdgeSchema,
+  FormatSchema,
   HeightSchema,
   NodeSchema,
   TextureSchema,
@@ -35,13 +36,14 @@ const schema = {
   theme: ThemeSchema,
   width: WidthSchema,
   height: HeightSchema,
+  format: FormatSchema,
 };
 
 // Flow diagram tool descriptor
 const tool = {
   name: "generate_flow_diagram",
   description:
-    "Generate a flow diagram chart to show the steps and decision points of a process or system, such as, scenarios requiring linear process presentation.",
+    "Generate a flow diagram chart to show the steps and decision points of a process or system, such as, scenarios requiring linear process presentation. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 

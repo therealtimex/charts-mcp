@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { zodToJsonSchema } from "../utils";
 import {
+  FormatSchema,
   MapHeightSchema,
   MapTitleSchema,
   MapWidthSchema,
@@ -26,13 +27,14 @@ const schema = {
     ),
   width: MapWidthSchema,
   height: MapHeightSchema,
+  format: FormatSchema,
 };
 
 // https://modelcontextprotocol.io/specification/2025-03-26/server/tools#listing-tools
 const tool = {
   name: "generate_pin_map",
   description:
-    "Generate a point map to display the location and distribution of point data on the map, such as the location distribution of attractions, hospitals, supermarkets, etc.",
+    "Generate a point map to display the location and distribution of point data on the map, such as the location distribution of attractions, hospitals, supermarkets, etc. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 

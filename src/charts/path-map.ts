@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { zodToJsonSchema } from "../utils";
 import {
+  FormatSchema,
   MapHeightSchema,
   MapTitleSchema,
   MapWidthSchema,
@@ -19,13 +20,14 @@ const schema = {
     ),
   width: MapWidthSchema,
   height: MapHeightSchema,
+  format: FormatSchema,
 };
 
 // https://modelcontextprotocol.io/specification/2025-03-26/server/tools#listing-tools
 const tool = {
   name: "generate_path_map",
   description:
-    "Generate a route map to display the user's planned route, such as travel guide routes.",
+    "Generate a route map to display the user's planned route, such as travel guide routes. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 

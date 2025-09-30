@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { zodToJsonSchema } from "../utils";
-import { HeightSchema, TextureSchema, ThemeSchema, WidthSchema } from "./base";
+import { FormatSchema, HeightSchema, TextureSchema, ThemeSchema, WidthSchema } from "./base";
 
 // The recursive schema is not supported by gemini, and other clients, so we use a non-recursive schema which can represent a tree structure with a fixed depth.
 // Ref: https://github.com/antvis/mcp-server-chart/issues/155
@@ -53,12 +53,13 @@ const schema = {
   theme: ThemeSchema,
   width: WidthSchema,
   height: HeightSchema,
+  format: FormatSchema,
 };
 
 const tool = {
   name: "generate_organization_chart",
   description:
-    "Generate an organization chart to visualize the hierarchical structure of an organization, such as, a diagram showing the relationship between a CEO and their direct reports.",
+    "Generate an organization chart to visualize the hierarchical structure of an organization, such as, a diagram showing the relationship between a CEO and their direct reports. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 

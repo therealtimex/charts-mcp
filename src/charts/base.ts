@@ -55,6 +55,12 @@ export const AxisYTitleSchema = z
   .default("")
   .describe("Set the y-axis title of chart.");
 
+export const FormatSchema = z
+  .enum(["html", "html-url", "png"])
+  .optional()
+  .default("html")
+  .describe("Output format: 'html' returns an interactive MCP-UI resource (default), 'html-url' returns a URL to an interactive HTML page, 'png' returns a static image URL. MCP-UI resources render directly in compatible clients for better interactivity.");
+
 export const NodeSchema = z.object({
   name: z.string(),
 });

@@ -1,7 +1,7 @@
 import { ErrorCode, McpError } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import * as Charts from "../charts";
-import { generateChartUrl, generateMap } from "./generate";
+import { generateChartResult, generateMap } from "./generate";
 import { getMapRequestServer } from "./env";
 import { ValidateError } from "./validator";
 
@@ -75,21 +75,9 @@ export async function callTool(tool: string, args: object = {}) {
       return result;
     }
 
-    const url = await generateChartUrl(chartType, args);
-
-    return {
-      content: [
-        {
-          type: "text",
-          text: url,
-        },
-      ],
-      _meta: {
-        description:
-          "Charts spec configuration, you can use this config to generate the corresponding chart.",
-        spec: { type: chartType, ...args },
-      },
-    };
+    // Generate chart with UI resource support
+    const { metadata, ...result } = await generateChartResult(chartType, args);
+    return result;
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   } catch (error: any) {
     if (error instanceof McpError) throw error;

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { zodToJsonSchema } from "../utils";
 import { validatedTreeDataSchema } from "../utils/validator";
-import { HeightSchema, TextureSchema, ThemeSchema, WidthSchema } from "./base";
+import { FormatSchema, HeightSchema, TextureSchema, ThemeSchema, WidthSchema } from "./base";
 import { FishboneNodeSchema } from "./fishbone-diagram";
 
 // Mind map node schema
@@ -27,13 +27,14 @@ const schema = {
   theme: ThemeSchema,
   width: WidthSchema,
   height: HeightSchema,
+  format: FormatSchema,
 };
 
 // Mind map chart tool descriptor
 const tool = {
   name: "generate_mind_map",
   description:
-    "Generate a mind map chart to organizes and presents information in a hierarchical structure with branches radiating from a central topic, such as, a diagram showing the relationship between a main topic and its subtopics.",
+    "Generate a mind map chart to organizes and presents information in a hierarchical structure with branches radiating from a central topic, such as, a diagram showing the relationship between a main topic and its subtopics. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 
