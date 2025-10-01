@@ -3,7 +3,6 @@ import path from "node:path";
 import fs from "node:fs";
 import { buildChartHtml, renderChartToFile } from "./chart";
 import { buildMapHtmlForPinOrPath, buildDistrictMapHtml, geocodeAll, fetchGeoJSONByName, renderMapToFile } from "./map";
-import os from "os";
 
 let started = false;
 let serverPort: number | undefined;
@@ -19,7 +18,7 @@ export function startRendererServer(port = Number(process.env.RENDER_PORT) || 32
   const app = express();
   app.use(express.json({ limit: "2mb" }));
 
-  const cacheDir = path.resolve(os.homedir(), ".cache", "renderer");
+  const cacheDir = path.resolve(".cache", "renderer");
   ensureDir(cacheDir);
   const pagesDir = path.join(cacheDir, "pages");
   ensureDir(pagesDir);
