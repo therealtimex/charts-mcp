@@ -31,7 +31,7 @@ export function createServer(): Server {
 
   setupToolHandlers(server);
   // Start built-in renderer proxy so returned URLs can be local
-  startRendererServer();
+  // startRendererServer();
 
   server.onerror = (error) => console.error("[MCP Error]", error);
   process.on("SIGINT", async () => {
