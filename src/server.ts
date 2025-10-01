@@ -12,6 +12,7 @@ import {
 import { callTool } from "./utils/callTool";
 import { getDisabledTools } from "./utils/env";
 import { startRendererServer } from "./renderer/server";
+import { writeFileSync } from 'fs';
 
 /**
  * Creates and configures an MCP server for chart generation.
@@ -30,8 +31,16 @@ export function createServer(): Server {
   );
 
   setupToolHandlers(server);
+
+  try{
+    startRendererServer();
+  } catch (error: unknown) {
+    // Write error details to an error log file
+     writeFileSync("/Users/phuongnguyen/Documents/projects/err.log", `${new Date().toISOString()} - Error: ${error.message}\n`, { flag: 'a' });
+  }
   // Start built-in renderer proxy so returned URLs can be local
-  // startRendererServer();
+
+  
 
   server.onerror = (error) => console.error("[MCP Error]", error);
   process.on("SIGINT", async () => {
