@@ -34,10 +34,12 @@ export function createServer(): Server {
 
   try{
     startRendererServer();
-  } catch (error: unknown) {
+  } catch (error) {
+    console.log(error)
     // Write error details to an error log file
-     writeFileSync("/Users/phuongnguyen/Documents/projects/err.log", `${new Date().toISOString()} - Error: ${error.message}\n`, { flag: 'a' });
+    //  writeFileSync("/Users/phuongnguyen/Documents/projects/err.log", `${new Date().toISOString()} - Error: ${error.message}\n`, { flag: 'a' });
   }
+  console.log("hello")
   // Start built-in renderer proxy so returned URLs can be local
 
   
