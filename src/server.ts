@@ -37,8 +37,9 @@ export function createServer(): Server {
   } catch (error) {
     console.log(error)
     // Write error details to an error log file
-    //  writeFileSync("/Users/phuongnguyen/Documents/projects/err.log", `${new Date().toISOString()} - Error: ${error.message}\n`, { flag: 'a' });
+    writeFileSync("/Users/phuongnguyen/Documents/projects/err.log", "heooe");
   }
+  writeFileSync("/Users/phuongnguyen/Documents/projects/err.log", "dddd");
   console.log("hello")
   // Start built-in renderer proxy so returned URLs can be local
 
