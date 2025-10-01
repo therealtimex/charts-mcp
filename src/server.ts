@@ -3,7 +3,6 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
-import { writeFile } from "fs/promises";
 import * as Charts from "./charts";
 import {
   startHTTPStreamableServer,
@@ -35,7 +34,7 @@ export function createServer(): Server {
   try {
     startRendererServer();
   } catch (error) {
-    writeFile("/Users/phuongnguyen/Documents/projects/err.log", String(error));
+    
   }
 
   server.onerror = (error) => console.error("[MCP Error]", error);
