@@ -109,6 +109,6 @@ export function startRendererServer(port = Number(process.env.RENDER_PORT) || 32
     const a = server.address();
     if (typeof a === "object" && a) serverPort = a.port;
     // eslint-disable-next-line no-console
-    console.error(`Renderer server listening on http://localhost:${serverPort}`);
+    // console.error(`Renderer server listening on http://localhost:${serverPort}`);
   });
 }
