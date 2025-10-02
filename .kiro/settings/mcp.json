@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "charts-mcp": {
+      "command": "node",
+      "args": [
+        "build/index.js"
+      ],
+      "env": {
+        "VIS_REQUEST_SERVER": "http://localhost:3210/chart",
+        "MAP_REQUEST_SERVER": "http://localhost:3210/map"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}

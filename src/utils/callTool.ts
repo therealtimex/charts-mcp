@@ -9,7 +9,9 @@ import { ValidateError } from "./validator";
 const CHART_TYPE_MAP = {
   generate_area_chart: "area",
   generate_bar_chart: "bar",
+  generate_bi_directional_bar_chart: "bi-directional-bar",
   generate_boxplot_chart: "boxplot",
+  generate_bubble_chart: "bubble-chart",
   generate_column_chart: "column",
   generate_district_map: "district-map",
   generate_dual_axes_chart: "dual-axes",

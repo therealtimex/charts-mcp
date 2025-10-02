@@ -1,0 +1,54 @@
+{
+  "type": "bar",
+  "title": "Regional Sales Performance (Interactive)",
+  "width": 800,
+  "height": 500,
+  "data": [
+    { "category": "North", "value": 45, "quarter": "Q1" },
+    { "category": "South", "value": 67, "quarter": "Q1" },
+    { "category": "East", "value": 82, "quarter": "Q1" },
+    { "category": "West", "value": 54, "quarter": "Q1" },
+    { "category": "North", "value": 52, "quarter": "Q2" },
+    { "category": "South", "value": 73, "quarter": "Q2" },
+    { "category": "East", "value": 88, "quarter": "Q2" },
+    { "category": "West", "value": 61, "quarter": "Q2" }
+  ],
+  "axisXTitle": "Sales Value ($K)",
+  "axisYTitle": "Region",
+  "style": {
+    "palette": ["#1890ff", "#52c41a", "#faad14", "#f5222d"],
+    "backgroundColor": "#f5f5f5"
+  },
+  "interactivity": {
+    "tooltip": {
+      "enabled": true,
+      "shared": true,
+      "position": "auto"
+    },
+    "drillDown": {
+      "enabled": true,
+      "levels": 3,
+      "breadcrumb": true
+    },
+    "filter": {
+      "enabled": true,
+      "type": "category",
+      "position": "top",
+      "fields": ["quarter", "category"]
+    },
+    "zoom": {
+      "enabled": true,
+      "type": "scroll",
+      "direction": "x"
+    },
+    "legend": {
+      "enabled": true,
+      "position": "top",
+      "interactive": true
+    }
+  },
+  "export": {
+    "enabled": true,
+    "formats": ["svg", "png", "pdf"]
+  }
+}

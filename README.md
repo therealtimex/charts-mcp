@@ -183,6 +183,31 @@ Sample JSON payloads live under `examples/` and are validated by tests:
 
 Use them as templates for MCP `callTool` arguments.
 
+## 🧪 Visual Testing
+
+For developers and contributors, we provide a comprehensive visual testing system to validate chart rendering across all three output formats (`html`, `html-url`, `png`).
+
+### Quick Start
+
+```bash
+# 1. Start the renderer server
+npm run renderer:dev
+
+# 2. In another terminal, generate test renders
+npm run render-examples
+
+# 3. Open the interactive gallery
+open test-outputs/index.html
+```
+
+The gallery provides:
+- Side-by-side comparison of all formats
+- Interactive viewing of each chart
+- PNG thumbnails for quick inspection
+- File size information and success rates
+
+For detailed information, see [Visual Testing Guide](docs/VISUAL_TESTING.md).
+
 ### Built-in Renderer
 
 This server renders charts and maps locally and serves results via local URLs. To enable it for MCP tools, point envs to the built-in endpoints:

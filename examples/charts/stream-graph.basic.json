@@ -1,0 +1,28 @@
+{
+  "title": "Music Genre Popularity Over Time",
+  "data": [
+    { "time": "2018", "category": "Rock", "value": 45 },
+    { "time": "2018", "category": "Pop", "value": 38 },
+    { "time": "2018", "category": "Jazz", "value": 22 },
+    { "time": "2018", "category": "Electronic", "value": 30 },
+    { "time": "2019", "category": "Rock", "value": 42 },
+    { "time": "2019", "category": "Pop", "value": 41 },
+    { "time": "2019", "category": "Jazz", "value": 20 },
+    { "time": "2019", "category": "Electronic", "value": 35 },
+    { "time": "2020", "category": "Rock", "value": 38 },
+    { "time": "2020", "category": "Pop", "value": 45 },
+    { "time": "2020", "category": "Jazz", "value": 18 },
+    { "time": "2020", "category": "Electronic", "value": 40 },
+    { "time": "2021", "category": "Rock", "value": 35 },
+    { "time": "2021", "category": "Pop", "value": 48 },
+    { "time": "2021", "category": "Jazz", "value": 16 },
+    { "time": "2021", "category": "Electronic", "value": 45 },
+    { "time": "2022", "category": "Rock", "value": 32 },
+    { "time": "2022", "category": "Pop", "value": 50 },
+    { "time": "2022", "category": "Jazz", "value": 15 },
+    { "time": "2022", "category": "Electronic", "value": 48 }
+  ],
+  "axisXTitle": "Year",
+  "width": 800,
+  "height": 400
+}

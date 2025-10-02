@@ -1,0 +1,25 @@
+{
+  "title": "File System",
+  "data": {
+    "name": "root",
+    "children": [
+      {
+        "name": "docs",
+        "children": [
+          { "name": "readme.md" },
+          { "name": "guide.pdf" }
+        ]
+      },
+      {
+        "name": "src",
+        "children": [
+          { "name": "main.ts" },
+          { "name": "utils.ts" }
+        ]
+      }
+    ]
+  },
+  "direction": "TB",
+  "width": 600,
+  "height": 500
+}

@@ -1,6 +1,10 @@
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import axios from "axios";
-import { getMapRequestServer, getServiceIdentifier, getVisRequestServer } from "./env";
+import { getMapRequestServer, getServiceIdentifier, getVisRequestServer, getRenderMode, getUIResourceMode } from "./env";
+import { buildChartHtml } from "../renderer/chart";
+import { createChartUIResource } from "./uiResource";
+import { ChartDispatcher } from "../renderer/chart-dispatcher";
+import "../renderer/init-registry"; // Initialize the chart registry
 
 /**
  * Generate a chart URL using the provided configuration.
@@ -36,6 +40,104 @@ export async function generateChartUrl(
   }
 
   return resultObj;
+}
+
+/**
+ * Generate a chart with UI resource support
+ * @param type The type of chart to generate
+ * @param options Chart options
+ * @returns {Promise<ResponseResult>} The generated chart result
+ */
+export async function generateChartResult(
+  type: string,
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  options: Record<string, any>,
+): Promise<ResponseResult> {
+  const format = options.format || "html";
+  const renderMode = getRenderMode();
+  const uiResourceMode = getUIResourceMode();
+
+  // PNG format always returns URL
+  if (format === "png") {
+    const url = await generateChartUrl(type, { ...options, format: "png" });
+    return {
+      metadata: { type, options },
+      content: [
+        {
+          type: "text",
+          text: url,
+        },
+      ],
+    };
+  }
+
+  // HTML URL format returns URL to interactive HTML page
+  if (format === "html-url") {
+    const url = await generateChartUrl(type, { ...options, format: "html" });
+    return {
+      metadata: { type, options },
+      content: [
+        {
+          type: "text",
+          text: url,
+        },
+      ],
+    };
+  }
+
+  // Legacy URL mode (environment variable override)
+  if (renderMode === "url") {
+    const url = await generateChartUrl(type, options);
+    return {
+      metadata: { type, options },
+      content: [
+        {
+          type: "text",
+          text: url,
+        },
+      ],
+    };
+  }
+
+  // MCP-UI resource mode (HTML format)
+  // Try using the new G2 v5 dispatcher first, fallback to direct renderer
+  let html: string;
+  try {
+    if (ChartDispatcher.isSupported(type)) {
+      const result = await ChartDispatcher.dispatch(type, { type, ...options });
+      html = result.html;
+    } else {
+      // Fallback to direct G2/G6 renderer
+      html = await buildChartHtml(type, options);
+    }
+  } catch (error) {
+    // If dispatcher fails, fallback to direct renderer
+    console.error(`G2 v5 dispatcher failed for ${type}, falling back to direct renderer:`, error);
+    html = await buildChartHtml(type, options);
+  }
+
+  const chartTitle = options.title || `${type} Chart`;
+  const uri = `ui://charts-mcp/${type}/${Date.now()}` as `ui://${string}`;
+
+  // Check if we need server URL for large charts
+  let serverUrl: string | undefined;
+  if (uiResourceMode === "server" || (uiResourceMode === "auto" && html.length > 100 * 1024)) {
+    serverUrl = await generateChartUrl(type, { ...options, format: "html" });
+  }
+
+  const uiResource = createChartUIResource({
+    uri,
+    html,
+    title: chartTitle,
+    description: `Interactive ${type} chart`,
+    mode: uiResourceMode,
+    serverUrl,
+  });
+
+  return {
+    metadata: { type, options },
+    content: [uiResource],
+  };
 }
 
 type ResponseResult = {

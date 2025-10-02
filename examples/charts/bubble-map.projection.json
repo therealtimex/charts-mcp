@@ -1,0 +1,56 @@
+{
+  "title": "Orthographic Projection: Global Cities",
+  "data": [
+    { "name": "Beijing", "lng": 116.4074, "lat": 39.9042, "size": 4027, "group": "Asia" },
+    { "name": "Tokyo", "lng": 139.6917, "lat": 35.6895, "size": 1617, "group": "Asia" },
+    { "name": "Seoul", "lng": 126.978, "lat": 37.5665, "size": 779, "group": "Asia" },
+    { "name": "Mumbai", "lng": 72.8777, "lat": 19.076, "size": 310, "group": "Asia" },
+    { "name": "Singapore", "lng": 103.8198, "lat": 1.3521, "size": 340, "group": "Asia" },
+    { "name": "Sydney", "lng": 151.2093, "lat": -33.8688, "size": 337, "group": "Oceania" },
+    { "name": "London", "lng": -0.1276, "lat": 51.5074, "size": 653, "group": "Europe" },
+    { "name": "Paris", "lng": 2.3522, "lat": 48.8566, "size": 709, "group": "Europe" },
+    { "name": "New York", "lng": -74.0059, "lat": 40.7128, "size": 1700, "group": "North America" },
+    { "name": "Los Angeles", "lng": -118.2437, "lat": 34.0522, "size": 710, "group": "North America" }
+  ],
+  "projection": {
+    "type": "orthographic",
+    "center": [100, 30],
+    "scale": 250,
+    "rotate": [0, 0, 0]
+  },
+  "scale": {
+    "size": {
+      "range": [8, 40]
+    }
+  },
+  "legend": {
+    "size": false,
+    "color": true
+  },
+  "style": {
+    "fillOpacity": 0.8,
+    "lineWidth": 2,
+    "stroke": "white"
+  },
+  "mapBackgroundStyle": {
+    "fill": "#e8f4f8",
+    "stroke": "#4a90e2",
+    "lineWidth": 1
+  },
+  "tooltip": {
+    "title": "name",
+    "items": [
+      {
+        "name": "GDP",
+        "channel": "size",
+        "valueFormatter": "(value) => `${value} billion USD`"
+      },
+      {
+        "name": "Region",
+        "field": "group"
+      }
+    ]
+  },
+  "width": 800,
+  "height": 800
+}

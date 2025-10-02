@@ -1,0 +1,40 @@
+{
+  "type": "line",
+  "title": "Temperature Trends Over Time",
+  "width": 800,
+  "height": 500,
+  "data": [
+    { "time": "Jan", "value": 5.2 },
+    { "time": "Feb", "value": 7.1 },
+    { "time": "Mar", "value": 12.3 },
+    { "time": "Apr", "value": 18.5 },
+    { "time": "May", "value": 23.7 },
+    { "time": "Jun", "value": 28.4 },
+    { "time": "Jul", "value": 31.2 },
+    { "time": "Aug", "value": 30.1 },
+    { "time": "Sep", "value": 25.8 },
+    { "time": "Oct", "value": 19.3 },
+    { "time": "Nov", "value": 12.7 },
+    { "time": "Dec", "value": 6.9 }
+  ],
+  "axisXTitle": "Month",
+  "axisYTitle": "Temperature (°C)",
+  "style": {
+    "palette": ["#ff7875", "#ff4d4f", "#cf1322"],
+    "backgroundColor": "#ffffff"
+  },
+  "accessibility": {
+    "enabled": true,
+    "description": "Line chart showing average monthly temperatures throughout the year. Temperatures range from 5.2°C in January to a peak of 31.2°C in July, then decline to 6.9°C in December.",
+    "altText": "Temperature chart: January 5.2°C, February 7.1°C, March 12.3°C, April 18.5°C, May 23.7°C, June 28.4°C, July 31.2°C (peak), August 30.1°C, September 25.8°C, October 19.3°C, November 12.7°C, December 6.9°C",
+    "keyboardNavigation": true,
+    "announceData": true,
+    "highContrast": true,
+    "focusIndicators": true
+  },
+  "interactivity": {
+    "tooltip": true,
+    "zoom": true,
+    "legend": true
+  }
+}

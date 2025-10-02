@@ -1,0 +1,42 @@
+{
+  "title": "Quarterly Sales Performance",
+  "axisYTitle": "Sales (10k CNY)",
+  "axisXTitle": "Quarter",
+  "data": [
+    {
+      "title": "Q1 Sales",
+      "ranges": 100,
+      "measures": 80,
+      "target": 85
+    },
+    {
+      "title": "Q2 Sales",
+      "ranges": 100,
+      "measures": 92,
+      "target": 88
+    },
+    {
+      "title": "Q3 Sales",
+      "ranges": 100,
+      "measures": 76,
+      "target": 90
+    }
+  ],
+  "orientation": "vertical",
+  "colors": {
+    "ranges": "#f0f0f0",
+    "measures": "#52c41a",
+    "target": "#ff4d4f"
+  },
+  "label": {
+    "enabled": true,
+    "position": "top"
+  },
+  "styleConfig": {
+    "rangesWidth": 30,
+    "measuresWidth": 20,
+    "targetSize": 6
+  },
+  "width": 600,
+  "height": 400
+}

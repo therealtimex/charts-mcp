@@ -1,0 +1,58 @@
+{
+  "title": "Time Series: City GDP Growth (2015-2020)",
+  "data": [
+    { "name": "Beijing", "lng": 116.4074, "lat": 39.9042, "size": 3500, "time": 2015, "group": "Asia" },
+    { "name": "Beijing", "lng": 116.4074, "lat": 39.9042, "size": 3800, "time": 2017, "group": "Asia" },
+    { "name": "Beijing", "lng": 116.4074, "lat": 39.9042, "size": 4027, "time": 2020, "group": "Asia" },
+    { "name": "New York", "lng": -74.0059, "lat": 40.7128, "size": 1500, "time": 2015, "group": "North America" },
+    { "name": "New York", "lng": -74.0059, "lat": 40.7128, "size": 1600, "time": 2017, "group": "North America" },
+    { "name": "New York", "lng": -74.0059, "lat": 40.7128, "size": 1700, "time": 2020, "group": "North America" },
+    { "name": "London", "lng": -0.1276, "lat": 51.5074, "size": 580, "time": 2015, "group": "Europe" },
+    { "name": "London", "lng": -0.1276, "lat": 51.5074, "size": 620, "time": 2017, "group": "Europe" },
+    { "name": "London", "lng": -0.1276, "lat": 51.5074, "size": 653, "time": 2020, "group": "Europe" },
+    { "name": "Tokyo", "lng": 139.6917, "lat": 35.6895, "size": 1450, "time": 2015, "group": "Asia" },
+    { "name": "Tokyo", "lng": 139.6917, "lat": 35.6895, "size": 1530, "time": 2017, "group": "Asia" },
+    { "name": "Tokyo", "lng": 139.6917, "lat": 35.6895, "size": 1617, "time": 2020, "group": "Asia" }
+  ],
+  "animation": {
+    "enabled": true,
+    "duration": 500,
+    "interval": 2000,
+    "loop": true,
+    "timeField": "time"
+  },
+  "scale": {
+    "size": {
+      "range": [10, 50]
+    }
+  },
+  "legend": {
+    "size": false,
+    "color": true
+  },
+  "style": {
+    "fillOpacity": 0.7,
+    "lineWidth": 2,
+    "stroke": "white"
+  },
+  "tooltip": {
+    "title": "name",
+    "items": [
+      {
+        "name": "GDP",
+        "channel": "size",
+        "valueFormatter": "(value) => `${value} billion USD`"
+      },
+      {
+        "name": "Year",
+        "field": "time"
+      },
+      {
+        "name": "Region",
+        "field": "group"
+      }
+    ]
+  },
+  "width": 900,
+  "height": 600
+}

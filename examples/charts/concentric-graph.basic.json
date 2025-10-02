@@ -1,0 +1,21 @@
+{
+  "title": "Social Network",
+  "data": {
+    "nodes": [
+      { "id": "A", "label": "Alice" },
+      { "id": "B", "label": "Bob" },
+      { "id": "C", "label": "Charlie" },
+      { "id": "D", "label": "Diana" },
+      { "id": "E", "label": "Eve" }
+    ],
+    "edges": [
+      { "source": "A", "target": "B" },
+      { "source": "A", "target": "C" },
+      { "source": "A", "target": "D" },
+      { "source": "B", "target": "C" },
+      { "source": "C", "target": "E" }
+    ]
+  },
+  "width": 600,
+  "height": 600
+}

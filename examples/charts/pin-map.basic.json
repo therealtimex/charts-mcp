@@ -1,0 +1,19 @@
+{
+  "title": "New York Landmarks",
+  "data": [
+    "Statue of Liberty, New York",
+    "Empire State Building, New York",
+    "Central Park, New York",
+    "Times Square, New York",
+    "Brooklyn Bridge, New York",
+    "One World Trade Center, New York"
+  ],
+  "markerPopup": {
+    "type": "image",
+    "width": 60,
+    "height": 60,
+    "borderRadius": 8
+  },
+  "width": 1400,
+  "height": 1000
+}

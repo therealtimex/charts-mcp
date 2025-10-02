@@ -1,0 +1,28 @@
+{
+  "title": "Package Dependencies",
+  "data": {
+    "name": "app",
+    "children": [
+      {
+        "name": "ui",
+        "children": [
+          { "name": "button" },
+          { "name": "input" }
+        ]
+      },
+      {
+        "name": "api",
+        "children": [
+          { "name": "auth" },
+          { "name": "data" }
+        ]
+      }
+    ],
+    "edges": [
+      { "source": "button", "target": "auth" },
+      { "source": "input", "target": "data" }
+    ]
+  },
+  "width": 600,
+  "height": 600
+}

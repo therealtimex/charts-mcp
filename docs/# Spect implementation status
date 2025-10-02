@@ -1,0 +1,47 @@
+check if src/charts/bullet.ts provides full G2 v5 capabilities as documented docs/g2/bullet.en.md
+
+
+bubble-chart is not yet supported, here's g2's doc docs/g2/bubble-chart.en.md
+
+
+src/charts/bubble.ts
+
+- @src/charts/area.ts
+- @src/charts/bar.ts
+src/charts/bi-directional-bar.ts
+- @src/charts/boxplot.ts
+- @src/charts/bubble-chart.ts
+- @src/charts/bubble-map.ts
+- @src/charts/chord.ts
+- @src/charts/.ts
+- @src/charts/.ts
+- @src/charts/.ts
+- @src/charts/.ts
+- @src/charts/histogram.ts
+- 
+
+
+
+
+After reviewing both `src/charts/bar.ts` and the G2 documentation `docs/g2/bar.en.md`, I've identified several discrepancies. The bar.ts implementation 
+  does not provide the full capabilities of the G2 bar chart as documented.
+
+  Here is a summary of the differences:
+
+  Missing Features in `src/charts/bar.ts`:
+
+   * Chart Orientation: The G2 documentation describes both vertical and horizontal bar charts. The bar.ts implementation is 
+     specifically for "a horizontal bar chart" and lacks an option to create a vertical one.
+   * Advanced Axis Configuration: The G2 documentation details several options for axis label management, such as 
+     labelAutoEllipsis, labelAutoWrap, labelAutoRotate, and labelAutoHide. These features are not available in the bar.ts schema, 
+     which only allows setting the axis titles.
+   * Interactions: G2 provides interactions like elementHighlight. The bar.ts schema does not include any options to configure 
+     chart interactions.
+
+  Features in `bar.ts` not in the G2 documentation:
+
+   * Stacking and Grouping: The bar.ts schema includes built-in boolean flags for stack and group, which are treated as distinct 
+     chart types (stacked-bar, multi-set-bar) in the G2 documentation.
+
+  In conclusion, the bar.ts component is a simplified abstraction for generating horizontal bar charts and does not expose the 
+  full, flexible API of the G2 library. It prioritizes ease of use for common cases over comprehensive customizability.

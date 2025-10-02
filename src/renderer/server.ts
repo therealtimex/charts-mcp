@@ -38,7 +38,7 @@ export function startRendererServer(port = Number(process.env.RENDER_PORT) || 32
       const base = process.env.RENDER_PUBLIC_BASE || `http://localhost:${serverPort}`;
       const fmt = String(format || process.env.RENDER_FORMAT || (process.env.RENDER_INTERACTIVE ? 'html' : '')).toLowerCase();
       if (fmt === "html") {
-        const html = buildChartHtml(type, options);
+        const html = await buildChartHtml(type, options);
         const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
         const file = path.join(pagesDir, `${id}.html`);
         fs.writeFileSync(file, html, "utf-8");
@@ -107,8 +107,10 @@ export function startRendererServer(port = Number(process.env.RENDER_PORT) || 32
 
   const server = app.listen(port, () => {
     const a = server.address();
-    if (typeof a === "object" && a) serverPort = a.port;
-    // eslint-disable-next-line no-console
-    console.log(`Renderer server listening on http://localhost:${serverPort}`);
+    if (typeof a === "object" && a) {
+      serverPort = a.port;
+      // eslint-disable-next-line no-console
+      console.error(`Renderer server listening on http://localhost:${serverPort}`);
+    }
   });
 }

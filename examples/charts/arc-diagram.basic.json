@@ -1,0 +1,21 @@
+{
+  "title": "Sequential Process",
+  "data": {
+    "nodes": [
+      { "id": "S1", "label": "Step 1" },
+      { "id": "S2", "label": "Step 2" },
+      { "id": "S3", "label": "Step 3" },
+      { "id": "S4", "label": "Step 4" },
+      { "id": "S5", "label": "Step 5" }
+    ],
+    "edges": [
+      { "source": "S1", "target": "S2" },
+      { "source": "S2", "target": "S3" },
+      { "source": "S3", "target": "S4" },
+      { "source": "S4", "target": "S5" },
+      { "source": "S1", "target": "S4" }
+    ]
+  },
+  "width": 800,
+  "height": 400
+}

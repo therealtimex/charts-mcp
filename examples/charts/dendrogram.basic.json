@@ -1,0 +1,25 @@
+{
+  "title": "Species Classification",
+  "data": {
+    "name": "Life",
+    "children": [
+      {
+        "name": "Animals",
+        "children": [
+          { "name": "Mammals" },
+          { "name": "Birds" }
+        ]
+      },
+      {
+        "name": "Plants",
+        "children": [
+          { "name": "Trees" },
+          { "name": "Flowers" }
+        ]
+      }
+    ]
+  },
+  "direction": "LR",
+  "width": 700,
+  "height": 400
+}

@@ -1,0 +1,44 @@
+{
+  "type": "hybrid",
+  "title": "Sales Network Analysis",
+  "width": 1000,
+  "height": 600,
+  "layout": "split-horizontal",
+  "g2Config": {
+    "type": "bar",
+    "data": [
+      { "category": "Product A", "value": 45, "group": "Electronics" },
+      { "category": "Product B", "value": 67, "group": "Electronics" },
+      { "category": "Product C", "value": 82, "group": "Clothing" },
+      { "category": "Product D", "value": 54, "group": "Clothing" },
+      { "category": "Product E", "value": 91, "group": "Food" }
+    ],
+    "position": "left",
+    "size": { "width": 500, "height": 600 }
+  },
+  "g6Config": {
+    "type": "force",
+    "data": {
+      "nodes": [
+        { "id": "A", "name": "Product A", "category": "Electronics", "value": 45 },
+        { "id": "B", "name": "Product B", "category": "Electronics", "value": 67 },
+        { "id": "C", "name": "Product C", "category": "Clothing", "value": 82 },
+        { "id": "D", "name": "Product D", "category": "Clothing", "value": 54 },
+        { "id": "E", "name": "Product E", "category": "Food", "value": 91 }
+      ],
+      "edges": [
+        { "source": "A", "target": "B", "name": "Cross-sell" },
+        { "source": "B", "target": "C", "name": "Bundle" },
+        { "source": "C", "target": "D", "name": "Related" },
+        { "source": "D", "target": "E", "name": "Cross-sell" },
+        { "source": "E", "target": "A", "name": "Bundle" }
+      ]
+    },
+    "position": "right",
+    "size": { "width": 500, "height": 600 }
+  },
+  "style": {
+    "palette": ["#5B8FF9", "#5AD8A6", "#5D7092", "#F6BD16", "#E8684A"],
+    "backgroundColor": "#ffffff"
+  }
+}

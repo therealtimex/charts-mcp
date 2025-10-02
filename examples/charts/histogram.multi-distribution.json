@@ -1,0 +1,38 @@
+{
+  "title": "Test Scores Comparison: Class A vs Class B",
+  "axisXTitle": "Score",
+  "axisYTitle": "Frequency",
+  "data": [
+    { "value": 78, "group": "Class A" },
+    { "value": 88, "group": "Class A" },
+    { "value": 60, "group": "Class A" },
+    { "value": 100, "group": "Class A" },
+    { "value": 95, "group": "Class A" },
+    { "value": 81, "group": "Class A" },
+    { "value": 76, "group": "Class A" },
+    { "value": 91, "group": "Class A" },
+    { "value": 89, "group": "Class A" },
+    { "value": 73, "group": "Class A" },
+    { "value": 84, "group": "Class A" },
+    { "value": 69, "group": "Class A" },
+    { "value": 92, "group": "Class A" },
+    { "value": 82, "group": "Class B" },
+    { "value": 75, "group": "Class B" },
+    { "value": 90, "group": "Class B" },
+    { "value": 68, "group": "Class B" },
+    { "value": 85, "group": "Class B" },
+    { "value": 79, "group": "Class B" },
+    { "value": 94, "group": "Class B" },
+    { "value": 71, "group": "Class B" },
+    { "value": 87, "group": "Class B" },
+    { "value": 96, "group": "Class B" },
+    { "value": 74, "group": "Class B" },
+    { "value": 83, "group": "Class B" }
+  ],
+  "binNumber": 8,
+  "style": {
+    "palette": ["#1890FF", "#FF6B3B"]
+  },
+  "width": 700,
+  "height": 400
+}

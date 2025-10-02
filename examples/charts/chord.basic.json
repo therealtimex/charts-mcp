@@ -1,0 +1,15 @@
+{
+  "title": "Migration Flow Between Regions",
+  "data": [
+    { "source": "North", "target": "South", "value": 15 },
+    { "source": "North", "target": "East", "value": 10 },
+    { "source": "South", "target": "North", "value": 8 },
+    { "source": "South", "target": "West", "value": 12 },
+    { "source": "East", "target": "North", "value": 5 },
+    { "source": "East", "target": "West", "value": 18 },
+    { "source": "West", "target": "South", "value": 14 },
+    { "source": "West", "target": "East", "value": 9 }
+  ],
+  "width": 600,
+  "height": 600
+}
