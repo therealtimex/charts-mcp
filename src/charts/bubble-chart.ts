@@ -4,7 +4,6 @@ import {
   AxisXTitleSchema,
   AxisYTitleSchema,
   BackgroundColorSchema,
-  FormatSchema,
   HeightSchema,
   PaletteSchema,
   TextureSchema,
@@ -95,7 +94,6 @@ const schema = {
   title: TitleSchema,
   axisXTitle: AxisXTitleSchema,
   axisYTitle: AxisYTitleSchema,
-  format: FormatSchema,
 };
 
 // Bubble chart tool descriptor

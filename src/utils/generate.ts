@@ -136,7 +136,7 @@ export async function generateChartResult(
 
   return {
     metadata: { type, options },
-    content: [uiResource],
+    content: [uiResource as any],
   };
 }
 

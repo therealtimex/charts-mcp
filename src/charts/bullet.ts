@@ -4,7 +4,6 @@ import {
   AxisXTitleSchema,
   AxisYTitleSchema,
   BackgroundColorSchema,
-  FormatSchema,
   HeightSchema,
   PaletteSchema,
   ThemeSchema,
@@ -99,7 +98,6 @@ const schema = {
   title: TitleSchema,
   axisXTitle: AxisXTitleSchema,
   axisYTitle: AxisYTitleSchema,
-  format: FormatSchema,
 };
 
 // Bullet chart tool descriptor

@@ -3,7 +3,6 @@ import { zodToJsonSchema } from "../utils";
 import {
   AxisXTitleSchema,
   BackgroundColorSchema,
-  FormatSchema,
   HeightSchema,
   PaletteSchema,
   TextureSchema,
@@ -40,7 +39,6 @@ const schema = {
   height: HeightSchema,
   title: TitleSchema,
   axisXTitle: AxisXTitleSchema,
-  format: FormatSchema,
 };
 
 // Stream graph tool descriptor

@@ -34,3 +34,17 @@ export function getDisabledTools(): string[] {
   }
   return disabledTools.split(",");
 }
+
+/**
+ * Get the RENDER_MODE from environment variables.
+ */
+export function getRenderMode() {
+  return process.env.RENDER_MODE || "html";
+}
+
+/**
+ * Get the UI_RESOURCE_MODE from environment variables.
+ */
+export function getUIResourceMode() {
+  return process.env.UI_RESOURCE_MODE || "auto";
+}

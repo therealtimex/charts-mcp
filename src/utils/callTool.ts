@@ -12,6 +12,8 @@ const CHART_TYPE_MAP = {
   generate_bi_directional_bar_chart: "bi-directional-bar",
   generate_boxplot_chart: "boxplot",
   generate_bubble_chart: "bubble-chart",
+  generate_bubble_map: "bubble-map",
+  generate_chord_chart: "chord",
   generate_column_chart: "column",
   generate_district_map: "district-map",
   generate_dual_axes_chart: "dual-axes",

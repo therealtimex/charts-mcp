@@ -2,7 +2,6 @@ import { z } from "zod";
 import { zodToJsonSchema } from "../utils";
 import {
   BackgroundColorSchema,
-  FormatSchema,
   HeightSchema,
   PaletteSchema,
   TextureSchema,
@@ -79,7 +78,6 @@ const schema = {
     .optional()
     .describe("Custom style configuration for the hybrid visualization."),
   theme: ThemeSchema,
-  format: FormatSchema,
 };
 
 // Hybrid chart tool descriptor

@@ -2,7 +2,6 @@ import { z } from "zod";
 import { zodToJsonSchema } from "../utils";
 import {
   BackgroundColorSchema,
-  FormatSchema,
   HeightSchema,
   PaletteSchema,
   ThemeSchema,
@@ -187,7 +186,6 @@ const schema = {
   width: WidthSchema,
   height: HeightSchema,
   title: TitleSchema,
-  format: FormatSchema,
 };
 
 // Bubble map tool descriptor

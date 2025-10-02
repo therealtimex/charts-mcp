@@ -2,7 +2,6 @@ import { z } from "zod";
 import { zodToJsonSchema } from "../utils";
 import {
   BackgroundColorSchema,
-  FormatSchema,
   HeightSchema,
   PaletteSchema,
   TextureSchema,
@@ -43,7 +42,6 @@ const schema = {
   width: WidthSchema,
   height: HeightSchema,
   title: TitleSchema,
-  format: FormatSchema,
 };
 
 // Dendrogram tool descriptor
