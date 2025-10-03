@@ -95,9 +95,16 @@ export class AreaChartBuilder extends ChartBuilder {
 
   private buildComposedChart(spec: ChartSpec): string {
     const { data, theme = 'light', width = 600, height = 400 } = spec;
-    const scale = this.buildScale(spec);
-    const axis = this.buildAxisWithFormatter(spec);
     const children = this.buildChildren(spec);
+
+    // Build options-style axis config
+    const axisOptions = this.buildAxisOptions(spec);
+    // Build options-style scale config
+    const scaleOptions = this.buildScaleOptions(spec);
+
+    // Build primary area child from top-level encodes/transforms if present
+    const primaryAreaChild = this.buildPrimaryAreaChild(spec);
+    const childrenArray = primaryAreaChild ? `[${primaryAreaChild}, ${children.slice(1, -1)}]` : children;
 
     return `<script>
   const { Chart } = G2;
@@ -113,13 +120,96 @@ export class AreaChartBuilder extends ChartBuilder {
   chart.options({
     type: 'view',
     data: ${JSON.stringify(data)},
-    ${scale}
-    ${axis}
-    children: ${children}
+    ${scaleOptions}
+    ${axisOptions}
+    children: ${childrenArray}
   });
 
   chart.render();
 </script>`;
+  }
+
+  // Build options-style axis configuration
+  private buildAxisOptions(spec: ChartSpec): string {
+    const axis: any = {};
+    if (spec.axis?.x || spec.axisXTitle !== undefined) {
+      axis.x = {};
+      if (spec.axis?.x?.title !== undefined) axis.x.title = spec.axis.x.title;
+      if (spec.axisXTitle && (axis.x.title === undefined || axis.x.title === '')) axis.x.title = spec.axisXTitle;
+      if (spec.axis?.x?.labelFormatter) axis.x.labelFormatter = spec.axis.x.labelFormatter;
+    }
+    if (spec.axis?.y || spec.axisYTitle !== undefined) {
+      axis.y = {};
+      if (spec.axis?.y?.title !== undefined) axis.y.title = spec.axis.y.title;
+      if (spec.axisYTitle && (axis.y.title === undefined || axis.y.title === '')) axis.y.title = spec.axisYTitle;
+      if (spec.axis?.y?.labelFormatter) axis.y.labelFormatter = spec.axis.y.labelFormatter;
+    }
+    return Object.keys(axis).length ? `axis: ${JSON.stringify(axis)},` : '';
+  }
+
+  // Build options-style scale configuration
+  private buildScaleOptions(spec: ChartSpec): string {
+    if (!spec.scale) return '';
+    const s: any = {};
+    if (spec.scale.x) s.x = spec.scale.x;
+    if (spec.scale.y) s.y = spec.scale.y;
+    if (spec.scale.color) s.color = spec.scale.color;
+    return Object.keys(s).length ? `scale: ${JSON.stringify(s)},` : '';
+  }
+
+  // Build a primary area child mark from top-level spec (encode/transform/shape/style)
+  private buildPrimaryAreaChild(spec: ChartSpec): string | null {
+    // Helper: detect function-like strings
+    const isFunctionLike = (v: unknown) => typeof v === 'string' && (/=>/.test(v) || /function\s*\(/.test(v.trim()) || /^\s*\(/.test(v.trim()))
+    const enc = (spec as any).encode || {};
+    // Build encode only if at least x and y present via encode or data inferrable
+    const data = spec.data as any;
+    const first = Array.isArray(data) ? (data[0] || {}) : {};
+    const xField = enc.x || ('x' in first ? 'x' : ('time' in first ? 'time' : ('year' in first ? 'year' : null)));
+    const yField = enc.y || (('y' in first) ? 'y' : (('value' in first) ? 'value' : null));
+    if (!xField || !yField) return null;
+
+    const encParts: string[] = [];
+    encParts.push(`x: ${isFunctionLike(xField) ? String(xField) : JSON.stringify(xField)}`);
+    if (Array.isArray(yField)) encParts.push(`y: ${JSON.stringify(yField)}`); else encParts.push(`y: ${JSON.stringify(yField)}`);
+    if (enc.color) encParts.push(`color: ${JSON.stringify(enc.color)}`);
+    if (enc.series) encParts.push(`series: ${JSON.stringify(enc.series)}`);
+    if (spec.shape) encParts.push(`shape: ${JSON.stringify(spec.shape)}`);
+
+    // Transforms
+    const tParts: string[] = [];
+    if (spec.transform && Array.isArray(spec.transform)) {
+      spec.transform.forEach((t: any) => {
+        if (t.type === 'stackY') {
+          const cfg: any = { type: 'stackY' };
+          if (t.orderBy) cfg.orderBy = t.orderBy;
+          if (t.offset) cfg.offset = t.offset;
+          if (typeof t.reverse === 'boolean') cfg.reverse = t.reverse;
+          if (typeof t.y === 'string') cfg.y = t.y;
+          tParts.push(JSON.stringify(cfg));
+        } else if (t.type === 'normalizeY') {
+          tParts.push(`{ "type": "normalizeY" }`);
+        } else if (t.type === 'diffY') {
+          tParts.push(`{ "type": "diffY" }`);
+        } else if (t.type === 'map' && t.callback) {
+          tParts.push(`{ type: 'map', callback: ${t.callback} }`);
+        } else if (t.type === 'fold' && t.fields) {
+          tParts.push(`{ type: 'fold', fields: ${JSON.stringify(t.fields)}, key: ${JSON.stringify(t.key || 'key')}, value: ${JSON.stringify(t.value || 'value')} }`);
+        }
+      });
+    }
+
+    // Style
+    const style: any = {};
+    if (spec.style?.fill) style.fill = spec.style.fill;
+    if (spec.style?.fillOpacity !== undefined) style.fillOpacity = spec.style.fillOpacity;
+    if (spec.style?.stroke) style.stroke = spec.style.stroke;
+    if (spec.style?.strokeOpacity !== undefined) style.strokeOpacity = spec.style.strokeOpacity;
+    if (spec.style?.lineWidth !== undefined) style.lineWidth = spec.style.lineWidth;
+
+    const stylePart = Object.keys(style).length ? `, style: ${JSON.stringify(style)}` : '';
+    const transformPart = tParts.length ? `, transform: [${tParts.join(', ')}]` : '';
+    return `{ type: 'area', encode: { ${encParts.join(', ')} }${stylePart}${transformPart} }`;
   }
 
   private buildEncode(spec: ChartSpec, data: any[], chartType: string): string {
