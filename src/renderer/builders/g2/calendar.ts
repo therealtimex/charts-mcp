@@ -46,7 +46,7 @@ export class CalendarChartBuilder extends ChartBuilder {
     container: 'container',
     width: ${spec.width ?? 800},
     height: ${spec.height ?? 150},
-    theme: ${JSON.stringify(spec.theme ?? "light")},
+    theme: ${JSON.stringify(((spec.theme as any) === 'default' ? 'classic' : (spec.theme ?? 'light')))},
     autoFit: false,
     paddingLeft: 40
   });

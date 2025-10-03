@@ -74,7 +74,10 @@ const baseStyleSchema = z.object({
 const baseChartSchema = {
   width: z.number().optional(),
   height: z.number().optional(),
-  theme: z.enum(['default', 'dark', 'academy']).optional(),
+  theme: z
+    .enum(['classic', 'dark', 'academy', 'light', 'classicDark', 'academyDark', 'default'])
+    .optional()
+    .default('classic'),
   title: z.string().optional(),
   axisXTitle: z.string().optional(),
   axisYTitle: z.string().optional(),
@@ -150,11 +153,34 @@ const columnSchema = z.object({
 // Area Chart
 const areaSchema = z.object({
   type: z.literal('area'),
-  data: z.array(z.object({
-    time: z.string(),
-    value: z.number(),
-    group: z.string().optional()
-  })),
+  data: z.union([
+    // Basic x/y
+    z.array(z.object({
+      x: z.union([z.string(), z.number()]),
+      y: z.number(),
+      group: z.string().optional()
+    })),
+    // Legacy time/value (G2 examples)
+    z.array(z.object({
+      time: z.string(),
+      value: z.number(),
+      group: z.string().optional()
+    })),
+    // G2 alias year/value
+    z.array(z.object({
+      year: z.union([z.string(), z.number()]),
+      value: z.number(),
+      group: z.string().optional()
+    })),
+    // Range area
+    z.array(z.object({
+      x: z.union([z.string(), z.number()]),
+      low: z.number(),
+      high: z.number()
+    })),
+    // Fallback: arbitrary records if encode provided in runtime (builder handles)
+    z.array(z.record(z.any()))
+  ]),
   ...baseChartSchema,
   stack: z.boolean().optional()
 });

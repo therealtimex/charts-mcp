@@ -73,7 +73,7 @@ export class AreaChartBuilder extends ChartBuilder {
     container: 'container',
     width: ${width},
     height: ${height},
-    theme: ${JSON.stringify(theme)},
+    theme: ${JSON.stringify((theme as any) === 'default' ? 'classic' : theme)},
     autoFit: false
   });
 
@@ -123,55 +123,60 @@ export class AreaChartBuilder extends ChartBuilder {
   }
 
   private buildEncode(spec: ChartSpec, data: any[], chartType: string): string {
-    // Use custom encode if provided
-    if (spec.encode) {
-      const parts: string[] = [];
-      const enc = spec.encode;
-
-      if (enc.x) parts.push(`.encode('x', ${JSON.stringify(enc.x)})`);
-      if (enc.y) {
-        if (Array.isArray(enc.y)) {
-          parts.push(`.encode('y', ${JSON.stringify(enc.y)})`);
-        } else {
-          parts.push(`.encode('y', ${JSON.stringify(enc.y)})`);
-        }
-      }
-      if (enc.color) parts.push(`.encode('color', ${JSON.stringify(enc.color)})`);
-      if (enc.series) parts.push(`.encode('series', ${JSON.stringify(enc.series)})`);
-
-      return parts.join('\n    ');
-    }
-
-    // Auto-detect encoding from data
     const parts: string[] = [];
     const firstRow = data[0] || {};
 
-    // X encoding
-    if ('x' in firstRow) {
-      parts.push(`.encode('x', 'x')`);
-    } else if ('time' in firstRow) {
-      parts.push(`.encode('x', 'time')`);
-    } else if ('date' in firstRow) {
-      parts.push(`.encode('x', (d) => new Date(d.date))`);
+    // Helper to choose X from provided encode or data shape
+    const pickX = () => {
+      const enc = (spec as any).encode || {};
+      if (enc.x) return enc.x;
+      if ('x' in firstRow) return 'x';
+      if ('time' in firstRow) return 'time';
+      if ('date' in firstRow) return (d: any) => new Date(d.date);
+      // Fallback: first string-like key
+      const k = Object.keys(firstRow).find((key) => key !== 'y' && key !== 'value' && key !== 'group');
+      return k || 'x';
+    };
+
+    // Helper to choose Y from provided encode or data shape
+    const pickY = () => {
+      const enc = (spec as any).encode || {};
+      if (enc.y) return enc.y;
+      if (chartType === 'range' && 'low' in firstRow && 'high' in firstRow) return ['low', 'high'];
+      if ('y' in firstRow) return 'y';
+      if ('value' in firstRow) return 'value';
+      // Fallback: first numeric-like key
+      const k = Object.keys(firstRow).find((key) => typeof (firstRow as any)[key] === 'number');
+      return k || 'value';
+    };
+
+    const xEnc = pickX();
+    const yEnc = pickY();
+
+    // Helper: detect function-like strings (arrow or function keyword)
+    const isFunctionLike = (v: unknown) => typeof v === 'string' && (/=>/.test(v) || /function\s*\(/.test(v.trim()) || /^\s*\(/.test(v.trim()));
+
+    // Encode X/Y
+    parts.push(`.encode('x', ${typeof xEnc === 'function' ? xEnc.toString() : (isFunctionLike(xEnc) ? String(xEnc) : JSON.stringify(xEnc))})`);
+    if (Array.isArray(yEnc)) {
+      parts.push(`.encode('y', ${JSON.stringify(yEnc)})`);
+    } else {
+      parts.push(`.encode('y', ${JSON.stringify(yEnc)})`);
     }
 
-    // Y encoding
-    if (chartType === 'range' && 'low' in firstRow && 'high' in firstRow) {
-      parts.push(`.encode('y', ['low', 'high'])`);
-    } else if ('y' in firstRow) {
-      parts.push(`.encode('y', 'y')`);
-    } else if ('value' in firstRow) {
-      parts.push(`.encode('y', 'value')`);
-    }
-
-    // Color encoding
-    if ('group' in firstRow || this.hasGroupField(data)) {
+    // Color/Series
+    const hasGroup = this.hasGroupField(data) || 'group' in firstRow;
+    const enc = (spec as any).encode || {};
+    if (enc.color) {
+      parts.push(`.encode('color', ${JSON.stringify(enc.color)})`);
+    } else if (hasGroup) {
       parts.push(`.encode('color', 'group')`);
       parts.push(`.encode('series', 'group')`);
     } else {
       const color = this.getAreaColor(spec);
       parts.push(`.encode('color', ${color})`);
     }
+    if (enc.series) parts.push(`.encode('series', ${JSON.stringify(enc.series)})`);
 
     return parts.join('\n    ');
   }

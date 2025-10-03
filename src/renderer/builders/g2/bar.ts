@@ -36,7 +36,7 @@ export class BarChartBuilder extends ChartBuilder {
     container: 'container',
     width: ${width},
     height: ${height},
-    theme: ${JSON.stringify(theme)},
+    theme: ${JSON.stringify((theme as any) === 'default' ? 'classic' : theme)},
     autoFit: false
   });
 

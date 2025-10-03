@@ -23,7 +23,7 @@ export class WordCloudChartBuilder extends ChartBuilder {
     container: 'container',
     width: ${spec.width ?? 600},
     height: ${spec.height ?? 400},
-    theme: ${JSON.stringify(spec.theme ?? "light")},
+    theme: ${JSON.stringify(((spec.theme as any) === 'default' ? 'classic' : (spec.theme ?? 'light')))},
     autoFit: false
   });
 

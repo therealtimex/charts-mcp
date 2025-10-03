@@ -31,6 +31,13 @@ const legacyData = z.object({
   group: z.string().optional(),
 });
 
+// Common G2 alias data shape (e.g., step area examples use `year` + `value`)
+const yearAliasData = z.object({
+  year: z.union([z.string(), z.number()]),
+  value: z.number(),
+  group: z.string().optional(),
+});
+
 // Transform options
 const TransformSchema = z
   .array(
@@ -147,10 +154,13 @@ const schema = {
       .union([
         z.array(basicData).nonempty({ message: "Area chart data cannot be empty." }),
         z.array(rangeData).nonempty({ message: "Area chart data cannot be empty." }),
-        z.array(legacyData).nonempty({ message: "Area chart data cannot be empty." })
+        z.array(legacyData).nonempty({ message: "Area chart data cannot be empty." }),
+        z.array(yearAliasData).nonempty({ message: "Area chart data cannot be empty." }),
+        // Fallback: allow arbitrary records when encode maps fields (e.g., { date, close })
+        z.array(z.record(z.any())).nonempty({ message: "Area chart data cannot be empty." })
       ])
       .describe(
-        "Data for area chart. Basic: [{ x: '2018', y: 99.9, group: 'A' }]. Range: [{ x: '2018', low: 10, high: 20 }]. Legacy format with 'time' and 'value' also supported."
+        "Data for area chart. Basic: [{ x: '2018', y: 99.9, group: 'A' }]. Range: [{ x: '2018', low: 10, high: 20 }]. Legacy: [{ time: '2018', value: 99.9 }]. G2 alias: [{ year: '2018', value: 99.9 }]. Or any record array when encode provides x/y mapping (e.g., [{ date, close }] + encode.x='(d)=>new Date(d.date)', encode.y='close')."
       ),
   chartType:
     z

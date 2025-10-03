@@ -51,7 +51,7 @@ export class SunburstChartBuilder extends ChartBuilder {
     container: 'container',
     width: ${spec.width ?? 600},
     height: ${spec.height ?? 600},
-    theme: ${JSON.stringify(spec.theme ?? "light")},
+    theme: ${JSON.stringify(((spec.theme as any) === 'default' ? 'classic' : (spec.theme ?? 'light')))},
     autoFit: false
   });
 
