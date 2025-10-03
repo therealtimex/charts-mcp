@@ -127,6 +127,12 @@ const ChildMarkSchema = z.object({
         shape: z.string().optional(),
       })
       .optional(),
+  data: z
+    .object({
+      transform: TransformSchema,
+    })
+    .optional()
+    .describe("Per-mark data pipeline (e.g., fold)"),
   style: z.record(z.any()).optional().describe("Style properties as key-value pairs"),
   tooltip: z.union([
     z.object({

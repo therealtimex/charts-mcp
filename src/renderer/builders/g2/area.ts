@@ -176,25 +176,26 @@ export class AreaChartBuilder extends ChartBuilder {
     if (enc.series) encParts.push(`series: ${JSON.stringify(enc.series)}`);
     if (spec.shape) encParts.push(`shape: ${JSON.stringify(spec.shape)}`);
 
-    // Transforms
-    const tParts: string[] = [];
+    // Split transforms: data-level vs mark-level
+    const dataT: string[] = [];
+    const markT: string[] = [];
     if (spec.transform && Array.isArray(spec.transform)) {
       spec.transform.forEach((t: any) => {
-        if (t.type === 'stackY') {
+        if (t.type === 'fold' && t.fields) {
+          dataT.push(`{ type: 'fold', fields: ${JSON.stringify(t.fields)}, key: ${JSON.stringify(t.key || 'key')}, value: ${JSON.stringify(t.value || 'value')} }`);
+        } else if (t.type === 'map' && t.callback) {
+          dataT.push(`{ type: 'map', callback: ${t.callback} }`);
+        } else if (t.type === 'stackY') {
           const cfg: any = { type: 'stackY' };
           if (t.orderBy) cfg.orderBy = t.orderBy;
           if (t.offset) cfg.offset = t.offset;
           if (typeof t.reverse === 'boolean') cfg.reverse = t.reverse;
           if (typeof t.y === 'string') cfg.y = t.y;
-          tParts.push(JSON.stringify(cfg));
+          markT.push(JSON.stringify(cfg));
         } else if (t.type === 'normalizeY') {
-          tParts.push(`{ "type": "normalizeY" }`);
+          markT.push(`{ "type": "normalizeY" }`);
         } else if (t.type === 'diffY') {
-          tParts.push(`{ "type": "diffY" }`);
-        } else if (t.type === 'map' && t.callback) {
-          tParts.push(`{ type: 'map', callback: ${t.callback} }`);
-        } else if (t.type === 'fold' && t.fields) {
-          tParts.push(`{ type: 'fold', fields: ${JSON.stringify(t.fields)}, key: ${JSON.stringify(t.key || 'key')}, value: ${JSON.stringify(t.value || 'value')} }`);
+          markT.push(`{ "type": "diffY" }`);
         }
       });
     }
@@ -208,8 +209,9 @@ export class AreaChartBuilder extends ChartBuilder {
     if (spec.style?.lineWidth !== undefined) style.lineWidth = spec.style.lineWidth;
 
     const stylePart = Object.keys(style).length ? `, style: ${JSON.stringify(style)}` : '';
-    const transformPart = tParts.length ? `, transform: [${tParts.join(', ')}]` : '';
-    return `{ type: 'area', encode: { ${encParts.join(', ')} }${stylePart}${transformPart} }`;
+    const dataPart = dataT.length ? `, data: { transform: [${dataT.join(', ')}] }` : '';
+    const transformPart = markT.length ? `, transform: [${markT.join(', ')}]` : '';
+    return `{ type: 'area', encode: { ${encParts.join(', ')} }${stylePart}${dataPart}${transformPart} }`;
   }
 
   private buildEncode(spec: ChartSpec, data: any[], chartType: string): string {
@@ -425,33 +427,39 @@ export class AreaChartBuilder extends ChartBuilder {
         parts.push(`tooltip: ${JSON.stringify(child.tooltip)}`);
       }
 
+      const dataTransformParts: string[] = [];
+      const markTransformParts: string[] = [];
       if (child.transform && Array.isArray(child.transform)) {
-        const tParts = child.transform.map((t: any) => {
-          if (t.type === 'stackY') {
+        child.transform.forEach((t: any) => {
+          if (t.type === 'fold' && t.fields) {
+            dataTransformParts.push(`{ type: 'fold', fields: ${JSON.stringify(t.fields)}, key: ${JSON.stringify(t.key || 'key')}, value: ${JSON.stringify(t.value || 'value')} }`);
+          } else if (t.type === 'map' && t.callback) {
+            dataTransformParts.push(`{ type: 'map', callback: ${t.callback} }`);
+          } else if (t.type === 'stackY') {
             const cfg: any = { type: 'stackY' };
             if (t.orderBy) cfg.orderBy = t.orderBy;
             if (t.offset) cfg.offset = t.offset;
             if (typeof t.reverse === 'boolean') cfg.reverse = t.reverse;
             if (typeof t.y === 'string') cfg.y = t.y;
-            return JSON.stringify(cfg);
+            markTransformParts.push(JSON.stringify(cfg));
           } else if (t.type === 'normalizeY') {
-            return `{ "type": "normalizeY" }`;
+            markTransformParts.push(`{ "type": "normalizeY" }`);
           } else if (t.type === 'diffY') {
-            return `{ "type": "diffY" }`;
-          } else if (t.type === 'map' && t.callback) {
-            return `{ type: 'map', callback: ${t.callback} }`;
-          } else if (t.type === 'fold' && t.fields) {
-            return `{
-              type: 'fold',
-              fields: ${JSON.stringify(t.fields)},
-              key: ${JSON.stringify(t.key || 'key')},
-              value: ${JSON.stringify(t.value || 'value')}
-            }`;
+            markTransformParts.push(`{ "type": "diffY" }`);
           }
-          return JSON.stringify({ type: t.type });
         });
-        if (tParts.length > 0) parts.push(`transform: [${tParts.join(', ')}]`);
       }
+      if (child.data?.transform && Array.isArray(child.data.transform)) {
+        child.data.transform.forEach((t: any) => {
+          if (t.type === 'fold' && t.fields) {
+            dataTransformParts.push(`{ type: 'fold', fields: ${JSON.stringify(t.fields)}, key: ${JSON.stringify(t.key || 'key')}, value: ${JSON.stringify(t.value || 'value')} }`);
+          } else if (t.type === 'map' && t.callback) {
+            dataTransformParts.push(`{ type: 'map', callback: ${t.callback} }`);
+          }
+        });
+      }
+      if (dataTransformParts.length) parts.push(`data: { transform: [${dataTransformParts.join(', ')}] }`);
+      if (markTransformParts.length) parts.push(`transform: [${markTransformParts.join(', ')}]`);
 
       return `{ ${parts.join(', ')} }`;
     });
