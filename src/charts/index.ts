@@ -44,3 +44,4 @@ export { treemap } from "./treemap";
 export { venn } from "./venn";
 export { violin } from "./violin";
 export { wordCloud as "word-cloud" } from "./word-cloud";
+export { areaGuide } from "./area-guide";

@@ -62,6 +62,20 @@ export async function callTool(tool: string, args: object = {}) {
   const chartType = CHART_TYPE_MAP[tool as keyof typeof CHART_TYPE_MAP];
 
   if (!chartType) {
+    // Non-chart tools
+    if (tool === "get_area_chart_guide") {
+      const { areaGuide, readAreaGuide } = await import("../charts/area-guide.js");
+      const result = z.object(areaGuide.schema).safeParse(args);
+      if (!result.success) {
+        throw new McpError(ErrorCode.InvalidParams, `Invalid parameters: ${result.error.message}`);
+      }
+      const format = (result.data as any).format || "text";
+      const text = readAreaGuide(format);
+      return {
+        content: [{ type: "text", text }],
+        _meta: { description: "Area chart documentation guide", spec: { tool, format } },
+      };
+    }
     throw new McpError(ErrorCode.MethodNotFound, `Unknown tool: ${tool}.`);
   }
 
