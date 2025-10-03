@@ -38,6 +38,12 @@ const yearAliasData = z.object({
   group: z.string().optional(),
 });
 
+// Remote data via G2 fetch connector
+const fetchData = z.object({
+  type: z.literal("fetch"),
+  value: z.string().url(),
+});
+
 // Transform options
 const TransformSchema = z
   .array(
@@ -53,6 +59,8 @@ const TransformSchema = z
         .enum(["wiggle", "expand", "silhouette", "diverging"])
         .optional()
         .describe("Offset for stackY transform: 'wiggle' for streamgraph, 'expand' for normalized, 'silhouette' for centered, 'diverging' for positive/negative split"),
+      reverse: z.boolean().optional().describe("Reverse stacking order for stackY"),
+      y: z.string().optional().describe("Alternate output channel name for y (e.g., 'y1')"),
       fields: z.array(z.string()).optional().describe("Fields for fold transform"),
       key: z.string().optional().describe("Key field name for fold transform"),
       value: z.string().optional().describe("Value field name for fold transform"),
@@ -120,11 +128,13 @@ const ChildMarkSchema = z.object({
       })
       .optional(),
   style: z.record(z.any()).optional().describe("Style properties as key-value pairs"),
-  tooltip:
+  tooltip: z.union([
     z.object({
       items: z.array(z.string()).optional(),
-    })
-    .optional(),
+    }),
+    z.boolean()
+  ]).optional(),
+  transform: TransformSchema,
 });
 
 // Axis configuration with formatter
@@ -156,11 +166,12 @@ const schema = {
         z.array(rangeData).nonempty({ message: "Area chart data cannot be empty." }),
         z.array(legacyData).nonempty({ message: "Area chart data cannot be empty." }),
         z.array(yearAliasData).nonempty({ message: "Area chart data cannot be empty." }),
+        fetchData,
         // Fallback: allow arbitrary records when encode maps fields (e.g., { date, close })
         z.array(z.record(z.any())).nonempty({ message: "Area chart data cannot be empty." })
       ])
       .describe(
-        "Data for area chart. Basic: [{ x: '2018', y: 99.9, group: 'A' }]. Range: [{ x: '2018', low: 10, high: 20 }]. Legacy: [{ time: '2018', value: 99.9 }]. G2 alias: [{ year: '2018', value: 99.9 }]. Or any record array when encode provides x/y mapping (e.g., [{ date, close }] + encode.x='(d)=>new Date(d.date)', encode.y='close')."
+        "Data for area chart. Basic: [{ x: '2018', y: 99.9, group: 'A' }]. Range: [{ x: '2018', low: 10, high: 20 }]. Legacy: [{ time: '2018', value: 99.9 }]. G2 alias: [{ year: '2018', value: 99.9 }]. Fetch: { type: 'fetch', value: 'https://...' }. Or any record array when encode provides x/y mapping (e.g., [{ date, close }] + encode.x='(d)=>new Date(d.date)', encode.y='close')."
       ),
   chartType:
     z

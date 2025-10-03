@@ -178,6 +178,8 @@ const areaSchema = z.object({
       low: z.number(),
       high: z.number()
     })),
+    // Remote data via fetch connector
+    z.object({ type: z.literal('fetch'), value: z.string().url() }),
     // Fallback: arbitrary records if encode provided in runtime (builder handles)
     z.array(z.record(z.any()))
   ]),

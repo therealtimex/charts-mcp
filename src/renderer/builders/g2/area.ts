@@ -191,6 +191,8 @@ export class AreaChartBuilder extends ChartBuilder {
           const config: any = { type: 'stackY' };
           if (t.orderBy) config.orderBy = t.orderBy;
           if (t.offset) config.offset = t.offset;
+          if (typeof t.reverse === 'boolean') config.reverse = t.reverse;
+          if (typeof t.y === 'string') config.y = t.y;
           transforms.push(`.transform(${JSON.stringify(config)})`);
         } else if (t.type === 'normalizeY') {
           transforms.push(`.transform({ type: 'normalizeY' })`);
@@ -306,22 +308,59 @@ export class AreaChartBuilder extends ChartBuilder {
     const children = spec.children.map((child: any) => {
       const parts: string[] = [`type: ${JSON.stringify(child.type)}`];
 
+      // Helper: detect function-like strings
+      const isFunctionLike = (v: unknown) => typeof v === 'string' && (/=>/.test(v) || /function\s*\(/.test(v.trim()) || /^\s*\(/.test(v.trim()));
+
       if (child.encode) {
-        const encodeObj: any = {};
-        if (child.encode.x) encodeObj.x = child.encode.x;
-        if (child.encode.y) encodeObj.y = child.encode.y;
-        if (child.encode.color) encodeObj.color = child.encode.color;
-        if (child.encode.size) encodeObj.size = child.encode.size;
-        if (child.encode.shape) encodeObj.shape = child.encode.shape;
-        parts.push(`encode: ${JSON.stringify(encodeObj)}`);
+        const encParts: string[] = [];
+        const enc = child.encode;
+        if (enc.x !== undefined) encParts.push(`x: ${isFunctionLike(enc.x) ? String(enc.x) : JSON.stringify(enc.x)}`);
+        if (enc.y !== undefined) {
+          if (Array.isArray(enc.y)) encParts.push(`y: ${JSON.stringify(enc.y)}`);
+          else encParts.push(`y: ${isFunctionLike(enc.y) ? String(enc.y) : JSON.stringify(enc.y)}`);
+        }
+        if (enc.color !== undefined) encParts.push(`color: ${JSON.stringify(enc.color)}`);
+        if (enc.size !== undefined) encParts.push(`size: ${JSON.stringify(enc.size)}`);
+        if (enc.shape !== undefined) encParts.push(`shape: ${JSON.stringify(enc.shape)}`);
+        if (encParts.length > 0) parts.push(`encode: { ${encParts.join(', ')} }`);
       }
 
       if (child.style) {
         parts.push(`style: ${JSON.stringify(child.style)}`);
       }
 
-      if (child.tooltip) {
+      if (typeof child.tooltip === 'boolean') {
+        parts.push(`tooltip: ${child.tooltip}`);
+      } else if (child.tooltip) {
         parts.push(`tooltip: ${JSON.stringify(child.tooltip)}`);
+      }
+
+      if (child.transform && Array.isArray(child.transform)) {
+        const tParts = child.transform.map((t: any) => {
+          if (t.type === 'stackY') {
+            const cfg: any = { type: 'stackY' };
+            if (t.orderBy) cfg.orderBy = t.orderBy;
+            if (t.offset) cfg.offset = t.offset;
+            if (typeof t.reverse === 'boolean') cfg.reverse = t.reverse;
+            if (typeof t.y === 'string') cfg.y = t.y;
+            return JSON.stringify(cfg);
+          } else if (t.type === 'normalizeY') {
+            return `{ "type": "normalizeY" }`;
+          } else if (t.type === 'diffY') {
+            return `{ "type": "diffY" }`;
+          } else if (t.type === 'map' && t.callback) {
+            return `{ type: 'map', callback: ${t.callback} }`;
+          } else if (t.type === 'fold' && t.fields) {
+            return `{
+              type: 'fold',
+              fields: ${JSON.stringify(t.fields)},
+              key: ${JSON.stringify(t.key || 'key')},
+              value: ${JSON.stringify(t.value || 'value')}
+            }`;
+          }
+          return JSON.stringify({ type: t.type });
+        });
+        if (tParts.length > 0) parts.push(`transform: [${tParts.join(', ')}]`);
       }
 
       return `{ ${parts.join(', ')} }`;
