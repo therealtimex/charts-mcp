@@ -420,14 +420,38 @@ export class AreaChartBuilder extends ChartBuilder {
         if (encParts.length > 0) parts.push(`encode: { ${encParts.join(', ')} }`);
       }
 
+      // Prepare data parts for child: value or fetch
+      const dataParts: string[] = [];
+      if (child.data) {
+        const dt = child.data as any;
+        if (Array.isArray(dt.value)) {
+          dataParts.push(`value: ${JSON.stringify(dt.value)}`);
+        }
+        if (dt.type === 'fetch' && typeof dt.value === 'string') {
+          dataParts.push(`type: 'fetch'`);
+          dataParts.push(`value: ${JSON.stringify(dt.value)}`);
+        }
+      }
+
       if (child.style) {
         parts.push(`style: ${JSON.stringify(child.style)}`);
       }
 
       if (typeof child.tooltip === 'boolean') {
         parts.push(`tooltip: ${child.tooltip}`);
-      } else if (child.tooltip) {
-        parts.push(`tooltip: ${JSON.stringify(child.tooltip)}`);
+      } else if (child.tooltip && typeof child.tooltip === 'object') {
+        const t = child.tooltip as any;
+        const tp: string[] = [];
+        if (t.title !== undefined) {
+          if (typeof t.title === 'boolean') tp.push(`title: ${t.title}`);
+          else if (typeof t.title === 'string' && isFunctionLike(t.title)) tp.push(`title: ${t.title}`);
+          else tp.push(`title: ${JSON.stringify(t.title)}`);
+        }
+        if (Array.isArray(t.items)) {
+          const items = t.items.map((it: any) => (typeof it === 'string' && isFunctionLike(it) ? it : JSON.stringify(it)));
+          tp.push(`items: [${items.join(', ')}]`);
+        }
+        parts.push(`tooltip: { ${tp.join(', ')} }`);
       }
 
       const dataTransformParts: string[] = [];
@@ -461,7 +485,12 @@ export class AreaChartBuilder extends ChartBuilder {
           }
         });
       }
-      if (dataTransformParts.length) parts.push(`data: { transform: [${dataTransformParts.join(', ')}] }`);
+      // Emit data object if value/fetch or transform exists
+      if (dataParts.length || dataTransformParts.length) {
+        const pieces = [...dataParts];
+        if (dataTransformParts.length) pieces.push(`transform: [${dataTransformParts.join(', ')}]`);
+        parts.push(`data: { ${pieces.join(', ')} }`);
+      }
       if (markTransformParts.length) parts.push(`transform: [${markTransformParts.join(', ')}]`);
 
       return `{ ${parts.join(', ')} }`;

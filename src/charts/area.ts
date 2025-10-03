@@ -122,6 +122,21 @@ const EncodeSchema = z
   .describe("Advanced encoding configuration for custom field mapping");
 
 // Children marks for combined visualizations
+const ChildDataSchema = z.union([
+  z.object({
+    value: z.array(z.record(z.any())),
+    transform: TransformSchema.optional(),
+  }),
+  z.object({
+    type: z.literal("fetch"),
+    value: z.string().url(),
+    transform: TransformSchema.optional(),
+  }),
+  z.object({
+    transform: TransformSchema,
+  }),
+]);
+
 const ChildMarkSchema = z.object({
   type: z.enum(["line", "point", "area"])
     .describe("Mark type"),
@@ -135,12 +150,7 @@ const ChildMarkSchema = z.object({
         shape: z.string().optional(),
       })
       .optional(),
-  data: z
-    .object({
-      transform: TransformSchema,
-    })
-    .optional()
-    .describe("Per-mark data pipeline (e.g., fold)"),
+  data: ChildDataSchema.optional().describe("Per-mark data: value/fetch and/or transform pipeline"),
   style: z.record(z.any()).optional().describe("Style properties as key-value pairs"),
   tooltip: z.union([
     z.object({
