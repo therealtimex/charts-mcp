@@ -90,10 +90,18 @@ const ScaleSchema = z
       })
       .optional(),
     color:
-      z.object({
-        range: z.array(z.string()).optional().describe("Color range for series"),
-      })
-      .optional(),
+      z
+        .object({
+          range: z
+            .array(z.string())
+            .optional()
+            .describe("Explicit color range for series"),
+          palette: z
+            .union([z.string(), z.array(z.string())])
+            .optional()
+            .describe("Named palette (e.g., 'reds') or palette array"),
+        })
+        .optional(),
   })
   .optional()
   .describe("Scale configuration for axes and color");
@@ -214,6 +222,7 @@ const schema = {
         z.string()
           .optional()
           .describe("Fill color or gradient like 'l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff'"),
+      gradient: z.string().optional().describe("Gradient direction: 'x' or 'y' for band charts"),
       fillOpacity:
         z.number()
           .min(0)

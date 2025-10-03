@@ -259,8 +259,8 @@ export class AreaChartBuilder extends ChartBuilder {
     // Color/Series
     const hasGroup = this.hasGroupField(data) || 'group' in firstRow;
     const enc = (spec as any).encode || {};
-    if (enc.color) {
-      parts.push(`.encode('color', ${JSON.stringify(enc.color)})`);
+    if (enc.color !== undefined) {
+      parts.push(`.encode('color', ${isFunctionLike(enc.color) ? String(enc.color) : JSON.stringify(enc.color)})`);
     } else if (hasGroup) {
       parts.push(`.encode('color', 'group')`);
       parts.push(`.encode('series', 'group')`);
@@ -268,7 +268,7 @@ export class AreaChartBuilder extends ChartBuilder {
       const color = this.getAreaColor(spec);
       parts.push(`.encode('color', ${color})`);
     }
-    if (enc.series) parts.push(`.encode('series', ${JSON.stringify(enc.series)})`);
+    if (enc.series !== undefined) parts.push(`.encode('series', ${isFunctionLike(enc.series) ? String(enc.series) : JSON.stringify(enc.series)})`);
 
     return parts.join('\n    ');
   }
@@ -389,6 +389,9 @@ export class AreaChartBuilder extends ChartBuilder {
     }
     if (style.lineWidth !== undefined) {
       styles.push(`.style('lineWidth', ${style.lineWidth})`);
+    }
+    if ((style as any).gradient) {
+      styles.push(`.style('gradient', ${JSON.stringify((style as any).gradient)})`);
     }
 
     return styles.join('\n    ');
