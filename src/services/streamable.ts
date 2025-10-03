@@ -4,7 +4,7 @@ import express from "express";
 import cors from "cors";
 
 export const startHTTPStreamableServer = async (
-  createServer: () => Server,
+  createServer: () => Server | Promise<Server>,
   endpoint = "/mcp",
   port = 1122,
 ): Promise<void> => {
@@ -14,7 +14,7 @@ export const startHTTPStreamableServer = async (
 
   app.post(endpoint, async (req, res) => {
     try {
-      const server = createServer();
+      const server = await Promise.resolve(createServer());
       const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });
       await server.connect(transport);
       await transport.handleRequest(req, res, req.body);

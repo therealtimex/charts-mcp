@@ -9,6 +9,7 @@ import {
   BiDirectionalBarChartBuilder,
   LineChartBuilder,
   PieChartBuilder,
+  DonutChartBuilder,
   ColumnChartBuilder,
   AreaChartBuilder,
   ScatterChartBuilder,
@@ -37,7 +38,10 @@ import {
   ContourPlotBuilder,
   ParallelCoordinatesBuilder,
   StreamGraphBuilder,
-  ChordBuilder
+  ChordBuilder,
+  ChoroplethMapBuilder,
+  ColorMapBuilder,
+  ArcDiagramG2Builder
 } from './builders/g2';
 import {
   FlowDiagramBuilder,
@@ -111,6 +115,24 @@ const pieSchema = z.object({
   })),
   ...baseChartSchema,
   innerRadius: z.number().optional()
+});
+
+// Donut Chart
+const donutSchema = z.object({
+  type: z.literal('donut-chart'),
+  data: z.array(z.record(z.any())),
+  ...baseChartSchema,
+  innerRadius: z.number().min(0.1).max(0.9).optional(),
+  encode: z.object({
+    angleField: z.string().optional(),
+    colorField: z.string().optional()
+  }).optional(),
+  labels: z.array(z.any()).optional(),
+  legend: z.any().optional(),
+  centerAnnotation: z.any().optional(),
+  facet: z.any().optional(),
+  markStyle: z.any().optional(),
+  autoFit: z.boolean().optional()
 });
 
 // Column Chart
@@ -198,6 +220,15 @@ export function initializeChartRegistry(): void {
     builder: new PieChartBuilder(),
     schema: pieSchema,
     description: 'Pie chart using G2 v5'
+  });
+
+  ChartRegistry.register({
+    type: 'donut-chart',
+    renderer: 'g2',
+    category: 'statistical',
+    builder: new DonutChartBuilder(),
+    schema: donutSchema,
+    description: 'Donut chart (doughnut chart) for showing proportional relationships with better space utilization using G2 v5'
   });
 
   // Phase 3: Core Charts (G2 v5)
@@ -480,7 +511,16 @@ export function initializeChartRegistry(): void {
     category: 'statistical',
     builder: new ContourPlotBuilder(),
     schema: genericSchema,
-    description: 'Contour plot showing 3D data as 2D isolines'
+    description: 'Contour plot showing 3D data as 2D isolines or color-coded cells'
+  });
+
+  ChartRegistry.register({
+    type: 'contour-line',
+    renderer: 'g2',
+    category: 'statistical',
+    builder: new ContourPlotBuilder(),
+    schema: genericSchema,
+    description: 'Contour line chart (alias for contour) showing 3D data as 2D isolines or color-coded cells'
   });
 
   ChartRegistry.register({
@@ -508,6 +548,24 @@ export function initializeChartRegistry(): void {
     builder: new ChordBuilder(),
     schema: genericSchema,
     description: 'Chord diagram visualizing relationships in circular layout'
+  });
+
+  ChartRegistry.register({
+    type: 'choropleth-map',
+    renderer: 'g2',
+    category: 'statistical',
+    builder: new ChoroplethMapBuilder(),
+    schema: genericSchema,
+    description: 'Choropleth map for geographic data visualization using color-coded regions'
+  });
+
+  ChartRegistry.register({
+    type: 'color-map',
+    renderer: 'g2',
+    category: 'statistical',
+    builder: new ColorMapBuilder(),
+    schema: genericSchema,
+    description: 'Color map for visualizing relationships between two categorical dimensions using color-encoded grid cells'
   });
 
   // Phase 5: Advanced G6 Graph Layouts
@@ -549,9 +607,9 @@ export function initializeChartRegistry(): void {
 
   ChartRegistry.register({
     type: 'arc-diagram',
-    renderer: 'g6',
+    renderer: 'g2',
     category: 'graph',
-    builder: new ArcDiagramBuilder(),
+    builder: new ArcDiagramG2Builder(),
     schema: genericSchema,
     description: 'Linear node arrangement with arc connections above'
   });

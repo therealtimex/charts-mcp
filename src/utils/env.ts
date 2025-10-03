@@ -1,10 +1,14 @@
 import process from "node:process";
+import { getRendererPort } from "../renderer/server";
 
 /**
  * Get the VIS_REQUEST_SERVER from environment variables.
  */
 export function getVisRequestServer() {
-  const port = Number(process.env.RENDER_PORT) || 3210;
+  // Use actual renderer port if available, otherwise use configured/default port
+  const actualPort = getRendererPort();
+  const configuredPort = Number(process.env.RENDER_PORT) || 3210;
+  const port = actualPort || configuredPort;
   return process.env.VIS_REQUEST_SERVER || `http://localhost:${port}/chart`;
 }
 
@@ -13,7 +17,10 @@ export function getVisRequestServer() {
  * This should point to an OSM/Leaflet-based map renderer service.
  */
 export function getMapRequestServer() {
-  const port = Number(process.env.RENDER_PORT) || 3210;
+  // Use actual renderer port if available, otherwise use configured/default port
+  const actualPort = getRendererPort();
+  const configuredPort = Number(process.env.RENDER_PORT) || 3210;
+  const port = actualPort || configuredPort;
   return process.env.MAP_REQUEST_SERVER || `http://localhost:${port}/map`;
 }
 

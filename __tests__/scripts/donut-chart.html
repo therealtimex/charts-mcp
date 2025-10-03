@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Game Sales by Genre</title>
+    <style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, Helvetica, Arial, sans-serif;
+  }
+  #title {
+    width: 600px;
+    margin: 8px auto 0;
+    font: 600 16px/1.3 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, Helvetica, Arial, sans-serif;
+    color: #111;
+    text-align: center;
+  }
+  #container {
+    width: 600px;
+    height: 400px;
+    margin: 0 auto;
+  }
+</style>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2@5/dist/g2.min.js"></script>
+  </head>
+  <body>
+    <div id="title">Game Sales by Genre</div>
+    <div id="container"></div>
+    <script>
+  const { Chart } = G2;
+
+  const chart = new Chart({
+    container: 'container',
+    width: 600,
+    height: 400,
+    theme: "light",
+    autoFit: false
+  });
+
+  chart
+    .interval()
+    .data([{"category":"Sports","value":27500},{"category":"Strategy","value":11500},{"category":"Action","value":6000},{"category":"Shooter","value":3500},{"category":"Other","value":1500}])
+    .transform({ type: 'stackY' })
+    .coordinate({ type: 'theta', innerRadius: 0.5 })
+    .encode('y', "value")
+    .encode('color', "category")
+    
+    .style({
+      stroke: '#fff',
+      lineWidth: 2
+    })
+    .legend('color', {
+      position: "bottom",
+      layout: {"justifyContent":"center"}
+    })
+    .label({
+      text: (d, i, data) => {
+        const total = data.reduce((acc, curr) => acc + curr["value"], 0);
+        const percent = ((d["value"] / total) * 100).toFixed(1);
+        return `${percent}%`;
+      },
+      style: {
+        fontWeight: 'bold',
+        fontSize: 12
+      }
+    })
+    .tooltip({
+      items: [
+        { channel: 'color', name: "category" },
+        { channel: 'y', name: "value" }
+      ]
+    });
+
+  
+
+  chart.render();
+</script>
+  </body>
+</html>

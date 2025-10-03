@@ -1,0 +1,43 @@
+{
+  "title": "Monthly Sales Performance by Product",
+  "data": [
+    { "x": "January", "y": "Product A", "value": 120 },
+    { "x": "January", "y": "Product B", "value": 231 },
+    { "x": "January", "y": "Product C", "value": 189 },
+    { "x": "February", "y": "Product A", "value": 145 },
+    { "x": "February", "y": "Product B", "value": 198 },
+    { "x": "February", "y": "Product C", "value": 212 },
+    { "x": "March", "y": "Product A", "value": 167 },
+    { "x": "March", "y": "Product B", "value": 245 },
+    { "x": "March", "y": "Product C", "value": 178 },
+    { "x": "April", "y": "Product A", "value": 198 },
+    { "x": "April", "y": "Product B", "value": 267 },
+    { "x": "April", "y": "Product C", "value": 223 }
+  ],
+  "xField": "x",
+  "yField": "y",
+  "valueField": "value",
+  "colorScale": {
+    "type": "linear",
+    "palette": "ylGnBu"
+  },
+  "label": {
+    "show": true,
+    "field": "value",
+    "fontSize": 12
+  },
+  "legend": {
+    "show": true,
+    "position": "right"
+  },
+  "axis": {
+    "x": {
+      "title": "Month"
+    },
+    "y": {
+      "title": "Product"
+    }
+  },
+  "width": 800,
+  "height": 400
+}

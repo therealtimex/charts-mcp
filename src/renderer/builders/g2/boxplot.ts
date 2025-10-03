@@ -26,39 +26,43 @@ export class BoxplotBuilder extends ChartBuilder {
       style = {},
     } = spec;
 
-    // Transform data to match G2 boxplot format
-    const boxData = data.map((d: any) => ({
+    // Normalize data fields
+    const boxData = (data || []).map((d: any) => ({
       x: d.category,
       y: d.value,
       ...(d.group && { series: d.group }),
     }));
 
-    // Build coordinate config for horizontal boxplot
+    const hasGroup = Array.isArray(data) && data.some((d: any) => d && d.group != null);
+
+    // Build style configuration for options API
+    const styleOptions: any = {};
+    if (showOutliers === false) styleOptions.point = false;
+    if ((style as any).boxFill) styleOptions.boxFill = (style as any).boxFill;
+    if ((style as any).boxFillOpacity !== undefined)
+      styleOptions.boxFillOpacity = (style as any).boxFillOpacity;
+    if ((style as any).pointStroke) styleOptions.pointStroke = (style as any).pointStroke;
+    if ((style as any).pointR) styleOptions.pointR = (style as any).pointR;
+
+    // Encode config for options API
+    const encodeConfig = hasGroup
+      ? `encode: { x: 'x', y: 'y', color: 'series', series: 'series' },`
+      : `encode: { x: 'x', y: 'y' },`;
+
+    // Coordinate config
     const coordinateConfig = horizontal
       ? `coordinate: { transform: [{ type: 'transpose' }] },`
       : '';
 
-    // Build style configuration
-    const styleOptions: any = {};
-    if (showOutliers === false) {
-      styleOptions.point = false;
-    }
-    if (style.boxFill) styleOptions.boxFill = style.boxFill;
-    if (style.boxFillOpacity !== undefined)
-      styleOptions.boxFillOpacity = style.boxFillOpacity;
-    if (style.pointStroke) styleOptions.pointStroke = style.pointStroke;
-    if (style.pointR) styleOptions.pointR = style.pointR;
+    // Axis config
+    const axisParts: string[] = [];
+    if (spec.axisYTitle) axisParts.push(`y: { title: ${JSON.stringify(spec.axisYTitle)} }`);
+    if (spec.axisXTitle) axisParts.push(`x: { title: ${JSON.stringify(spec.axisXTitle)} }`);
+    const axisConfig = axisParts.length ? `axis: { ${axisParts.join(', ')} },` : '';
 
-    const styleConfig =
-      Object.keys(styleOptions).length > 0
-        ? `style: ${JSON.stringify(styleOptions)},`
-        : '';
-
-    // Build encode configuration
-    const hasGroup = data.some((d: any) => d.group);
-    const encodeConfig = hasGroup
-      ? `encode: { x: 'x', y: 'y', color: 'series', series: 'series' },`
-      : `encode: { x: 'x', y: 'y' },`;
+    // Scale config for color palette
+    const palette = spec.style?.palette;
+    const scaleConfig = palette && palette.length > 0 ? `scale: { color: { range: ${JSON.stringify(palette)} } },` : '';
 
     return `<script>
   const { Chart } = G2;
@@ -76,8 +80,9 @@ export class BoxplotBuilder extends ChartBuilder {
     data: ${JSON.stringify(boxData)},
     ${encodeConfig}
     ${coordinateConfig}
-    ${styleConfig}
-    ${this.buildAxisConfig(spec)}
+    ${axisConfig}
+    ${scaleConfig}
+    ${Object.keys(styleOptions).length ? `style: ${JSON.stringify(styleOptions)},` : ''}
   });
 
   chart.render();

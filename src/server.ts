@@ -3,7 +3,7 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
-import * as Charts from "./charts";
+import * as Charts from "./charts/index";
 import {
   startHTTPStreamableServer,
   startSSEMcpServer,
@@ -16,7 +16,7 @@ import { startRendererServer } from "./renderer/server";
 /**
  * Creates and configures an MCP server for chart generation.
  */
-export function createServer(): Server {
+export async function createServer(): Promise<Server> {
   const server = new Server(
     {
       name: "charts-mcp",
@@ -31,7 +31,7 @@ export function createServer(): Server {
 
   setupToolHandlers(server);
   // Start built-in renderer proxy so returned URLs can be local
-  startRendererServer();
+  await startRendererServer();
 
   server.onerror = (error) => console.error("[MCP Error]", error);
   process.on("SIGINT", async () => {
@@ -47,13 +47,13 @@ export function createServer(): Server {
  */
 function getEnabledTools() {
   const disabledTools = getDisabledTools();
-  const allCharts = Object.values(Charts);
+  const allCharts = Object.values(Charts).map((module) => module.tool);
 
   if (disabledTools.length === 0) {
     return allCharts;
   }
 
-  return allCharts.filter((chart) => !disabledTools.includes(chart.tool.name));
+  return allCharts.filter((tool) => !disabledTools.includes(tool.name));
 }
 
 /**
@@ -61,7 +61,7 @@ function getEnabledTools() {
  */
 function setupToolHandlers(server: Server): void {
   server.setRequestHandler(ListToolsRequestSchema, async () => ({
-    tools: getEnabledTools().map((chart) => chart.tool),
+    tools: getEnabledTools(),
   }));
 
   server.setRequestHandler(CallToolRequestSchema, async (request) => {
@@ -73,7 +73,7 @@ function setupToolHandlers(server: Server): void {
  * Runs the server with stdio transport.
  */
 export async function runStdioServer(): Promise<void> {
-  const server = createServer();
+  const server = await createServer();
   await startStdioMcpServer(server);
 }
 
@@ -84,7 +84,7 @@ export async function runSSEServer(
   endpoint = "/sse",
   port = 1122,
 ): Promise<void> {
-  const server = createServer();
+  const server = await createServer();
   await startSSEMcpServer(server, endpoint, port);
 }
 

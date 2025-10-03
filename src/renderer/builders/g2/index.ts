@@ -8,6 +8,7 @@ export { BarChartBuilder } from './bar';
 export { BiDirectionalBarChartBuilder } from './bi-directional-bar';
 export { LineChartBuilder } from './line';
 export { PieChartBuilder } from './pie';
+export { DonutChartBuilder } from './donut-chart';
 
 // Batch 1: Basic Charts
 export { ColumnChartBuilder } from './column';
@@ -58,3 +59,6 @@ export { ContourPlotBuilder } from './contour';
 export { ParallelCoordinatesBuilder } from './parallel-coordinates';
 export { StreamGraphBuilder } from './stream-graph';
 export { ChordBuilder } from './chord';
+export { ChoroplethMapBuilder } from './choropleth-map';
+export { ColorMapBuilder } from './color-map';
+export { ArcDiagramBuilder as ArcDiagramG2Builder } from './arc-diagram';

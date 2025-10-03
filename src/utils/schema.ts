@@ -5,16 +5,16 @@ import { zodToJsonSchema as zodToJsonSchemaOriginal } from "zod-to-json-schema";
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const zodToJsonSchema = (schema: Record<string, z.ZodType<any>>) => {
   const FormatSchema = z
-    .enum(["html", "png"]) // allow interactive HTML or static PNG
+    .enum(["html", "png", "html-url"]) // allow interactive HTML, static PNG, or HTML URL
     .default("html")
     .optional()
-    .describe('Output format: "png" or "html" (default).');
+    .describe('Output format: "png", "html" (default), or "html-url" for interactive HTML page URL.');
   const merged = {
     ...schema,
     ...(schema.format ? {} : { format: FormatSchema }),
   } as Record<string, z.ZodType<any>>;
   return zodToJsonSchemaOriginal(z.object(merged), {
     rejectedAdditionalProperties: undefined,
-    $refStrategy: "none",
+    $refStrategy: "root",
   });
 };

@@ -24,6 +24,7 @@ const CHART_TYPE_MAP: Record<string, string> = {
   area: "area",
   bar: "bar",
   boxplot: "boxplot",
+  "choropleth-map": "choropleth-map",
   chord: "chord",
   column: "column",
   "compact-tree": "compact-tree",
@@ -63,6 +64,7 @@ const MAP_TOOL_NAMES: Record<string, string> = {
   "pin-map": "generate_pin_map",
   "path-map": "generate_path_map",
   "district-map": "generate_district_map",
+  "choropleth-map": "generate_choropleth_map",
 };
 
 interface Example {

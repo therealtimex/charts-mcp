@@ -29,15 +29,18 @@ This is a TypeScript-based MCP server that provides chart generation capabilitie
 
 ## ✨ Features
 
-Now 25+ charts supported.
+Now 28+ charts supported.
 
 <img width="768" alt="mcp-server-chart preview" src="https://mdn.alipayobjects.com/huamei_qa8qxu/afts/img/A*IyIRQIQHyKYAAAAAgCAAAAgAemJ7AQ/fmt.avif" />
 
 1. `generate_area_chart`: Generate an `area` chart, used to display the trend of data under a continuous independent variable, allowing observation of overall data trends.
 1. `generate_bar_chart`: Generate a `bar` chart, used to compare values across different categories, suitable for horizontal comparisons.
 1. `generate_boxplot_chart`: Generate a `boxplot`, used to display the distribution of data, including the median, quartiles, and outliers.
+1. `generate_choropleth_map`: Generate a `choropleth` map (thematic map), used to visualize statistical data across geographic regions using color shading. Perfect for showing population density, election results, economic indicators, or any metric that varies by region.
+1. `generate_color_map`: Generate a `color-map` (color block chart), used to visualize relationships between two categorical dimensions with color-encoded values. Ideal for showing patterns in multi-dimensional categorical data like sales performance, exam scores, or fare matrices.
 1. `generate_column_chart`: Generate a `column` chart, used to compare values across different categories, suitable for vertical comparisons.
 1. `generate_district_map` - Generate a `district-map`, used to show administrative divisions and data distribution.
+1. `generate_donut_chart`: Generate a `donut` chart (doughnut chart), used to display proportional relationships with a hollow center. Features customizable labels, center annotations, and better space utilization than pie charts.
 1. `generate_dual_axes_chart`: Generate a `dual-axes` chart, used to display the relationship between two variables with different units or ranges.
 1. `generate_fishbone_diagram`: Generate a `fishbone` diagram, also known as an Ishikawa diagram, used to identify and display the root causes of a problem.
 1. `generate_flow_diagram`: Generate a `flowchart`, used to display the steps and sequence of a process.

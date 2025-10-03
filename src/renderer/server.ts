@@ -6,14 +6,22 @@ import { buildMapHtmlForPinOrPath, buildDistrictMapHtml, geocodeAll, fetchGeoJSO
 
 let started = false;
 let serverPort: number | undefined;
+let startPromise: Promise<void> | undefined;
 
 function ensureDir(dir: string) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
 
-export function startRendererServer(port = Number(process.env.RENDER_PORT) || 3210) {
-  if (started) return;
+export function getRendererPort(): number | undefined {
+  return serverPort;
+}
+
+export function startRendererServer(port = Number(process.env.RENDER_PORT) || 3210): Promise<void> {
+  if (started && startPromise) return startPromise;
+  if (started) return Promise.resolve();
   started = true;
+
+  startPromise = new Promise<void>((resolve) => {
 
   const app = express();
   app.use(express.json({ limit: "2mb" }));
@@ -37,7 +45,7 @@ export function startRendererServer(port = Number(process.env.RENDER_PORT) || 32
       if (!type) return res.json({ success: false, errorMessage: "missing chart type" });
       const base = process.env.RENDER_PUBLIC_BASE || `http://localhost:${serverPort}`;
       const fmt = String(format || process.env.RENDER_FORMAT || (process.env.RENDER_INTERACTIVE ? 'html' : '')).toLowerCase();
-      if (fmt === "html") {
+      if (fmt === "html" || fmt === "html-url") {
         const html = await buildChartHtml(type, options);
         const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
         const file = path.join(pagesDir, `${id}.html`);
@@ -59,7 +67,7 @@ export function startRendererServer(port = Number(process.env.RENDER_PORT) || 32
       if (!tool) return res.json({ success: false, errorMessage: "missing map tool name" });
       const base = process.env.RENDER_PUBLIC_BASE || `http://localhost:${serverPort}`;
       const fmt = String(input?.format || process.env.RENDER_FORMAT || (process.env.RENDER_INTERACTIVE ? 'html' : '')).toLowerCase();
-      if (fmt === "html") {
+      if (fmt === "html" || fmt === "html-url") {
         if (tool === 'generate_pin_map' || tool === 'generate_path_map' || tool === 'generate_district_map') {
           const width = Number(input?.width || 800);
           const height = Number(input?.height || 600);
@@ -105,12 +113,39 @@ export function startRendererServer(port = Number(process.env.RENDER_PORT) || 32
     }
   });
 
-  const server = app.listen(port, () => {
-    const a = server.address();
-    if (typeof a === "object" && a) {
-      serverPort = a.port;
-      // eslint-disable-next-line no-console
-      console.error(`Renderer server listening on http://localhost:${serverPort}`);
-    }
+    const server = app.listen(port, () => {
+      const a = server.address();
+      if (typeof a === "object" && a) {
+        serverPort = a.port;
+        // eslint-disable-next-line no-console
+        console.error(`Renderer server listening on http://localhost:${serverPort}`);
+        resolve();
+      }
+    });
+
+    server.on('error', (err) => {
+      console.error(`Renderer server error:`, err);
+      // If port is in use, try random port
+      if ((err as any).code === 'EADDRINUSE') {
+        console.error(`Port ${port} is in use, retrying with port 0 (random)`);
+        const retryServer = app.listen(0, () => {
+          const a = retryServer.address();
+          if (typeof a === "object" && a) {
+            serverPort = a.port;
+            console.error(`Renderer server listening on http://localhost:${serverPort}`);
+            resolve();
+          }
+        });
+        retryServer.on('error', (retryErr) => {
+          console.error(`Renderer server retry error:`, retryErr);
+          resolve(); // Resolve anyway to not block startup
+        });
+      } else {
+        console.error(`Renderer server failed to start, continuing without it`);
+        resolve(); // Resolve anyway to not block startup
+      }
+    });
   });
+
+  return startPromise;
 }

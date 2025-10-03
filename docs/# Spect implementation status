@@ -1,10 +1,15 @@
-check if src/charts/bullet.ts provides full G2 v5 capabilities as documented docs/g2/bullet.en.md
+check if src/charts/donut-chart.ts provides full G2 v5 capabilities as documented docs/g2/donut-chart.en.md
 
 
-bubble-chart is not yet supported, here's g2's doc docs/g2/bubble-chart.en.md
+donut-chart is not yet supported, here's g2's doc docs/g2/donut-chart.en.md
+please implement it, provides full G2 v5 capabilities 
 
 
-src/charts/bubble.ts
+check if MCP tool for src/charts/arc-diagram.ts is functional and provides full G2 v5 capabilities as documented docs/g2/arcdiagram.en.md
+- Sript test should write to `__tests__/scripts`
+- Example data should write to `examples/charts`
+- Test 3 formats: `html`, `html-url`, `png`
+
 
 - @src/charts/area.ts
 - @src/charts/bar.ts

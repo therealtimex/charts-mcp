@@ -1,0 +1,44 @@
+{
+  "title": "Market Share Distribution",
+  "data": [
+    { "category": "Desktop", "value": 45.2 },
+    { "category": "Mobile", "value": 38.7 },
+    { "category": "Tablet", "value": 12.1 },
+    { "category": "Other", "value": 4.0 }
+  ],
+  "encode": {
+    "angleField": "value",
+    "colorField": "category"
+  },
+  "innerRadius": 0.6,
+  "labels": [
+    {
+      "text": "category",
+      "position": "outside"
+    },
+    {
+      "text": "percentage",
+      "position": "inside",
+      "style": {
+        "fontSize": 14,
+        "fontWeight": "bold"
+      }
+    }
+  ],
+  "legend": {
+    "position": "right",
+    "layout": {
+      "justifyContent": "center"
+    }
+  },
+  "centerAnnotation": {
+    "text": "Total\n100%",
+    "style": {
+      "fontSize": 16,
+      "fontWeight": "bold",
+      "textAlign": "center"
+    }
+  },
+  "width": 600,
+  "height": 400
+}

@@ -155,7 +155,7 @@ async function exportToPNG(
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     await page.screenshot({
-      path: outputPath,
+      path: outputPath as `${string}.png`,
       type: 'png',
       quality: undefined, // PNG doesn't use quality parameter
       fullPage: false

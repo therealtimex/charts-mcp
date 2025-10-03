@@ -36,6 +36,11 @@ export abstract class ChartBuilder {
     const height = spec.height || 400;
     const backgroundColor = spec.style?.backgroundColor || '';
 
+    // If builder returned a full <script> tag, don't wrap again
+    const scriptBlock = /<\s*script[\s>]/i.test(chartScript)
+      ? chartScript
+      : `<script>\n    ${chartScript}\n    </script>`;
+
     return `<!doctype html>
 <html>
   <head>
@@ -48,7 +53,7 @@ export abstract class ChartBuilder {
   <body${backgroundColor ? ` style="background: ${backgroundColor};"` : ''}>
     ${this.buildTitle(spec)}
     <div id="container"></div>
-    ${chartScript}
+    ${scriptBlock}
   </body>
 </html>`;
   }
