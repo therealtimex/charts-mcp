@@ -24,7 +24,7 @@ export class AreaChartBuilder extends ChartBuilder {
     const useChildren = spec.children && spec.children.length > 0;
 
     if (useChildren) {
-      return this.buildComposedChart(spec);
+      return this.buildComposedChart(spec, chartType);
     }
 
     return this.buildSimpleChart(spec, chartType);
@@ -93,9 +93,9 @@ export class AreaChartBuilder extends ChartBuilder {
 </script>`;
   }
 
-  private buildComposedChart(spec: ChartSpec): string {
+  private buildComposedChart(spec: ChartSpec, chartType: string): string {
     const { data, theme = 'light', width = 600, height = 400 } = spec;
-    const children = this.buildChildren(spec);
+    const children = this.buildChildren(spec, chartType);
 
     // Build options-style axis config
     const axisOptions = this.buildAxisOptions(spec);
@@ -103,7 +103,7 @@ export class AreaChartBuilder extends ChartBuilder {
     const scaleOptions = this.buildScaleOptions(spec);
     // Build primary area child from top-level encodes/transforms if present
     // We'll hoist data-level transforms to the view so both area and line share them
-    const primaryAreaChild = this.buildPrimaryAreaChild(spec, /*skipDataTransforms*/ true);
+    const primaryAreaChild = this.buildPrimaryAreaChild(spec, /*skipDataTransforms*/ true, chartType);
     const childrenArray = primaryAreaChild ? `[${primaryAreaChild}, ${children.slice(1, -1)}]` : children;
     const dataOption = this.buildViewDataOption(spec);
 
@@ -185,7 +185,7 @@ export class AreaChartBuilder extends ChartBuilder {
   }
 
   // Build a primary area child mark from top-level spec (encode/transform/shape/style)
-  private buildPrimaryAreaChild(spec: ChartSpec, skipDataTransforms = false): string | null {
+  private buildPrimaryAreaChild(spec: ChartSpec, skipDataTransforms = false, chartType?: string): string | null {
     // Helper: detect function-like strings
     const isFunctionLike = (v: unknown) => typeof v === 'string' && (/=>/.test(v) || /function\s*\(/.test(v.trim()) || /^\s*\(/.test(v.trim()))
     const enc = (spec as any).encode || {};
@@ -231,6 +231,20 @@ export class AreaChartBuilder extends ChartBuilder {
           markT.push(`{ "type": "diffY" }`);
         }
       });
+    }
+
+    // If no explicit mark-level transforms are provided, infer from chartType
+    if (markT.length === 0 && chartType) {
+      if (chartType === 'percentage') {
+        markT.push(`{ "type": "stackY" }`);
+        markT.push(`{ "type": "normalizeY" }`);
+      } else if (chartType === 'stacked') {
+        markT.push(`{ "type": "stackY" }`);
+      } else if (chartType === 'streamgraph') {
+        markT.push(`{ "type": "stackY", "offset": "wiggle" }`);
+      } else if (chartType === 'difference') {
+        markT.push(`{ "type": "diffY" }`);
+      }
     }
 
     // Style
@@ -472,7 +486,7 @@ export class AreaChartBuilder extends ChartBuilder {
     return styles.join('\n    ');
   }
 
-  private buildChildren(spec: ChartSpec): string {
+  private buildChildren(spec: ChartSpec, chartType?: string): string {
     if (!spec.children || spec.children.length === 0) return '[]';
 
     const children = spec.children.map((child: any) => {
@@ -562,6 +576,20 @@ export class AreaChartBuilder extends ChartBuilder {
             dataTransformParts.push(`{ type: 'map', callback: ${t.callback} }`);
           }
         });
+      }
+
+      // If no child mark-level transforms were provided, infer from chartType
+      // Apply to area/line children to mirror view-level behavior in G2 examples
+      if (markTransformParts.length === 0 && chartType && (child.type === 'area' || child.type === 'line')) {
+        if (chartType === 'percentage') {
+          markTransformParts.push(`{ "type": "stackY" }`);
+          markTransformParts.push(`{ "type": "normalizeY" }`);
+        } else if (chartType === 'stacked') {
+          markTransformParts.push(`{ "type": "stackY" }`);
+        } else if (chartType === 'streamgraph') {
+          markTransformParts.push(`{ "type": "stackY", "offset": "wiggle" }`);
+        }
+        // For 'difference', we don't auto-apply to child lines by default
       }
       // Emit data object if value/fetch or transform exists
       if (dataParts.length || dataTransformParts.length) {
