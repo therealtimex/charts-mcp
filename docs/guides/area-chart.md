@@ -39,6 +39,7 @@ Use tools/call with arguments:
 ## Style
 
 - `fill`, `fillOpacity`, `stroke`, `strokeOpacity`, `lineWidth`, `gradient` ("x" or "y")
+- Missing data connectors (G2 area): `style.connect`, `style.connectFill`, `style.connectFillOpacity`
 
 ## Scale & Axis
 
@@ -152,6 +153,28 @@ Use tools/call with arguments:
 }
 ```
 
+### Missing Data (connect gaps)
+
+```
+{
+  "title": "Area with Missing Data Connected",
+  "data": { "type": "fetch", "value": "https://assets.antv.antgroup.com/g2/aapl.json" },
+  "encode": {
+    "x": "(d) => new Date(d.date)",
+    "y": "(d) => (new Date(d.date).getUTCMonth() <= 3 ? NaN : d.close)"
+  },
+  "style": {
+    "connect": true,
+    "connectFill": "grey",
+    "connectFillOpacity": 0.15,
+    "fill": "l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff",
+    "opacity": 0.9,
+    "stroke": "yellow"
+  },
+  "format": "html-url"
+}
+```
+
 ## Test Commands
 
 - Streamable HTTP:
@@ -164,4 +187,3 @@ curl -s -X POST http://localhost:3001/mcp -H "Content-Type: application/json" --
 ```
 node -e 'const fs=require("fs");const m=fs.readFileSync("request.json","utf8").trim();process.stdout.write(`Content-Length: ${Buffer.byteLength(m,"utf8")}\r\n\r\n${m}`);' | node build/index.js
 ```
-

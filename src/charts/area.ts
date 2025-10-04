@@ -241,6 +241,17 @@ const schema = {
           .describe("Fill opacity from 0 to 1"),
       stroke: z.string().optional().describe("Stroke color"),
       strokeOpacity: z.number().min(0).max(1).optional(),
+      // Missing-data connector support (G2 area)
+      connect: z.boolean().optional().describe("Draw connectors across missing data segments"),
+      connectFill: z.string().optional().describe("Fill color for missing-data connector"),
+      connectFillOpacity: z
+        .number()
+        .min(0)
+        .max(1)
+        .optional()
+        .describe("Opacity for missing-data connector fill"),
+      // Overall mark opacity
+      opacity: z.number().min(0).max(1).optional().describe("Overall area opacity"),
     })
     .optional()
     .describe("Custom style configuration for the chart."),

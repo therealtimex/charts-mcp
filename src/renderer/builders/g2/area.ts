@@ -171,7 +171,8 @@ export class AreaChartBuilder extends ChartBuilder {
 
     const encParts: string[] = [];
     encParts.push(`x: ${isFunctionLike(xField) ? String(xField) : JSON.stringify(xField)}`);
-    if (Array.isArray(yField)) encParts.push(`y: ${JSON.stringify(yField)}`); else encParts.push(`y: ${JSON.stringify(yField)}`);
+    if (Array.isArray(yField)) encParts.push(`y: ${JSON.stringify(yField)}`);
+    else encParts.push(`y: ${isFunctionLike(yField) ? String(yField) : JSON.stringify(yField)}`);
     if (enc.color) encParts.push(`color: ${JSON.stringify(enc.color)}`);
     if (enc.series) encParts.push(`series: ${JSON.stringify(enc.series)}`);
     if (spec.shape) encParts.push(`shape: ${JSON.stringify(spec.shape)}`);
@@ -207,6 +208,11 @@ export class AreaChartBuilder extends ChartBuilder {
     if (spec.style?.stroke) style.stroke = spec.style.stroke;
     if (spec.style?.strokeOpacity !== undefined) style.strokeOpacity = spec.style.strokeOpacity;
     if (spec.style?.lineWidth !== undefined) style.lineWidth = spec.style.lineWidth;
+    // Connector and opacity styles for missing data handling
+    if ((spec.style as any)?.connect !== undefined) style.connect = (spec.style as any).connect;
+    if ((spec.style as any)?.connectFill !== undefined) style.connectFill = (spec.style as any).connectFill;
+    if ((spec.style as any)?.connectFillOpacity !== undefined) style.connectFillOpacity = (spec.style as any).connectFillOpacity;
+    if ((spec.style as any)?.opacity !== undefined) style.opacity = (spec.style as any).opacity;
 
     const stylePart = Object.keys(style).length ? `, style: ${JSON.stringify(style)}` : '';
     const dataPart = dataT.length ? `, data: { transform: [${dataT.join(', ')}] }` : '';
@@ -253,7 +259,7 @@ export class AreaChartBuilder extends ChartBuilder {
     if (Array.isArray(yEnc)) {
       parts.push(`.encode('y', ${JSON.stringify(yEnc)})`);
     } else {
-      parts.push(`.encode('y', ${JSON.stringify(yEnc)})`);
+      parts.push(`.encode('y', ${isFunctionLike(yEnc) ? String(yEnc) : JSON.stringify(yEnc)})`);
     }
 
     // Color/Series
@@ -379,6 +385,9 @@ export class AreaChartBuilder extends ChartBuilder {
     } else {
       styles.push(`.style('fillOpacity', 0.6)`);
     }
+    if ((style as any).opacity !== undefined) {
+      styles.push(`.style('opacity', ${(style as any).opacity})`);
+    }
 
     // Stroke
     if (style.stroke) {
@@ -392,6 +401,17 @@ export class AreaChartBuilder extends ChartBuilder {
     }
     if ((style as any).gradient) {
       styles.push(`.style('gradient', ${JSON.stringify((style as any).gradient)})`);
+    }
+
+    // Missing-data connector styles
+    if ((style as any).connect !== undefined) {
+      styles.push(`.style('connect', ${(style as any).connect})`);
+    }
+    if ((style as any).connectFill !== undefined) {
+      styles.push(`.style('connectFill', ${JSON.stringify((style as any).connectFill)})`);
+    }
+    if ((style as any).connectFillOpacity !== undefined) {
+      styles.push(`.style('connectFillOpacity', ${(style as any).connectFillOpacity})`);
     }
 
     return styles.join('\n    ');
