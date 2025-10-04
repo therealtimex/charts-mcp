@@ -101,10 +101,11 @@ export class AreaChartBuilder extends ChartBuilder {
     const axisOptions = this.buildAxisOptions(spec);
     // Build options-style scale config
     const scaleOptions = this.buildScaleOptions(spec);
-
     // Build primary area child from top-level encodes/transforms if present
-    const primaryAreaChild = this.buildPrimaryAreaChild(spec);
+    // We'll hoist data-level transforms to the view so both area and line share them
+    const primaryAreaChild = this.buildPrimaryAreaChild(spec, /*skipDataTransforms*/ true);
     const childrenArray = primaryAreaChild ? `[${primaryAreaChild}, ${children.slice(1, -1)}]` : children;
+    const dataOption = this.buildViewDataOption(spec);
 
     return `<script>
   const { Chart } = G2;
@@ -119,7 +120,7 @@ export class AreaChartBuilder extends ChartBuilder {
 
   chart.options({
     type: 'view',
-    data: ${JSON.stringify(data)},
+    data: ${dataOption},
     ${scaleOptions}
     ${axisOptions}
     children: ${childrenArray}
@@ -127,6 +128,32 @@ export class AreaChartBuilder extends ChartBuilder {
 
   chart.render();
 </script>`;
+  }
+
+  // Build view-level data option: hoist fold/map transforms so scales derive from transformed data
+  private buildViewDataOption(spec: ChartSpec): string {
+    const dt = spec.data as any;
+    const t = Array.isArray(spec.transform) ? spec.transform : [];
+    const dataTransforms: string[] = [];
+    t.forEach((tr: any) => {
+      if (tr.type === 'fold' && tr.fields) {
+        dataTransforms.push(`{ type: 'fold', fields: ${JSON.stringify(tr.fields)}, key: ${JSON.stringify(tr.key || 'key')}, value: ${JSON.stringify(tr.value || 'value')} }`);
+      } else if (tr.type === 'map' && tr.callback) {
+        dataTransforms.push(`{ type: 'map', callback: ${tr.callback} }`);
+      }
+    });
+
+    // Build data object with value/fetch and optional transform
+    if (Array.isArray(dt)) {
+      const base = `value: ${JSON.stringify(dt)}`;
+      return dataTransforms.length ? `{ ${base}, transform: [${dataTransforms.join(', ')}] }` : `{ ${base} }`;
+    }
+    if (dt && typeof dt === 'object' && dt.type === 'fetch' && typeof dt.value === 'string') {
+      const parts = [`type: 'fetch'`, `value: ${JSON.stringify(dt.value)}`];
+      if (dataTransforms.length) parts.push(`transform: [${dataTransforms.join(', ')}]`);
+      return `{ ${parts.join(', ')} }`;
+    }
+    return JSON.stringify(dt);
   }
 
   // Build options-style axis configuration
@@ -158,7 +185,7 @@ export class AreaChartBuilder extends ChartBuilder {
   }
 
   // Build a primary area child mark from top-level spec (encode/transform/shape/style)
-  private buildPrimaryAreaChild(spec: ChartSpec): string | null {
+  private buildPrimaryAreaChild(spec: ChartSpec, skipDataTransforms = false): string | null {
     // Helper: detect function-like strings
     const isFunctionLike = (v: unknown) => typeof v === 'string' && (/=>/.test(v) || /function\s*\(/.test(v.trim()) || /^\s*\(/.test(v.trim()))
     const enc = (spec as any).encode || {};
@@ -173,7 +200,12 @@ export class AreaChartBuilder extends ChartBuilder {
     encParts.push(`x: ${isFunctionLike(xField) ? String(xField) : JSON.stringify(xField)}`);
     if (Array.isArray(yField)) encParts.push(`y: ${JSON.stringify(yField)}`);
     else encParts.push(`y: ${isFunctionLike(yField) ? String(yField) : JSON.stringify(yField)}`);
-    if (enc.color) encParts.push(`color: ${JSON.stringify(enc.color)}`);
+    if (enc.color) {
+      encParts.push(`color: ${JSON.stringify(enc.color)}`);
+      if (!enc.series && typeof enc.color === 'string') {
+        encParts.push(`series: ${JSON.stringify(enc.color)}`);
+      }
+    }
     if (enc.series) encParts.push(`series: ${JSON.stringify(enc.series)}`);
     if (spec.shape) encParts.push(`shape: ${JSON.stringify(spec.shape)}`);
 
@@ -183,9 +215,9 @@ export class AreaChartBuilder extends ChartBuilder {
     if (spec.transform && Array.isArray(spec.transform)) {
       spec.transform.forEach((t: any) => {
         if (t.type === 'fold' && t.fields) {
-          dataT.push(`{ type: 'fold', fields: ${JSON.stringify(t.fields)}, key: ${JSON.stringify(t.key || 'key')}, value: ${JSON.stringify(t.value || 'value')} }`);
+          if (!skipDataTransforms) dataT.push(`{ type: 'fold', fields: ${JSON.stringify(t.fields)}, key: ${JSON.stringify(t.key || 'key')}, value: ${JSON.stringify(t.value || 'value')} }`);
         } else if (t.type === 'map' && t.callback) {
-          dataT.push(`{ type: 'map', callback: ${t.callback} }`);
+          if (!skipDataTransforms) dataT.push(`{ type: 'map', callback: ${t.callback} }`);
         } else if (t.type === 'stackY') {
           const cfg: any = { type: 'stackY' };
           if (t.orderBy) cfg.orderBy = t.orderBy;
@@ -275,6 +307,10 @@ export class AreaChartBuilder extends ChartBuilder {
     const enc = (spec as any).encode || {};
     if (enc.color !== undefined) {
       parts.push(`.encode('color', ${isFunctionLike(enc.color) ? String(enc.color) : JSON.stringify(enc.color)})`);
+      // Default series to color field when a field name is used
+      if (typeof enc.color === 'string' && enc.series === undefined) {
+        parts.push(`.encode('series', ${JSON.stringify(enc.color)})`);
+      }
     } else if (hasGroup) {
       parts.push(`.encode('color', 'group')`);
       parts.push(`.encode('series', 'group')`);
@@ -453,7 +489,10 @@ export class AreaChartBuilder extends ChartBuilder {
           if (Array.isArray(enc.y)) encParts.push(`y: ${JSON.stringify(enc.y)}`);
           else encParts.push(`y: ${isFunctionLike(enc.y) ? String(enc.y) : JSON.stringify(enc.y)}`);
         }
-        if (enc.color !== undefined) encParts.push(`color: ${JSON.stringify(enc.color)}`);
+        if (enc.color !== undefined) {
+          encParts.push(`color: ${JSON.stringify(enc.color)}`);
+          if (!enc.series && typeof enc.color === 'string') encParts.push(`series: ${JSON.stringify(enc.color)}`);
+        }
         if (enc.size !== undefined) encParts.push(`size: ${JSON.stringify(enc.size)}`);
         if (enc.shape !== undefined) encParts.push(`shape: ${JSON.stringify(enc.shape)}`);
         if (encParts.length > 0) parts.push(`encode: { ${encParts.join(', ')} }`);
