@@ -1,0 +1,25 @@
+{
+  "title": "Missing Data Area Chart",
+  "data": {
+    "type": "fetch",
+    "value": "https://assets.antv.antgroup.com/g2/aapl.json"
+  },
+  "encode": {
+    "x": "(d) => new Date(d.date)",
+    "y": "(d) => (new Date(d.date).getUTCMonth() <= 3 ? NaN : d.close)"
+  },
+  "style": {
+    "connect": true,
+    "connectFill": "grey",
+    "connectFillOpacity": 0.15,
+    "fill": "l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff",
+    "opacity": 0.9,
+    "stroke": "yellow"
+  },
+  "transform": [],
+  "scale": {},
+  "axis": {},
+  "shape": "area",
+  "children": [],
+  "format": "html-url"
+}

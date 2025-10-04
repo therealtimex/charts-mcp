@@ -250,6 +250,22 @@ const schema = {
         .max(1)
         .optional()
         .describe("Opacity for missing-data connector fill"),
+      // Some G2 versions use connectOpacity (alias)
+      connectOpacity: z
+        .number()
+        .min(0)
+        .max(1)
+        .optional()
+        .describe("Alias for connector opacity in some G2 versions"),
+      // Optional connector stroke styling
+      connectStroke: z.string().optional().describe("Stroke color for missing-data connector boundary"),
+      connectStrokeOpacity: z
+        .number()
+        .min(0)
+        .max(1)
+        .optional()
+        .describe("Stroke opacity for connector boundary"),
+      connectLineWidth: z.number().optional().describe("Stroke width for connector boundary"),
       // Overall mark opacity
       opacity: z.number().min(0).max(1).optional().describe("Overall area opacity"),
     })

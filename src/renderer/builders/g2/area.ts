@@ -211,7 +211,15 @@ export class AreaChartBuilder extends ChartBuilder {
     // Connector and opacity styles for missing data handling
     if ((spec.style as any)?.connect !== undefined) style.connect = (spec.style as any).connect;
     if ((spec.style as any)?.connectFill !== undefined) style.connectFill = (spec.style as any).connectFill;
-    if ((spec.style as any)?.connectFillOpacity !== undefined) style.connectFillOpacity = (spec.style as any).connectFillOpacity;
+    if ((spec.style as any)?.connectFillOpacity !== undefined) {
+      (style as any).connectFillOpacity = (spec.style as any).connectFillOpacity;
+      // Mirror to connectOpacity for compatibility
+      (style as any).connectOpacity = (spec.style as any).connectFillOpacity;
+    }
+    if ((spec.style as any)?.connectOpacity !== undefined) style.connectOpacity = (spec.style as any).connectOpacity;
+    if ((spec.style as any)?.connectStroke !== undefined) style.connectStroke = (spec.style as any).connectStroke;
+    if ((spec.style as any)?.connectStrokeOpacity !== undefined) style.connectStrokeOpacity = (spec.style as any).connectStrokeOpacity;
+    if ((spec.style as any)?.connectLineWidth !== undefined) style.connectLineWidth = (spec.style as any).connectLineWidth;
     if ((spec.style as any)?.opacity !== undefined) style.opacity = (spec.style as any).opacity;
 
     const stylePart = Object.keys(style).length ? `, style: ${JSON.stringify(style)}` : '';
@@ -270,9 +278,6 @@ export class AreaChartBuilder extends ChartBuilder {
     } else if (hasGroup) {
       parts.push(`.encode('color', 'group')`);
       parts.push(`.encode('series', 'group')`);
-    } else {
-      const color = this.getAreaColor(spec);
-      parts.push(`.encode('color', ${color})`);
     }
     if (enc.series !== undefined) parts.push(`.encode('series', ${isFunctionLike(enc.series) ? String(enc.series) : JSON.stringify(enc.series)})`);
 
@@ -412,6 +417,20 @@ export class AreaChartBuilder extends ChartBuilder {
     }
     if ((style as any).connectFillOpacity !== undefined) {
       styles.push(`.style('connectFillOpacity', ${(style as any).connectFillOpacity})`);
+      // Also emit connectOpacity for compatibility with different G2 versions
+      styles.push(`.style('connectOpacity', ${(style as any).connectFillOpacity})`);
+    }
+    if ((style as any).connectOpacity !== undefined) {
+      styles.push(`.style('connectOpacity', ${(style as any).connectOpacity})`);
+    }
+    if ((style as any).connectStroke !== undefined) {
+      styles.push(`.style('connectStroke', ${JSON.stringify((style as any).connectStroke)})`);
+    }
+    if ((style as any).connectStrokeOpacity !== undefined) {
+      styles.push(`.style('connectStrokeOpacity', ${(style as any).connectStrokeOpacity})`);
+    }
+    if ((style as any).connectLineWidth !== undefined) {
+      styles.push(`.style('connectLineWidth', ${(style as any).connectLineWidth})`);
     }
 
     return styles.join('\n    ');
