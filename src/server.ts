@@ -80,17 +80,30 @@ function setupToolHandlers(server: Server): void {
 
 function setupResourceHandlers(server: Server): void {
   server.setRequestHandler(ListResourcesRequestSchema, async () => {
-    return {
-      resources: [
-        {
-          name: "Area Chart Guide",
-          uri: "doc://charts/area",
-          title: "Area Chart JSON Guide",
-          description: "How to prepare JSON for the area chart tool.",
-          mimeType: "text/markdown",
-        },
-      ],
-    } as any;
+    // Build dynamic resource list for docs and schemas
+    const resources: any[] = [
+      {
+        name: "Area Chart Guide",
+        uri: "doc://charts/area",
+        title: "Area Chart JSON Guide",
+        description: "How to prepare JSON for the area chart tool.",
+        mimeType: "text/markdown",
+      },
+    ];
+
+    // Add schema resources for each chart type
+    const chartTypes = Object.keys(Charts).filter((k) => (Charts as any)[k]?.tool);
+    for (const type of chartTypes) {
+      resources.push({
+        name: `Schema: ${type}`,
+        uri: `schema://charts/${type}`,
+        title: `Input schema for ${type}`,
+        description: `Tool input schema JSON for ${type}`,
+        mimeType: "application/json",
+      });
+    }
+
+    return { resources } as any;
   });
 
   server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
@@ -144,6 +157,24 @@ function setupResourceHandlers(server: Server): void {
 
   // Resource Templates listing (static)
   server.setRequestHandler(ListResourceTemplatesRequestSchema as any, async () => {
+    const chartTypes = Object.keys(Charts).filter((k) => (Charts as any)[k]?.tool);
+    // collect example variants from examples/charts directory
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    let exampleVariants: Record<string, string[]> = {};
+    try {
+      const dir = path.resolve("examples/charts");
+      const files = fs.existsSync(dir) ? fs.readdirSync(dir) : [];
+      for (const f of files) {
+        const m = f.match(/^(.*)\.(.*)\.json$/);
+        if (m) {
+          const [, type, variant] = m;
+          if (!exampleVariants[type]) exampleVariants[type] = [];
+          exampleVariants[type].push(variant);
+        }
+      }
+    } catch {}
+
     return {
       resourceTemplates: [
         {
@@ -152,6 +183,7 @@ function setupResourceHandlers(server: Server): void {
           uriTemplate: "doc://charts/{type}",
           description: "Documentation for chart JSON specs by type",
           mimeType: "text/markdown",
+          _meta: { params: { type: chartTypes } },
         },
         {
           name: "chart-schema",
@@ -159,6 +191,7 @@ function setupResourceHandlers(server: Server): void {
           uriTemplate: "schema://charts/{type}",
           description: "Input schema (JSON) for a chart tool by type",
           mimeType: "application/json",
+          _meta: { params: { type: chartTypes } },
         },
         {
           name: "chart-example",
@@ -166,6 +199,7 @@ function setupResourceHandlers(server: Server): void {
           uriTemplate: "examples://charts/{type}/{variant}",
           description: "Example JSON payloads for chart tools",
           mimeType: "application/json",
+          _meta: { params: { type: chartTypes, variant: Object.keys(exampleVariants).length ? exampleVariants : ["basic"] } },
         },
       ],
     } as any;
