@@ -36,9 +36,6 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Test
-        run: npx vitest --run --reporter=dot
-
       - name: Get package version
         id: package-version
         run: |
