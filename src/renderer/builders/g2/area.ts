@@ -65,6 +65,7 @@ export class AreaChartBuilder extends ChartBuilder {
     const style = this.buildStyle(spec);
     const shape = spec.shape ? `.encode('shape', ${JSON.stringify(spec.shape)})` : '';
     const connectNulls = spec.connectNulls ? `.style('connectNulls', true)` : '';
+    const tooltip = this.buildTooltip(spec.tooltip);
 
     return `<script>
   const { Chart } = G2;
@@ -86,6 +87,7 @@ export class AreaChartBuilder extends ChartBuilder {
     ${axis}
     ${shape}
     ${style}
+    ${tooltip}
     ${connectNulls}
     .legend(${this.shouldShowLegend(spec, data)});
 
@@ -130,7 +132,7 @@ export class AreaChartBuilder extends ChartBuilder {
 </script>`;
   }
 
-  // Build view-level data option: hoist fold/map transforms so scales derive from transformed data
+  // Build view-level data option: hoist fold/map/filter transforms so scales derive from transformed data
   private buildViewDataOption(spec: ChartSpec): string {
     const dt = spec.data as any;
     const t = Array.isArray(spec.transform) ? spec.transform : [];
@@ -140,6 +142,8 @@ export class AreaChartBuilder extends ChartBuilder {
         dataTransforms.push(`{ type: 'fold', fields: ${JSON.stringify(tr.fields)}, key: ${JSON.stringify(tr.key || 'key')}, value: ${JSON.stringify(tr.value || 'value')} }`);
       } else if (tr.type === 'map' && tr.callback) {
         dataTransforms.push(`{ type: 'map', callback: ${tr.callback} }`);
+      } else if (tr.type === 'filter' && tr.callback) {
+        dataTransforms.push(`{ type: 'filter', callback: ${tr.callback} }`);
       }
     });
 
@@ -218,6 +222,8 @@ export class AreaChartBuilder extends ChartBuilder {
           if (!skipDataTransforms) dataT.push(`{ type: 'fold', fields: ${JSON.stringify(t.fields)}, key: ${JSON.stringify(t.key || 'key')}, value: ${JSON.stringify(t.value || 'value')} }`);
         } else if (t.type === 'map' && t.callback) {
           if (!skipDataTransforms) dataT.push(`{ type: 'map', callback: ${t.callback} }`);
+        } else if (t.type === 'filter' && t.callback) {
+          if (!skipDataTransforms) dataT.push(`{ type: 'filter', callback: ${t.callback} }`);
         } else if (t.type === 'stackY') {
           const cfg: any = { type: 'stackY' };
           if (t.orderBy) cfg.orderBy = t.orderBy;
@@ -269,9 +275,12 @@ export class AreaChartBuilder extends ChartBuilder {
     if ((spec.style as any)?.opacity !== undefined) style.opacity = (spec.style as any).opacity;
 
     const stylePart = Object.keys(style).length ? `, style: ${JSON.stringify(style)}` : '';
+    // Top-level tooltip support for composed view
+    const tooltipObj = this.normalizeTooltipObject((spec as any).tooltip);
+    const tooltipPart = tooltipObj ? `, tooltip: ${tooltipObj}` : '';
     const dataPart = dataT.length ? `, data: { transform: [${dataT.join(', ')}] }` : '';
     const transformPart = markT.length ? `, transform: [${markT.join(', ')}]` : '';
-    return `{ type: 'area', encode: { ${encParts.join(', ')} }${stylePart}${dataPart}${transformPart} }`;
+    return `{ type: 'area', encode: { ${encParts.join(', ')} }${stylePart}${tooltipPart}${dataPart}${transformPart} }`;
   }
 
   private buildEncode(spec: ChartSpec, data: any[], chartType: string): string {
@@ -360,6 +369,8 @@ export class AreaChartBuilder extends ChartBuilder {
             key: ${JSON.stringify(t.key || 'key')},
             value: ${JSON.stringify(t.value || 'value')}
           })`);
+        } else if (t.type === 'filter' && t.callback) {
+          transforms.push(`.transform({ type: 'filter', callback: ${t.callback} })`);
         }
       });
     }
@@ -486,6 +497,36 @@ export class AreaChartBuilder extends ChartBuilder {
     return styles.join('\n    ');
   }
 
+  // Build tooltip chain for simple chart path
+  private buildTooltip(tooltip: any): string {
+    const obj = this.normalizeTooltipObject(tooltip);
+    if (obj === null) return '';
+    if (obj === 'false') return `.tooltip(false)`;
+    return `.tooltip(${obj})`;
+  }
+
+  // Normalize tooltip object/boolean to JS code string or null
+  private normalizeTooltipObject(tooltip: any): string | null {
+    if (tooltip === undefined) return null;
+    if (typeof tooltip === 'boolean') return tooltip ? `{}` : 'false';
+    if (tooltip && typeof tooltip === 'object') {
+      const parts: string[] = [];
+      if (tooltip.title !== undefined) {
+        if (typeof tooltip.title === 'boolean') parts.push(`title: ${tooltip.title}`);
+        else if (typeof tooltip.title === 'string' && (/=>/.test(tooltip.title) || /function\s*\(/.test(tooltip.title.trim()) || /^\s*\(/.test(tooltip.title.trim()))) parts.push(`title: ${tooltip.title}`);
+        else parts.push(`title: ${JSON.stringify(tooltip.title)}`);
+      }
+      if (Array.isArray(tooltip.items)) {
+        const items = tooltip.items.map((it: any) => (typeof it === 'string' && (/=>/.test(it) || /function\s*\(/.test(it.trim()) || /^\s*\(/.test(it.trim())) ? it : JSON.stringify(it)));
+        parts.push(`items: [${items.join(', ')}]`);
+      }
+      if (tooltip.channel) parts.push(`channel: ${JSON.stringify(tooltip.channel)}`);
+      if (tooltip.valueFormatter) parts.push(`valueFormatter: ${JSON.stringify(tooltip.valueFormatter)}`);
+      return `{ ${parts.join(', ')} }`;
+    }
+    return null;
+  }
+
   private buildChildren(spec: ChartSpec, chartType?: string): string {
     if (!spec.children || spec.children.length === 0) return '[]';
 
@@ -507,6 +548,7 @@ export class AreaChartBuilder extends ChartBuilder {
           encParts.push(`color: ${JSON.stringify(enc.color)}`);
           if (!enc.series && typeof enc.color === 'string') encParts.push(`series: ${JSON.stringify(enc.color)}`);
         }
+        if ((enc as any).series !== undefined) encParts.push(`series: ${JSON.stringify((enc as any).series)}`);
         if (enc.size !== undefined) encParts.push(`size: ${JSON.stringify(enc.size)}`);
         if (enc.shape !== undefined) encParts.push(`shape: ${JSON.stringify(enc.shape)}`);
         if (encParts.length > 0) parts.push(`encode: { ${encParts.join(', ')} }`);
@@ -543,6 +585,8 @@ export class AreaChartBuilder extends ChartBuilder {
           const items = t.items.map((it: any) => (typeof it === 'string' && isFunctionLike(it) ? it : JSON.stringify(it)));
           tp.push(`items: [${items.join(', ')}]`);
         }
+        if (t.channel) tp.push(`channel: ${JSON.stringify(t.channel)}`);
+        if (t.valueFormatter) tp.push(`valueFormatter: ${JSON.stringify(t.valueFormatter)}`);
         parts.push(`tooltip: { ${tp.join(', ')} }`);
       }
 
@@ -554,6 +598,8 @@ export class AreaChartBuilder extends ChartBuilder {
             dataTransformParts.push(`{ type: 'fold', fields: ${JSON.stringify(t.fields)}, key: ${JSON.stringify(t.key || 'key')}, value: ${JSON.stringify(t.value || 'value')} }`);
           } else if (t.type === 'map' && t.callback) {
             dataTransformParts.push(`{ type: 'map', callback: ${t.callback} }`);
+          } else if (t.type === 'filter' && t.callback) {
+            dataTransformParts.push(`{ type: 'filter', callback: ${t.callback} }`);
           } else if (t.type === 'stackY') {
             const cfg: any = { type: 'stackY' };
             if (t.orderBy) cfg.orderBy = t.orderBy;
@@ -574,6 +620,8 @@ export class AreaChartBuilder extends ChartBuilder {
             dataTransformParts.push(`{ type: 'fold', fields: ${JSON.stringify(t.fields)}, key: ${JSON.stringify(t.key || 'key')}, value: ${JSON.stringify(t.value || 'value')} }`);
           } else if (t.type === 'map' && t.callback) {
             dataTransformParts.push(`{ type: 'map', callback: ${t.callback} }`);
+          } else if (t.type === 'filter' && t.callback) {
+            dataTransformParts.push(`{ type: 'filter', callback: ${t.callback} }`);
           }
         });
       }

@@ -49,7 +49,7 @@ const TransformSchema = z
   .array(
     z.object({
       type: z
-        .enum(["stackY", "normalizeY", "diffY", "map", "fold"])
+        .enum(["stackY", "normalizeY", "diffY", "map", "fold", "filter"])
         .describe("Transform type"),
       orderBy: z
         .string()
@@ -64,12 +64,12 @@ const TransformSchema = z
       fields: z.array(z.string()).optional().describe("Fields for fold transform"),
       key: z.string().optional().describe("Key field name for fold transform"),
       value: z.string().optional().describe("Value field name for fold transform"),
-      callback: z.string().optional().describe("JavaScript callback function as string for map transform"),
+      callback: z.string().optional().describe("JavaScript callback function as string for map/filter transform"),
     })
   )
   .optional()
   .describe(
-    "Data transformations: stackY (stacking with optional orderBy/offset for streamgraph), normalizeY (percentage), diffY (difference), map (transform data), fold (reshape data)"
+    "Data transformations: stackY (stacking with optional orderBy/offset for streamgraph), normalizeY (percentage), diffY (difference), map (transform data), fold (reshape data), filter (predicate callback)"
   );
 
 // Scale configuration
@@ -121,6 +121,19 @@ const EncodeSchema = z
   .optional()
   .describe("Advanced encoding configuration for custom field mapping");
 
+// Tooltip configuration schema (shared by top-level and child marks)
+const TooltipSchema = z
+  .union([
+    z.boolean(),
+    z.object({
+      title: z.union([z.string(), z.boolean()]).optional(),
+      items: z.array(z.string()).optional().describe("Custom tooltip items; items can be function-like strings"),
+      channel: z.string().optional().describe("Channel to format, e.g., 'y' or 'y0'"),
+      valueFormatter: z.string().optional().describe("Format string like '.2f', '.0%' for values")
+    })
+  ])
+  .optional();
+
 // Children marks for combined visualizations
 const ChildDataSchema = z.union([
   z.object({
@@ -146,18 +159,14 @@ const ChildMarkSchema = z.object({
         x: z.string().optional(),
         y: z.union([z.string(), z.array(z.string())]).optional(),
         color: z.string().optional(),
+        series: z.string().optional(),
         size: z.number().optional(),
         shape: z.string().optional(),
       })
       .optional(),
   data: ChildDataSchema.optional().describe("Per-mark data: value/fetch and/or transform pipeline"),
   style: z.record(z.any()).optional().describe("Style properties as key-value pairs"),
-  tooltip: z.union([
-    z.object({
-      items: z.array(z.string()).optional(),
-    }),
-    z.boolean()
-  ]).optional(),
+  tooltip: TooltipSchema,
   transform: TransformSchema,
 });
 
@@ -209,6 +218,7 @@ const schema = {
   transform: TransformSchema,
   scale: ScaleSchema,
   axis: AxisConfigSchema,
+  tooltip: TooltipSchema,
   shape:
     z
       .enum(["area", "smooth", "vh", "hv", "hvh"])
