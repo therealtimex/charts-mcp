@@ -42,3 +42,7 @@ bun.lock
 docs/Tasks_0.md
 docs/publish-server.md
 docs/MCP-UI.md
+docs/temp
+
+.claude
+.husky

@@ -241,7 +241,7 @@ curl -s -X POST http://localhost:3001/mcp -H "Content-Type: application/json" --
 node -e 'const fs=require("fs");const m=fs.readFileSync("request.json","utf8").trim();process.stdout.write(`Content-Length: ${Buffer.byteLength(m,"utf8")}\r\n\r\n${m}`);' | node build/index.js
 ```
 
-## One-line zsh commands for examples
+## One-line zsh commands for example json files
 
 ### examples/charts/area/area_01_basic.json
 
@@ -269,6 +269,7 @@ node build/index.js <<< '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":
 
 
 ### examples/charts/area/area_06_stacked.json
+curl -s -X POST http://localhost:3001/mcp -H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream' --data-raw '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"generate_area_chart","arguments":{"title":"Basic Stacked Area Chart","chartType":"stacked","data":[{"country":"Asia","year":"1750","value":502},{"country":"Asia","year":"1800","value":635},{"country":"Asia","year":"1850","value":809},{"country":"Asia","year":"1900","value":5268},{"country":"Asia","year":"1950","value":4400},{"country":"Asia","year":"1999","value":3634},{"country":"Asia","year":"2050","value":947},{"country":"Africa","year":"1750","value":106},{"country":"Africa","year":"1800","value":107},{"country":"Africa","year":"1850","value":111},{"country":"Africa","year":"1900","value":1766},{"country":"Africa","year":"1950","value":221},{"country":"Africa","year":"1999","value":767},{"country":"Africa","year":"2050","value":133},{"country":"Europe","year":"1750","value":163},{"country":"Europe","year":"1800","value":203},{"country":"Europe","year":"1850","value":276},{"country":"Europe","year":"1900","value":628},{"country":"Europe","year":"1950","value":547},{"country":"Europe","year":"1999","value":729},{"country":"Europe","year":"2050","value":408},{"country":"Oceania","year":"1750","value":200},{"country":"Oceania","year":"1800","value":200},{"country":"Oceania","year":"1850","value":200},{"country":"Oceania","year":"1900","value":460},{"country":"Oceania","year":"1950","value":230},{"country":"Oceania","year":"1999","value":300},{"country":"Oceania","year":"2050","value":300}],"encode":{"x":"year","y":"value","color":"country","series":"country"},"axis":{"x":{"title":false},"y":{"title":false}},"style":{"fillOpacity":0.3},"children":[{"type":"area","encode":{"x":"year","y":"value","color":"country","series":"country","shape":"line"},"style":{"lineWidth":2},"tooltip":false}],"format":"html-url"}}}'
 
 ### examples/charts/area/area_07_percentage.json
 
@@ -287,6 +288,8 @@ curl -s -X POST http://localhost:3001/mcp \
 
 ### examples/charts/area/area_09_smooth_stacked.json
 
+curl -s -X POST http://localhost:3001/mcp -H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream' --data-raw '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"generate_area_chart","arguments":{"title":"Unemployment by Industry (Stacked)","data":{"type":"fetch","value":"https://assets.antv.antgroup.com/g2/unemployment-by-industry.json"},"encode":{"x":"(d) => new Date(d.date)","y":"unemployed","color":"industry"},"transform":[{"type":"stackY"}],"shape":"smooth","format":"html-url"}}}'
+
 ### examples/charts/area/area_10_stripe.json
 
 - Terminal 1:
@@ -298,7 +301,15 @@ curl -s -X POST http://localhost:3001/mcp \
     -H "Accept: application/json, text/event-stream" \
     --data-raw '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"generate_area_chart","arguments":{"title":"Unemployment by Industry (Stripe)","data":{"type":"fetch","value":"https://gw.alipayobjects.com/os/bmw-prod/e58c9758-0a09-4527-aa90-fbf175b45925.json"},"encode":{"x":"(d) => new Date(d.date)","y":"unemployed","color":"industry"},"transform":[{"type":"stackY","orderBy":"value"}],"shape":"smooth","scale":{"x":{"utc":true}},"axis":{"x":{"title":"Date"},"y":    {"labelFormatter":"~s"}},"format":"html-url"}}}'
 
-### examples/charts/area/area_11_maxindex.json
+### examples/charts/area/area_11_steamgraph.json
+
+- Terminal 1:
+node build/index.js -t streamable -p 3001
+
+- Terminal 2:
+curl -s -X POST http://localhost:3001/mcp -H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream' --data-raw '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"generate_area_chart","arguments":{"title":"Streamgraph (Unemployment by Industry)","data":{"type":"fetch","value":"https://assets.antv.antgroup.com/g2/unemployment-by-industry.json"},"encode":{"x":"(d) => new Date(d.date)","y":"unemployed","color":"industry"},"transform":[{"type":"stackY","offset":"wiggle","orderBy":"series"}],"shape":"smooth","format":"html-url"}}}'
+
+### examples/charts/area/area_12_maxindex.json
 
 - Terminal 1:
 node build/index.js -t streamable -p 3001
@@ -309,11 +320,13 @@ curl -s -X POST http://localhost:3001/mcp \
   -H "Accept: application/json, text/event-stream" \
   --data-binary '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"generate_area_chart","arguments":{"title":"Normalized Area (MaxIndex)","data":{"type":"fetch","value":"https://assets.antv.antgroup.com/g2/unemployment-by-industry.json"},"encode":{"x":"(d) => new Date(d.date)","y":"unemployed","color":"industry"},"transform":[{"type":"stackY","orderBy":"maxIndex"},{"type":"normalizeY"}],"axis":{"y":{"labelFormatter":".0%"}},"shape":"smooth","format":"html-url"}}}'
 
-### examples/charts/area/area_12_maxindex_reverse_line.json
+### examples/charts/area/area_13_maxindex_reverse_line.json
 
 curl -s -X POST http://localhost:3001/mcp -H "Content-Type: application/json" -H "Accept: application/json, text/event-stream" --data-binary '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"generate_area_chart","arguments":{"title":"Area (MaxIndex + Reverse) + Line","data":{"type":"fetch","value":"https://gw.alipayobjects.com/os/bmw-prod/f38a8ad0-6e1f-4bb3-894c-7db50781fdec.json"},"encode":{"x":"(d) => new Date(d.year)","y":"revenue","series":"format","color":"group"},"transform":[{"type":"stackY","orderBy":"maxIndex","reverse":true}],"axis":{"y":{"labelFormatter":"~s"}},"tooltip":{"channel":"y","valueFormatter":".2f"},"shape":"smooth","children":[{"type":"line","encode":{"x":"(d) => new Date(d.year)","y":"revenue","series":"format","color":"group","shape":"smooth"},"style":{"stroke":"white"},"tooltip":false,"transform":[{"type":"stackY","orderBy":"maxIndex","reverse":true,"y":"y1"}]}],"format":"html-url"}}}'
 
-### examples/charts/area/area_13_pop_nomarlized.json
+### examples/charts/area/area_14_pop_nomarlized.json
+
+curl -s -X POST http://localhost:3001/mcp -H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream' --data-raw '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"generate_area_chart","arguments":{"title":"Area Label","data":{"type":"fetch","value":"https://assets.antv.antgroup.com/g2/population-by-state.json"},"transform":[{"type":"fold","fields":["Massachusetts","Connecticut","Maine","Rhode Island","New Hampshire","Vermont","New York","Pennsylvania","New Jersey","North Carolina","Virginia","Georgia","Florida","Maryland","South Carolina","West Virginia","District of Columbia","Delaware","Tennessee","Kentucky","Alabama","Mississippi","Texas","Louisiana","Oklahoma","Arkansas","Illinois","Ohio","Michigan","Indiana","Wisconsin","Missouri","Minnesota","Iowa","Kansas","Nebraska","South Dakota","North Dakota","Colorado","Arizona","Utah","New Mexico","Montana","Idaho","Nevada","Wyoming","California","Washington","Oregon","Hawaii","Alaska"],"key":"state","value":"population"},{"type":"map","callback":"(d) => { const R={\"Alaska\":\"Pacific\",\"Alabama\":\"East South Central\",\"Arkansas\":\"West South Central\",\"Arizona\":\"Mountain\",\"California\":\"Pacific\",\"Colorado\":\"Mountain\",\"Connecticut\":\"New England\",\"District of Columbia\":\"South Atlantic\",\"Delaware\":\"South Atlantic\",\"Florida\":\"South Atlantic\",\"Georgia\":\"South Atlantic\",\"Hawaii\":\"Pacific\",\"Iowa\":\"West North Central\",\"Idaho\":\"Mountain\",\"Illinois\":\"East North Central\",\"Indiana\":\"East North Central\",\"Kansas\":\"West North Central\",\"Kentucky\":\"East South Central\",\"Louisiana\":\"West South Central\",\"Massachusetts\":\"New England\",\"Maryland\":\"South Atlantic\",\"Maine\":\"New England\",\"Michigan\":\"East North Central\",\"Minnesota\":\"West North Central\",\"Missouri\":\"West North Central\",\"Mississippi\":\"East South Central\",\"Montana\":\"Mountain\",\"North Carolina\":\"South Atlantic\",\"North Dakota\":\"West North Central\",\"Nebraska\":\"West North Central\",\"New Hampshire\":\"New England\",\"New Jersey\":\"Middle Atlantic\",\"New Mexico\":\"Mountain\",\"Nevada\":\"Mountain\",\"New York\":\"Middle Atlantic\",\"Ohio\":\"East North Central\",\"Oklahoma\":\"West South Central\",\"Oregon\":\"Pacific\",\"Pennsylvania\":\"Middle Atlantic\",\"Rhode Island\":\"New England\",\"South Carolina\":\"South Atlantic\",\"South Dakota\":\"West North Central\",\"Tennessee\":\"East South Central\",\"Texas\":\"West South Central\",\"Utah\":\"Mountain\",\"Virginia\":\"South Atlantic\",\"Vermont\":\"New England\",\"Washington\":\"Pacific\",\"Wisconsin\":\"East North Central\",\"West Virginia\":\"South Atlantic\",\"Wyoming\":\"Mountain\"}; d.region = R[d.state]; return d; }"},{"type":"stackY"},{"type":"normalizeY"}],"encode":{"x":"(d) => new Date(d.date)","y":"population","color":"region","series":"state"},"tooltip":{"channel":"y","valueFormatter":".3f"},"children":[{"type":"line","encode":{"x":"(d) => new Date(d.date)","y":"population","series":"state","color":"region","shape":"smooth"},"style":{"stroke":"#000","lineWidth":0.5,"fillOpacity":0.8},"tooltip":false,"transform":[{"type":"stackY"},{"type":"normalizeY"}]}],"format":"html-url"}}}'
 
 ### examples/charts/area/area_15_diff.json
 
