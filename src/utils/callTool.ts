@@ -1,7 +1,7 @@
 import { ErrorCode, McpError } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import * as Charts from "../charts";
-import { generateChartUrl, generateMap } from "./generate";
+import { generateChartResult, generateMap } from "./generate";
 import { getMapRequestServer } from "./env";
 import { ValidateError } from "./validator";
 
@@ -107,21 +107,22 @@ export async function callTool(tool: string, args: object = {}) {
       return result;
     }
 
-    const url = await generateChartUrl(chartType, args);
-
+    // Generate chart result respecting format semantics:
+    // - html: return MCP-UI resource (inline or server URL)
+    // - html-url: return a URL string to an interactive HTML page
+    // - png: return a URL string to a static PNG image
+    const result = await generateChartResult(chartType, args as any);
     return {
-      content: [
-        {
-          type: "text",
-          text: url,
-        },
-      ],
+      content: result.content,
+      // Keep lightweight meta for clients that surface it
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       _meta: {
         description:
-          "Charts spec configuration, you can use this config to generate the corresponding chart.",
+          "Chart generation result. For format=html this is an MCP-UI resource; for html-url/png this is a URL.",
         spec: { type: chartType, ...args },
       },
-    };
+    } as any;
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   } catch (error: any) {
     if (error instanceof McpError) throw error;

@@ -1,16 +1,11 @@
+// MCP‑UI resource shape, per docs/mcpui/protocol-details.md
 export type UIResource = {
-  type: "ui";
-  name: string;
-  uri: `ui://${string}`;
-  fallback?: {
-    type: "text";
-    text: string;
-  };
-  spec: {
-    title: string;
-    description: string;
-    html?: string;
-    htmlUrl?: string;
+  type: "resource";
+  resource: {
+    uri: string; // ui://charts-mcp/<type>/<id>
+    mimeType: "text/html" | "text/uri-list" | "application/vnd.mcp-ui.remote-dom";
+    text?: string; // HTML string or URI list text
+    blob?: string; // optional base64 content (unused here)
   };
 };
 
@@ -31,31 +26,26 @@ export function createChartUIResource({
   mode,
   serverUrl,
 }: CreateChartUIResourceOptions): UIResource {
-  if (mode === "server" && serverUrl) {
+  // If we have a serverUrl (either mode==='server' or auto-switch due to size),
+  // return a URI list resource pointing at the hosted page.
+  if (serverUrl) {
     return {
-      type: "ui",
-      name: title,
-      uri,
-      fallback: {
-        type: "text",
+      type: "resource",
+      resource: {
+        uri,
+        mimeType: "text/uri-list",
         text: serverUrl,
-      },
-      spec: {
-        title,
-        description,
-        htmlUrl: serverUrl,
       },
     };
   }
 
+  // Inline HTML content
   return {
-    type: "ui",
-    name: title,
-    uri,
-    spec: {
-      title,
-      description,
-      html,
+    type: "resource",
+    resource: {
+      uri,
+      mimeType: "text/html",
+      text: html,
     },
   };
 }
