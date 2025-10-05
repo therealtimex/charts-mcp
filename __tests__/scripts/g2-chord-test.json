@@ -1,0 +1,37 @@
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "tools/call",
+  "params": {
+    "name": "generate_chord",
+    "arguments": {
+      "title": "G2 Example - Chinese Provinces Network",
+      "data": [
+        {"source": "Beijing", "target": "Tianjin", "value": 30},
+        {"source": "Beijing", "target": "Shanghai", "value": 80},
+        {"source": "Beijing", "target": "Hebei", "value": 46},
+        {"source": "Beijing", "target": "Liaoning", "value": 49},
+        {"source": "Beijing", "target": "Heilongjiang", "value": 69},
+        {"source": "Beijing", "target": "Jilin", "value": 19},
+        {"source": "Tianjin", "target": "Hebei", "value": 62},
+        {"source": "Tianjin", "target": "Liaoning", "value": 82},
+        {"source": "Tianjin", "target": "Shanghai", "value": 16},
+        {"source": "Shanghai", "target": "Heilongjiang", "value": 16},
+        {"source": "Hebei", "target": "Heilongjiang", "value": 76},
+        {"source": "Hebei", "target": "Inner Mongolia", "value": 24},
+        {"source": "Inner Mongolia", "target": "Beijing", "value": 32}
+      ],
+      "scale": {
+        "color": {
+          "range": ["#4e79a7", "#f28e2c", "#e15759", "#76b7b2", "#59a14f", "#edc949", "#af7aa1", "#ff9da7", "#9c755f", "#bab0ab"]
+        }
+      },
+      "style": {
+        "labelFontSize": 15,
+        "linkFillOpacity": 0.6,
+        "nodeWidthRatio": 0.05
+      },
+      "format": "png"
+    }
+  }
+}

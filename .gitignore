@@ -22,6 +22,10 @@ build
 
 # Test
 coverage
+test-outputs/
+test-outputs-*/
+test-*.html
+*.test.html
 
 # Editor
 .vscode
@@ -33,3 +37,14 @@ pnpm-lock.yaml
 bun.lock
 
 .cache/
+
+# docs
+docs/Tasks_0.md
+docs/publish-server.md
+docs/MCP-UI.md
+docs/temp
+
+.claude
+.husky
+.kiro
+.codex

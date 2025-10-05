@@ -1,0 +1,34 @@
+{
+  "title": "Linear Arc Diagram - Character Relationships",
+  "data": {
+    "nodes": [
+      { "id": "0", "label": "Myriel" },
+      { "id": "1", "label": "Napoleon" },
+      { "id": "2", "label": "Mlle.Baptistine" },
+      { "id": "3", "label": "Mme.Magloire" },
+      { "id": "4", "label": "CountessdeLo" },
+      { "id": "5", "label": "Geborand" },
+      { "id": "6", "label": "Champtercier" },
+      { "id": "7", "label": "Cravatte" },
+      { "id": "8", "label": "Count" },
+      { "id": "9", "label": "OldMan" }
+    ],
+    "edges": [
+      { "source": "1", "target": "0" },
+      { "source": "2", "target": "0" },
+      { "source": "3", "target": "0" },
+      { "source": "3", "target": "2" },
+      { "source": "4", "target": "0" },
+      { "source": "5", "target": "0" },
+      { "source": "6", "target": "0" },
+      { "source": "7", "target": "0" },
+      { "source": "8", "target": "0" },
+      { "source": "9", "target": "0" }
+    ]
+  },
+  "layout": "linear",
+  "format": "html",
+  "width": 800,
+  "height": 400,
+  "theme": "classic"
+}

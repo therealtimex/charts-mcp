@@ -1,0 +1,33 @@
+{
+  "type": "bi-directional-bar",
+  "title": "Survey Agreement Levels - Stacked with Neutral Split",
+  "data": [
+    { "category": "Question 1", "value": 0.7, "type": "Strongly disagree" },
+    { "category": "Question 1", "value": 9.1, "type": "Disagree" },
+    { "category": "Question 1", "value": 18.5, "type": "Neither agree nor disagree" },
+    { "category": "Question 1", "value": 59.9, "type": "Agree" },
+    { "category": "Question 1", "value": 11.7, "type": "Strongly agree" },
+    { "category": "Question 2", "value": 1.5, "type": "Strongly disagree" },
+    { "category": "Question 2", "value": 12.3, "type": "Disagree" },
+    { "category": "Question 2", "value": 22.1, "type": "Neither agree nor disagree" },
+    { "category": "Question 2", "value": 48.7, "type": "Agree" },
+    { "category": "Question 2", "value": 15.4, "type": "Strongly agree" },
+    { "category": "Question 3", "value": 2.1, "type": "Strongly disagree" },
+    { "category": "Question 3", "value": 15.7, "type": "Disagree" },
+    { "category": "Question 3", "value": 25.3, "type": "Neither agree nor disagree" },
+    { "category": "Question 3", "value": 42.5, "type": "Agree" },
+    { "category": "Question 3", "value": 14.4, "type": "Strongly agree" }
+  ],
+  "orientation": "horizontal",
+  "positiveTypes": ["Agree", "Strongly agree"],
+  "negativeTypes": ["Disagree", "Strongly disagree"],
+  "neutralType": "Neither agree nor disagree",
+  "stack": true,
+  "hollowNegative": false,
+  "width": 800,
+  "height": 400,
+  "theme": "default",
+  "style": {
+    "palette": ["#c30d24", "#f3a583", "#cccccc", "#94c6da", "#1770ab"]
+  }
+}

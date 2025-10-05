@@ -1,0 +1,32 @@
+{
+  "title": "Country Economic and Health Indicators",
+  "axisXTitle": "GDP per Capita",
+  "axisYTitle": "Life Expectancy",
+  "data": [
+    { "x": 12547, "y": 76.9, "size": 1403500365, "group": "Asia" },
+    { "x": 59532, "y": 78.5, "size": 321773631, "group": "Americas" },
+    { "x": 6427, "y": 68.3, "size": 1324517249, "group": "Asia" },
+    { "x": 38428, "y": 83.9, "size": 127141000, "group": "Asia" },
+    { "x": 46136, "y": 81.0, "size": 82695000, "group": "Europe" },
+    { "x": 41267, "y": 82.7, "size": 64395345, "group": "Europe" },
+    { "x": 39735, "y": 82.8, "size": 60589445, "group": "Europe" },
+    { "x": 36223, "y": 82.4, "size": 46704314, "group": "Europe" },
+    { "x": 3955, "y": 62.3, "size": 182201962, "group": "Africa" },
+    { "x": 1968, "y": 58.9, "size": 95690000, "group": "Africa" }
+  ],
+  "scale": {
+    "size": {
+      "type": "log",
+      "range": [4, 20]
+    }
+  },
+  "legend": {
+    "size": false,
+    "color": true
+  },
+  "style": {
+    "fillOpacity": 0.3
+  },
+  "width": 800,
+  "height": 500
+}

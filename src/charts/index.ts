@@ -1,28 +1,47 @@
 /**
  * export all charts as named exports to match the chart type
  */
+export { arcDiagram as "arc-diagram" } from "./arc-diagram";
 export { area } from "./area";
 export { bar } from "./bar";
+export { biDirectionalBar as "bi-directional-bar" } from "./bi-directional-bar";
 export { boxplot } from "./boxplot";
+export { bubbleChart as "bubble-chart" } from "./bubble-chart";
+export { bubbleMap as "bubble-map" } from "./bubble-map";
+export { bullet } from "./bullet";
+export { chord } from "./chord";
+export { choroplethMap as "choropleth-map" } from "./choropleth-map";
+export { colorMap as "color-map" } from "./color-map";
 export { column } from "./column";
+export { compactTree as "compact-tree" } from "./compact-tree";
+export { concentricGraph as "concentric-graph" } from "./concentric-graph";
+export { contour } from "./contour";
+export { dendrogram } from "./dendrogram";
 export { districtMap as "district-map" } from "./district-map";
+export { donutChart as "donut-chart" } from "./donut-chart";
 export { dualAxes as "dual-axes" } from "./dual-axes";
 export { fishboneDiagram as "fishbone-diagram" } from "./fishbone-diagram";
 export { flowDiagram as "flow-diagram" } from "./flow-diagram";
 export { funnel } from "./funnel";
+export { gridGraph as "grid-graph" } from "./grid-graph";
+export { hierarchicalEdgeBundling as "hierarchical-edge-bundling" } from "./hierarchical-edge-bundling";
 export { histogram } from "./histogram";
+export { hybrid } from "./hybrid";
 export { line } from "./line";
 export { liquid } from "./liquid";
 export { mindMap as "mind-map" } from "./mind-map";
 export { networkGraph as "network-graph" } from "./network-graph";
 export { organizationChart as "organization-chart" } from "./organization-chart";
+export { parallelCoordinates as "parallel-coordinates" } from "./parallel-coordinates";
 export { pathMap as "path-map" } from "./path-map";
 export { pie } from "./pie";
 export { pinMap as "pin-map" } from "./pin-map";
 export { radar } from "./radar";
 export { sankey } from "./sankey";
 export { scatter } from "./scatter";
+export { streamGraph as "stream-graph" } from "./stream-graph";
 export { treemap } from "./treemap";
 export { venn } from "./venn";
 export { violin } from "./violin";
 export { wordCloud as "word-cloud" } from "./word-cloud";
+export { areaGuide } from "./area-guide";

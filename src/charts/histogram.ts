@@ -4,7 +4,6 @@ import {
   AxisXTitleSchema,
   AxisYTitleSchema,
   BackgroundColorSchema,
-  FormatSchema,
   HeightSchema,
   PaletteSchema,
   TextureSchema,
@@ -16,16 +15,37 @@ import {
 // Histogram chart input schema
 const schema = {
   data: z
-    .array(z.number())
+    .union([
+      z.array(z.number()).nonempty({ message: "Histogram chart data cannot be empty." }),
+      z.array(
+        z.object({
+          value: z.number().describe("The numerical value to be binned."),
+          group: z
+            .string()
+            .describe(
+              "The categorical group this value belongs to (for multi-distribution comparison).",
+            ),
+        }),
+      ).nonempty({ message: "Histogram chart data cannot be empty." }),
+    ])
     .describe(
-      "Data for histogram chart, it should be an array of numbers, such as, [78, 88, 60, 100, 95].",
-    )
-    .nonempty({ message: "Histogram chart data cannot be empty." }),
+      "Data for histogram chart. Can be either:\n" +
+        "1. Simple array of numbers for single distribution: [78, 88, 60, 100, 95]\n" +
+        "2. Array of objects for multi-distribution comparison: [{value: 78, group: 'A'}, {value: 85, group: 'B'}]",
+    ),
   binNumber: z
     .number()
     .optional()
     .describe(
-      "Number of intervals to define the number of intervals in a histogram, when not specified, a built-in value will be used.",
+      "Number of bins (intervals) for the histogram. Controls the granularity of the distribution. Default is auto-calculated based on data.",
+    ),
+  mode: z
+    .enum(["frequency", "density"])
+    .optional()
+    .describe(
+      "Display mode:\n" +
+        "- 'frequency' (default): Show raw counts in each bin\n" +
+        "- 'density': Show normalized probability density (useful for comparing distributions of different sizes)",
     ),
   style: z
     .object({
@@ -41,14 +61,19 @@ const schema = {
   title: TitleSchema,
   axisXTitle: AxisXTitleSchema,
   axisYTitle: AxisYTitleSchema,
-  format: FormatSchema,
 };
 
 // Histogram chart tool descriptor
 const tool = {
   name: "generate_histogram_chart",
   description:
-    "Generate a histogram chart to show the frequency of data points within a certain range. It can observe data distribution, such as, normal and skewed distributions, and identify data concentration areas and extreme points. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, a URL to an interactive HTML page (format='html-url'), or a static PNG image URL (format='png') for reports and documents.",
+    "Generate a histogram chart to show the frequency or density distribution of continuous numerical data. " +
+    "Supports three modes: " +
+    "(1) Basic histogram showing raw frequency counts, " +
+    "(2) Multi-distribution histogram for comparing multiple groups side-by-side with color encoding, " +
+    "(3) Density histogram showing normalized probability density for statistical analysis. " +
+    "Useful for observing data distribution patterns (normal, skewed), identifying concentration areas, detecting outliers, and comparing distributions. " +
+    "Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, a URL to an interactive HTML page (format='html-url'), or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 

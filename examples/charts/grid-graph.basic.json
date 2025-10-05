@@ -1,0 +1,22 @@
+{
+  "title": "Task Board",
+  "data": {
+    "nodes": [
+      { "id": "T1", "label": "Design" },
+      { "id": "T2", "label": "Code" },
+      { "id": "T3", "label": "Test" },
+      { "id": "T4", "label": "Deploy" },
+      { "id": "T5", "label": "Monitor" },
+      { "id": "T6", "label": "Review" }
+    ],
+    "edges": [
+      { "source": "T1", "target": "T2" },
+      { "source": "T2", "target": "T3" },
+      { "source": "T3", "target": "T4" },
+      { "source": "T4", "target": "T5" }
+    ]
+  },
+  "cols": 3,
+  "width": 700,
+  "height": 400
+}

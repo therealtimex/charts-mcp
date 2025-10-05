@@ -1,7 +1,7 @@
 {
-  "name": "@realtimex/charts-mcp",
+  "name": "@antv/mcp-server-chart",
   "description": "A Model Context Protocol server for generating charts using AntV. This is a TypeScript-based MCP server that provides chart generation capabilities. It allows you to create various types of charts through MCP tools.",
-  "version": "1.0.4",
+  "version": "2.0.0",
   "mcpName": "io.github.therealtimex/charts-mcp",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -12,11 +12,12 @@
     "prebuild": "rm -rf build/*",
     "build": "tsc && tsc-alias -p tsconfig.json",
     "postbuild": "chmod +x build/index.js",
-    "postinstall": "node scripts/postinstall.js",
     "start": "npx @modelcontextprotocol/inspector node build/index.js",
     "prepare": "husky && npm run build",
     "prepublishOnly": "npm run build",
-    "test": "vitest"
+    "test": "vitest",
+    "renderer:dev": "tsx scripts/start-renderer.ts",
+    "render-examples": "tsx scripts/render-examples.ts"
   },
   "lint-staged": {
     "*.{ts,js,json}": [
@@ -26,6 +27,7 @@
     ]
   },
   "bin": {
+    "mcp-server-chart": "./build/index.js",
     "charts-mcp": "./build/index.js"
   },
   "publishConfig": {
@@ -33,8 +35,7 @@
     "access": "public"
   },
   "files": [
-    "build",
-    "scripts/postinstall.js"
+    "build"
   ],
   "keywords": [
     "antv",
@@ -46,21 +47,22 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/therealtimex/charts-mcp"
+    "url": "https://github.com/antvis/mcp-server-chart"
   },
   "author": {
-    "name": "RealTimeX",
-    "url": "https://realtimex.ai/"
+    "name": "AntV",
+    "url": "https://antv.antgroup.com/"
   },
   "license": "MIT",
   "dependencies": {
-    "@antv/g2plot": "^2.4.32",
+    "@antv/g2": "^5.2.7",
+    "@antv/g6": "^5.0.49",
     "@mcp-ui/server": "^5.11.0",
     "@modelcontextprotocol/sdk": "^1.11.4",
     "axios": "^1.11.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
-    "puppeteer": "^23.7.0",
+    "puppeteer": "^24.23.0",
     "zod": "^3.25.16",
     "zod-to-json-schema": "^3.24.5"
   },
@@ -73,6 +75,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
     "tsc-alias": "^1.8.16",
+    "tsx": "^4.19.2",
     "typescript": "^5.8.3",
     "vitest": "^3.1.4"
   }

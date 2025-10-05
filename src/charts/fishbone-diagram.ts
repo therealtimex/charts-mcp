@@ -7,29 +7,24 @@ import { FormatSchema, HeightSchema, TextureSchema, ThemeSchema, WidthSchema } f
 // The recursive schema is not supported by gemini, and other clients, so we use a non-recursive schema which can represent a tree structure with a fixed depth.
 // Ref: https://github.com/antvis/mcp-server-chart/issues/155
 // Ref: https://github.com/antvis/mcp-server-chart/issues/132
-export const FishboneNodeSchema: z.ZodType<TreeDataType> = z.object({
+
+const Node3 = z.object({
   name: z.string(),
-  children: z
-    .array(
-      z.object({
-        name: z.string(),
-        children: z
-          .array(
-            z.object({
-              name: z.string(),
-              children: z
-                .array(
-                  z.object({
-                    name: z.string(),
-                  }),
-                )
-                .optional(),
-            }),
-          )
-          .optional(),
-      }),
-    )
-    .optional(),
+});
+
+const Node2 = z.object({
+  name: z.string(),
+  children: z.array(Node3).optional(),
+});
+
+const Node1 = z.object({
+  name: z.string(),
+  children: z.array(Node2).optional(),
+});
+
+export const FishboneNodeSchema = z.object({
+  name: z.string(),
+  children: z.array(Node1).optional(),
 });
 
 // Fishbone diagram input schema

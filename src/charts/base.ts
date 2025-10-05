@@ -2,10 +2,12 @@ import { z } from "zod";
 
 // Define Zod schemas for base configuration properties
 export const ThemeSchema = z
-  .enum(["default", "academy", "dark"])
+  .enum(["classic", "academy", "dark", "light", "classicDark", "academyDark", "default"]) // include 'default' for compatibility
   .optional()
-  .default("default")
-  .describe("Set the theme for the chart, optional, default is 'default'.");
+  .default("classic")
+  .describe(
+    "Set the theme for the chart. Recommended: 'classic', 'academy', 'dark', 'light'. 'default' is treated as 'classic'.",
+  );
 
 export const BackgroundColorSchema = z
   .string()

@@ -1,0 +1,177 @@
+[
+  {
+    "content": "Phase 1: Research & Planning - Audit G2 v5 capabilities and create comprehensive chart type catalog",
+    "status": "completed",
+    "activeForm": "Phase 1: Research & Planning - Auditing G2 v5 capabilities"
+  },
+  {
+    "content": "Phase 1: Research & Planning - Audit G6 capabilities and create comprehensive graph type catalog",
+    "status": "completed",
+    "activeForm": "Phase 1: Research & Planning - Auditing G6 capabilities"
+  },
+  {
+    "content": "Phase 1: Research & Planning - Document migration strategy from G2Plot to G2 v5",
+    "status": "completed",
+    "activeForm": "Phase 1: Research & Planning - Documenting migration strategy"
+  },
+  {
+    "content": "Phase 1: Research & Planning - Design unified rendering architecture for G2 v5 + G6",
+    "status": "completed",
+    "activeForm": "Phase 1: Research & Planning - Designing unified rendering architecture"
+  },
+  {
+    "content": "Phase 1: Research & Planning - Create prioritized implementation roadmap",
+    "status": "completed",
+    "activeForm": "Phase 1: Research & Planning - Creating prioritized roadmap"
+  },
+  {
+    "content": "Phase 2: Foundation - Set up G2 v5 development environment and dependencies",
+    "status": "completed",
+    "activeForm": "Phase 2: Foundation - Setting up G2 v5 development environment"
+  },
+  {
+    "content": "Phase 2: Foundation - Create base G2 v5 renderer with common configurations",
+    "status": "completed",
+    "activeForm": "Phase 2: Foundation - Creating base G2 v5 renderer"
+  },
+  {
+    "content": "Phase 2: Foundation - Implement G2 v5 POC for 3 basic charts (bar, line, pie)",
+    "status": "completed",
+    "activeForm": "Phase 2: Foundation - Implementing G2 v5 POC"
+  },
+  {
+    "content": "Phase 2: Foundation - Validate MCP-UI compatibility with G2 v5 charts",
+    "status": "completed",
+    "activeForm": "Phase 2: Foundation - Validating MCP-UI compatibility"
+  },
+  {
+    "content": "Phase 3: Core Migration - Migrate column, area, scatter charts to G2 v5 (batch 1)",
+    "status": "completed",
+    "activeForm": "Phase 3: Core Migration - Migrating batch 1 charts"
+  },
+  {
+    "content": "Phase 3: Core Migration - Migrate histogram, boxplot, radar charts to G2 v5 (batch 2)",
+    "status": "in_progress",
+    "activeForm": "Phase 3: Core Migration - Migrating batch 2 charts"
+  },
+  {
+    "content": "Phase 3: Core Migration - Migrate liquid, word-cloud charts to G2 v5 (batch 3)",
+    "status": "pending",
+    "activeForm": "Phase 3: Core Migration - Migrating batch 3 charts"
+  },
+  {
+    "content": "Phase 3: Core Migration - Migrate sankey, treemap charts to G2 v5 (batch 4)",
+    "status": "pending",
+    "activeForm": "Phase 3: Core Migration - Migrating batch 4 charts"
+  },
+  {
+    "content": "Phase 3: Core Migration - Migrate dual-axes, funnel charts to G2 v5 (batch 5)",
+    "status": "pending",
+    "activeForm": "Phase 3: Core Migration - Migrating batch 5 charts"
+  },
+  {
+    "content": "Phase 3: Core Migration - Migrate violin, venn charts to G2 v5 (batch 6)",
+    "status": "pending",
+    "activeForm": "Phase 3: Core Migration - Migrating batch 6 charts"
+  },
+  {
+    "content": "Phase 3: Core Migration - Update chart schemas and tool definitions for G2 v5",
+    "status": "pending",
+    "activeForm": "Phase 3: Core Migration - Updating schemas and tool definitions"
+  },
+  {
+    "content": "Phase 3: Core Migration - Integrate G2 v5 charts into existing renderer",
+    "status": "pending",
+    "activeForm": "Phase 3: Core Migration - Integrating G2 v5 charts"
+  },
+  {
+    "content": "Phase 3: Core Migration - Update tests for all migrated charts",
+    "status": "pending",
+    "activeForm": "Phase 3: Core Migration - Updating tests for migrated charts"
+  },
+  {
+    "content": "Phase 4: G2 Expansion - Add heatmap, calendar, and sunburst charts",
+    "status": "pending",
+    "activeForm": "Phase 4: G2 Expansion - Adding heatmap, calendar, and sunburst charts"
+  },
+  {
+    "content": "Phase 4: G2 Expansion - Add gauge, bullet, and waterfall charts",
+    "status": "pending",
+    "activeForm": "Phase 4: G2 Expansion - Adding gauge, bullet, and waterfall charts"
+  },
+  {
+    "content": "Phase 4: G2 Expansion - Add stock/candlestick and advanced financial charts",
+    "status": "pending",
+    "activeForm": "Phase 4: G2 Expansion - Adding stock/candlestick charts"
+  },
+  {
+    "content": "Phase 4: G2 Expansion - Add composite and custom mark-based visualizations",
+    "status": "pending",
+    "activeForm": "Phase 4: G2 Expansion - Adding composite visualizations"
+  },
+  {
+    "content": "Phase 5: G6 Enhancement - Upgrade existing G6 charts to latest version",
+    "status": "pending",
+    "activeForm": "Phase 5: G6 Enhancement - Upgrading existing G6 charts"
+  },
+  {
+    "content": "Phase 5: G6 Enhancement - Add radial tree, circular, and dendrogram layouts",
+    "status": "pending",
+    "activeForm": "Phase 5: G6 Enhancement - Adding radial tree layouts"
+  },
+  {
+    "content": "Phase 5: G6 Enhancement - Add force-directed graphs with physics simulation",
+    "status": "pending",
+    "activeForm": "Phase 5: G6 Enhancement - Adding force-directed graphs"
+  },
+  {
+    "content": "Phase 5: G6 Enhancement - Add arc diagrams, chord diagrams, and edge bundling",
+    "status": "pending",
+    "activeForm": "Phase 5: G6 Enhancement - Adding arc and chord diagrams"
+  },
+  {
+    "content": "Phase 6: Advanced Features - Implement hybrid G2+G6 composite charts",
+    "status": "completed",
+    "activeForm": "Phase 6: Advanced Features - Implementing hybrid charts"
+  },
+  {
+    "content": "Phase 6: Advanced Features - Add advanced interactivity (drill-down, filters)",
+    "status": "completed",
+    "activeForm": "Phase 6: Advanced Features - Adding advanced interactivity"
+  },
+  {
+    "content": "Phase 6: Advanced Features - Implement SVG and PDF export formats",
+    "status": "completed",
+    "activeForm": "Phase 6: Advanced Features - Implementing SVG/PDF export"
+  },
+  {
+    "content": "Phase 6: Advanced Features - Add accessibility features and ARIA support",
+    "status": "completed",
+    "activeForm": "Phase 6: Advanced Features - Adding accessibility features"
+  },
+  {
+    "content": "Phase 7: Documentation & Quality - Update README with all new chart types",
+    "status": "pending",
+    "activeForm": "Phase 7: Documentation & Quality - Updating README"
+  },
+  {
+    "content": "Phase 7: Documentation & Quality - Create comprehensive examples for all charts",
+    "status": "pending",
+    "activeForm": "Phase 7: Documentation & Quality - Creating comprehensive examples"
+  },
+  {
+    "content": "Phase 7: Documentation & Quality - Write migration guide from upstream MCP",
+    "status": "pending",
+    "activeForm": "Phase 7: Documentation & Quality - Writing migration guide"
+  },
+  {
+    "content": "Phase 7: Documentation & Quality - Perform full visual regression testing",
+    "status": "pending",
+    "activeForm": "Phase 7: Documentation & Quality - Performing visual regression testing"
+  },
+  {
+    "content": "Phase 7: Documentation & Quality - Publish v2.0.0 with complete G2 v5 + G6 support",
+    "status": "pending",
+    "activeForm": "Phase 7: Documentation & Quality - Publishing v2.0.0"
+  }
+]

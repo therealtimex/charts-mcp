@@ -1,0 +1,41 @@
+{
+  "title": "Complex Arc Diagram - Social Network",
+  "data": {
+    "nodes": [
+      { "id": "user1", "label": "Alice" },
+      { "id": "user2", "label": "Bob" },
+      { "id": "user3", "label": "Charlie" },
+      { "id": "user4", "label": "Diana" },
+      { "id": "user5", "label": "Eve" },
+      { "id": "user6", "label": "Frank" },
+      { "id": "user7", "label": "Grace" },
+      { "id": "user8", "label": "Henry" },
+      { "id": "user9", "label": "Ivy" },
+      { "id": "user10", "label": "Jack" }
+    ],
+    "edges": [
+      { "source": "user1", "target": "user2" },
+      { "source": "user1", "target": "user3" },
+      { "source": "user1", "target": "user5" },
+      { "source": "user2", "target": "user4" },
+      { "source": "user2", "target": "user6" },
+      { "source": "user3", "target": "user7" },
+      { "source": "user4", "target": "user8" },
+      { "source": "user5", "target": "user9" },
+      { "source": "user6", "target": "user10" },
+      { "source": "user7", "target": "user1" },
+      { "source": "user8", "target": "user3" },
+      { "source": "user9", "target": "user2" },
+      { "source": "user10", "target": "user4" }
+    ]
+  },
+  "layout": "linear",
+  "format": "png",
+  "width": 900,
+  "height": 500,
+  "theme": "academy",
+  "style": {
+    "backgroundColor": "#f8f9fa",
+    "palette": "spectral"
+  }
+}

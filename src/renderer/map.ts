@@ -254,7 +254,7 @@ export async function renderMapToFile(tool: MapTool, input: any, outDir: string)
     await page.setContent(html, { waitUntil: 'networkidle0' });
     const id = crypto.randomBytes(8).toString('hex');
     const file = path.join(outDir, `${id}.png`);
-    await page.screenshot({ path: file });
+    await page.screenshot({ path: file as `${string}.png` });
     return file;
   } finally {
     await browser.close();

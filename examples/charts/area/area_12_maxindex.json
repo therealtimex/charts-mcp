@@ -1,0 +1,28 @@
+{
+    "title": "Normalized Area (MaxIndex)",
+    "data": {
+        "type": "fetch",
+        "value": "https://assets.antv.antgroup.com/g2/unemployment-by-industry.json"
+    },
+    "encode": {
+        "x": "(d) => new Date(d.date)",
+        "y": "unemployed",
+        "color": "industry"
+    },
+    "transform": [
+        {
+            "type": "stackY",
+            "orderBy": "maxIndex"
+        },
+        {
+            "type": "normalizeY"
+        }
+    ],
+    "axis": {
+        "y": {
+            "labelFormatter": ".0%"
+        }
+    },
+    "shape": "smooth",
+    "format": "html-url"
+}

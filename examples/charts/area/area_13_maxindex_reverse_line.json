@@ -1,0 +1,55 @@
+{
+    "title": "Area (MaxIndex + Reverse) + Line",
+    "data": {
+        "type": "fetch",
+        "value": "https://gw.alipayobjects.com/os/bmw-prod/f38a8ad0-6e1f-4bb3-894c-7db50781fdec.json"
+    },
+    "encode": {
+        "x": "(d) => new Date(d.year)",
+        "y": "revenue",
+        "series": "format",
+        "color": "group"
+    },
+    "transform": [
+        {
+            "type": "stackY",
+            "orderBy": "maxIndex",
+            "reverse": true
+        }
+    ],
+    "axis": {
+        "y": {
+            "labelFormatter": "~s"
+        }
+    },
+    "tooltip": {
+        "channel": "y",
+        "valueFormatter": ".2f"
+    },
+    "shape": "smooth",
+    "children": [
+        {
+            "type": "line",
+            "encode": {
+                "x": "(d) => new Date(d.year)",
+                "y": "revenue",
+                "series": "format",
+                "color": "group",
+                "shape": "smooth"
+            },
+            "style": {
+                "stroke": "white"
+            },
+            "tooltip": false,
+            "transform": [
+                {
+                    "type": "stackY",
+                    "orderBy": "maxIndex",
+                    "reverse": true,
+                    "y": "y1"
+                }
+            ]
+        }
+    ],
+    "format": "html-url"
+}

@@ -3,6 +3,8 @@ import axios from "axios";
 import { getMapRequestServer, getServiceIdentifier, getVisRequestServer, getRenderMode, getUIResourceMode } from "./env";
 import { buildChartHtml } from "../renderer/chart";
 import { createChartUIResource } from "./uiResource";
+import { ChartDispatcher } from "../renderer/chart-dispatcher";
+import "../renderer/init-registry"; // Initialize the chart registry
 
 /**
  * Generate a chart URL using the provided configuration.
@@ -98,7 +100,22 @@ export async function generateChartResult(
   }
 
   // MCP-UI resource mode (HTML format)
-  const html = buildChartHtml(type, options);
+  // Try using the new G2 v5 dispatcher first, fallback to direct renderer
+  let html: string;
+  try {
+    if (ChartDispatcher.isSupported(type)) {
+      const result = await ChartDispatcher.dispatch(type, { type, ...options });
+      html = result.html;
+    } else {
+      // Fallback to direct G2/G6 renderer
+      html = await buildChartHtml(type, options);
+    }
+  } catch (error) {
+    // If dispatcher fails, fallback to direct renderer
+    console.error(`G2 v5 dispatcher failed for ${type}, falling back to direct renderer:`, error);
+    html = await buildChartHtml(type, options);
+  }
+
   const chartTitle = options.title || `${type} Chart`;
   const uri = `ui://charts-mcp/${type}/${Date.now()}` as `ui://${string}`;
 
@@ -119,7 +136,7 @@ export async function generateChartResult(
 
   return {
     metadata: { type, options },
-    content: [uiResource],
+    content: [uiResource as any],
   };
 }
 
@@ -133,15 +150,14 @@ type ResponseResult = {
 };
 
 /**
- * Generate a map with UI resource support
+ * Generate a map
  * @param tool - The tool name
  * @param input - The input
  * @returns
  */
 export async function generateMap(
   tool: string,
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  input: any,
+  input: unknown,
 ): Promise<ResponseResult> {
   const url = getMapRequestServer();
 
@@ -151,117 +167,12 @@ export async function generateMap(
     );
   }
 
-  const format = input.format || "html";
-  const renderMode = getRenderMode();
-  const uiResourceMode = getUIResourceMode();
-
-  // PNG format always returns URL
-  if (format === "png") {
-    const response = await axios.post(
-      url,
-      {
-        serviceId: getServiceIdentifier(),
-        tool,
-        input: { ...input, format: "png" },
-        source: "charts-mcp",
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-    const { success, errorMessage, resultObj } = response.data;
-
-    if (!success) {
-      throw new Error(errorMessage);
-    }
-
-    return {
-      metadata: { tool, input },
-      content: [
-        {
-          type: "text",
-          text: String(resultObj),
-        },
-      ],
-    };
-  }
-
-  // HTML URL format returns URL to interactive HTML page
-  if (format === "html-url") {
-    const response = await axios.post(
-      url,
-      {
-        serviceId: getServiceIdentifier(),
-        tool,
-        input: { ...input, format: "html" },
-        source: "charts-mcp",
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-    const { success, errorMessage, resultObj } = response.data;
-
-    if (!success) {
-      throw new Error(errorMessage);
-    }
-
-    return {
-      metadata: { tool, input },
-      content: [
-        {
-          type: "text",
-          text: String(resultObj),
-        },
-      ],
-    };
-  }
-
-  // Legacy URL mode (environment variable override)
-  if (renderMode === "url") {
-    const response = await axios.post(
-      url,
-      {
-        serviceId: getServiceIdentifier(),
-        tool,
-        input,
-        source: "charts-mcp",
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-    const { success, errorMessage, resultObj } = response.data;
-
-    if (!success) {
-      throw new Error(errorMessage);
-    }
-
-    return {
-      metadata: { tool, input },
-      content: [
-        {
-          type: "text",
-          text: String(resultObj),
-        },
-      ],
-    };
-  }
-
-  // MCP-UI resource mode (HTML format)
-  // For maps, we always use server mode since we don't generate HTML locally
   const response = await axios.post(
     url,
     {
       serviceId: getServiceIdentifier(),
       tool,
-      input: { ...input, format: "html" },
+      input,
       source: "charts-mcp",
     },
     {
@@ -276,21 +187,25 @@ export async function generateMap(
     throw new Error(errorMessage);
   }
 
-  const serverUrl = String(resultObj);
-  const mapTitle = input.title || "Map";
-  const uri = `ui://charts-mcp/map/${Date.now()}` as `ui://${string}`;
-
-  const uiResource = createChartUIResource({
-    uri,
-    html: "", // Empty HTML since we use server mode
-    title: mapTitle,
-    description: `Interactive map: ${tool.replace("generate_", "").replace(/_/g, " ")}`,
-    mode: "server",
-    serverUrl,
-  });
+  const urlStr = String(resultObj);
 
   return {
     metadata: { tool, input },
-    content: [uiResource],
+    content: [
+      {
+        type: "text",
+        text: urlStr,
+      },
+    ],
+    // Provide additional meta in the result
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore - carry custom meta for clients that display it
+    _meta: {
+      description:
+        "Map generation result URL. Open to view the rendered map (PNG or HTML depending on format).",
+      tool,
+      input,
+      url: urlStr,
+    },
   };
 }

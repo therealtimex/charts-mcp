@@ -1,0 +1,25 @@
+{
+  "title": "Sales Completion Rate",
+  "axisYTitle": "Completion Rate (%)",
+  "data": [
+    {
+      "title": "Sales Completion Rate",
+      "ranges": 100,
+      "measures": 80,
+      "target": 85
+    }
+  ],
+  "orientation": "horizontal",
+  "colors": {
+    "ranges": "#f0efff",
+    "measures": "#5B8FF9",
+    "target": "#3D76DD"
+  },
+  "label": {
+    "enabled": true,
+    "position": "right",
+    "formatter": "(d) => `${d}%`"
+  },
+  "width": 600,
+  "height": 200
+}
