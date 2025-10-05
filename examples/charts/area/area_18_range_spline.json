@@ -1,0 +1,60 @@
+{
+    "title": "Range Spline Area + Line + Marker",
+    "data": {
+        "type": "fetch",
+        "value": "https://assets.antv.antgroup.com/g2/range-spline-area.json"
+    },
+    "transform": [
+        {
+            "type": "map",
+            "callback": "(d) => ({ x: d[0], low: d[1], high: d[2], v2: d[3], v3: d[4] })"
+        }
+    ],
+    "encode": {
+        "x": "x",
+        "y": [
+            "low",
+            "high"
+        ]
+    },
+    "shape": "smooth",
+    "style": {
+        "fillOpacity": 0.65,
+        "fill": "#64b5f6",
+        "lineWidth": 1
+    },
+    "axis": {
+        "y": {
+            "title": false
+        }
+    },
+    "scale": {
+        "x": {
+            "type": "linear",
+            "tickCount": 10
+        }
+    },
+    "children": [
+        {
+            "type": "point",
+            "encode": {
+                "x": "x",
+                "y": "v2",
+                "size": 2,
+                "shape": "point"
+            }
+        },
+        {
+            "type": "line",
+            "encode": {
+                "x": "x",
+                "y": "v3",
+                "shape": "smooth"
+            },
+            "style": {
+                "stroke": "#FF6B3B"
+            }
+        }
+    ],
+    "format": "html-url"
+}

@@ -1,0 +1,24 @@
+{
+    "title": "Unemployment by Industry (Stripe)",
+    "data": {
+        "type": "fetch",
+        "value": "https://gw.alipayobjects.com/os/bmw-prod/e58c9758-0a09-4527-aa90-fbf175b45925.json"
+    },
+    "encode": {
+        "x": "(d) => new Date(d.date)",
+        "y": "unemployed",
+        "color": "industry"
+    },
+    "transform": [
+        {
+            "type": "stackY",
+            "orderBy": "value"
+        }
+    ],
+    "shape": "smooth",
+    "scale": {
+        "x": {
+            "utc": true
+        }
+    }
+}

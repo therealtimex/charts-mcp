@@ -1,0 +1,22 @@
+{
+  "title": "Paris Travel Route",
+  "data": [
+    {
+      "data": [
+        "Eiffel Tower, Paris",
+        "Arc de Triomphe, Paris",
+        "Champs-Élysées, Paris",
+        "Louvre Museum, Paris"
+      ]
+    },
+    {
+      "data": [
+        "Notre-Dame Cathedral, Paris",
+        "Sainte-Chapelle, Paris",
+        "Latin Quarter, Paris"
+      ]
+    }
+  ],
+  "width": 1400,
+  "height": 900
+}

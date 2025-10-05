@@ -1,10 +1,14 @@
 import process from "node:process";
+import { getRendererPort } from "../renderer/server";
 
 /**
  * Get the VIS_REQUEST_SERVER from environment variables.
  */
 export function getVisRequestServer() {
-  const port = Number(process.env.RENDER_PORT) || 3210;
+  // Use actual renderer port if available, otherwise use configured/default port
+  const actualPort = getRendererPort();
+  const configuredPort = Number(process.env.RENDER_PORT) || 3210;
+  const port = actualPort || configuredPort;
   return process.env.VIS_REQUEST_SERVER || `http://localhost:${port}/chart`;
 }
 
@@ -13,7 +17,10 @@ export function getVisRequestServer() {
  * This should point to an OSM/Leaflet-based map renderer service.
  */
 export function getMapRequestServer() {
-  const port = Number(process.env.RENDER_PORT) || 3210;
+  // Use actual renderer port if available, otherwise use configured/default port
+  const actualPort = getRendererPort();
+  const configuredPort = Number(process.env.RENDER_PORT) || 3210;
+  const port = actualPort || configuredPort;
   return process.env.MAP_REQUEST_SERVER || `http://localhost:${port}/map`;
 }
 
@@ -36,25 +43,15 @@ export function getDisabledTools(): string[] {
 }
 
 /**
- * Get the render mode: "url" (legacy), "ui-resource" (MCP-UI), or "auto"
- * Default is "ui-resource" for better UX
+ * Get the RENDER_MODE from environment variables.
  */
-export function getRenderMode(): "url" | "ui-resource" | "auto" {
-  const mode = process.env.RENDER_MODE?.toLowerCase();
-  if (mode === "url" || mode === "ui-resource" || mode === "auto") {
-    return mode;
-  }
-  return "ui-resource"; // Default to MCP-UI mode
+export function getRenderMode() {
+  return process.env.RENDER_MODE || "html";
 }
 
 /**
- * Get the UI resource mode: "auto", "blob", or "server"
- * Default is "auto" which uses size-based detection
+ * Get the UI_RESOURCE_MODE from environment variables.
  */
-export function getUIResourceMode(): "auto" | "blob" | "server" {
-  const mode = process.env.UI_RESOURCE_MODE?.toLowerCase();
-  if (mode === "blob" || mode === "server" || mode === "auto") {
-    return mode;
-  }
-  return "auto";
+export function getUIResourceMode() {
+  return process.env.UI_RESOURCE_MODE || "auto";
 }

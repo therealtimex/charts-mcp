@@ -1,0 +1,49 @@
+{
+    "title": "Diff Area (NY vs SF) + Line",
+    "data": {
+        "type": "fetch",
+        "value": "https://assets.antv.antgroup.com/g2/temperature-compare.json"
+    },
+    "children": [
+        {
+            "type": "area",
+            "data": {
+                "transform": [
+                    {
+                        "type": "fold",
+                        "fields": [
+                            "New York",
+                            "San Francisco"
+                        ],
+                        "key": "city",
+                        "value": "temperature"
+                    }
+                ]
+            },
+            "encode": {
+                "x": "(d) => new Date(d.date)",
+                "y": "temperature",
+                "color": "city",
+                "shape": "hvh"
+            },
+            "transform": [
+                {
+                    "type": "diffY"
+                }
+            ]
+        },
+        {
+            "type": "line",
+            "encode": {
+                "x": "(d) => new Date(d.date)",
+                "y": "San Francisco",
+                "shape": "hvh"
+            },
+            "style": {
+                "stroke": "#000"
+            },
+            "tooltip": false
+        }
+    ],
+    "format": "html-url"
+}

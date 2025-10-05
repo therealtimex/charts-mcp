@@ -1,0 +1,22 @@
+{
+  "title": "California GDP Distribution",
+  "data": {
+    "name": "California",
+    "showAllSubdistricts": true,
+    "dataLabel": "GDP",
+    "dataType": "number",
+    "dataValueUnit": "billion USD",
+    "colors": ["#F0884D"],
+    "subdistricts": [
+      { "name": "Los Angeles County", "dataValue": "712" },
+      { "name": "San Francisco County", "dataValue": "183" },
+      { "name": "Santa Clara County", "dataValue": "275" },
+      { "name": "San Diego County", "dataValue": "245" },
+      { "name": "Orange County", "dataValue": "267" },
+      { "name": "Alameda County", "dataValue": "124" },
+      { "name": "Sacramento County", "dataValue": "78" }
+    ]
+  },
+  "width": 1200,
+  "height": 1000
+}

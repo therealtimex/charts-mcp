@@ -1,0 +1,38 @@
+{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "tools/call",
+    "params": {
+        "name": "generate_area_chart",
+        "arguments": {
+            "title": "Band Chart (G2)",
+            "data": {
+                "type": "fetch",
+                "value": "https://assets.antv.antgroup.com/g2/temperatures3.json"
+            },
+            "encode": {
+                "x": "(d) => new Date(d.date)",
+                "y": [
+                    "low",
+                    "high"
+                ],
+                "color": "(d) => d.high - d.low",
+                "series": "() => undefined"
+            },
+            "scale": {
+                "color": {
+                    "palette": "reds"
+                }
+            },
+            "style": {
+                "gradient": "x"
+            },
+            "axis": {
+                "x": {
+                    "title": "date"
+                }
+            },
+            "format": "html-url"
+        }
+    }
+}

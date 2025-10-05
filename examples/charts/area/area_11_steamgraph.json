@@ -1,0 +1,21 @@
+{
+    "title": "Streamgraph (Unemployment by Industry)",
+    "data": {
+        "type": "fetch",
+        "value": "https://assets.antv.antgroup.com/g2/unemployment-by-industry.json"
+    },
+    "encode": {
+        "x": "(d) => new Date(d.date)",
+        "y": "unemployed",
+        "color": "industry"
+    },
+    "transform": [
+        {
+            "type": "stackY",
+            "offset": "wiggle",
+            "orderBy": "series"
+        }
+    ],
+    "shape": "smooth",
+    "format": "html-url"
+}

@@ -12,7 +12,7 @@
     "declaration": true
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "src/renderer/**/*-test*.ts", "src/renderer/**/g2v5-*.ts", "src/renderer/**/g6v5-*.ts"],
   "tsc-alias": {
     "verbose": false,
     "resolveFullPaths": true,

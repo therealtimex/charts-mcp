@@ -1,0 +1,90 @@
+{
+    "title": "Rank Trend Area",
+    "data": {
+        "value": [
+            {
+                "month": "January",
+                "rank": 200
+            },
+            {
+                "month": "February",
+                "rank": 160
+            },
+            {
+                "month": "March",
+                "rank": 100
+            },
+            {
+                "month": "April",
+                "rank": 80
+            },
+            {
+                "month": "May",
+                "rank": 99
+            },
+            {
+                "month": "June",
+                "rank": 36
+            },
+            {
+                "month": "July",
+                "rank": 40
+            },
+            {
+                "month": "August",
+                "rank": 20
+            },
+            {
+                "month": "September",
+                "rank": 12
+            },
+            {
+                "month": "October",
+                "rank": 15
+            },
+            {
+                "month": "November",
+                "rank": 6
+            },
+            {
+                "month": "December",
+                "rank": 1
+            }
+        ]
+    },
+    "encode": {
+        "x": "month",
+        "y": "(d) => 200 - d.rank"
+    },
+    "shape": "smooth",
+    "style": {
+        "fill": "l(270) 0:#ffffff 0.9:#7ec2f3 1:#1890ff",
+        "fillOpacity": 0.2
+    },
+    "axis": {
+        "y": {
+            "labelFormatter": "~s"
+        }
+    },
+    "tooltip": false,
+    "children": [
+        {
+            "type": "line",
+            "encode": {
+                "x": "month",
+                "y": "(d) => 200 - d.rank",
+                "shape": "smooth"
+            },
+            "style": {
+                "lineWidth": 2
+            },
+            "tooltip": {
+                "title": "(d) => d.month",
+                "items": [
+                    "(d) => ({ name: 'Rank', value: 200 - d.rank })"
+                ]
+            }
+        }
+    ],
+    "format": "html-url"
+}

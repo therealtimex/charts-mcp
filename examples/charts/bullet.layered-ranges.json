@@ -1,0 +1,27 @@
+{
+  "title": "Project Progress with Performance Levels",
+  "axisYTitle": "Progress (%)",
+  "data": [
+    {
+      "title": "Project Progress",
+      "ranges": [40, 30, 30],
+      "measures": 60,
+      "target": 80
+    }
+  ],
+  "orientation": "horizontal",
+  "rangeLevels": {
+    "labels": ["Poor", "Good", "Excellent"],
+    "colors": ["#ffebee", "#fff3e0", "#e8f5e8"]
+  },
+  "colors": {
+    "measures": "#1890ff",
+    "target": "#ff4d4f"
+  },
+  "styleConfig": {
+    "measuresWidth": 16,
+    "targetSize": 8
+  },
+  "width": 600,
+  "height": 200
+}

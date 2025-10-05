@@ -1,0 +1,54 @@
+{
+  "title": "Multi-Layer Bubble Map: GDP vs Population",
+  "layers": [
+    {
+      "name": "GDP Layer",
+      "data": [
+        { "name": "New York", "lng": -74.0059, "lat": 40.7128, "size": 1700, "group": "GDP" },
+        { "name": "London", "lng": -0.1276, "lat": 51.5074, "size": 653, "group": "GDP" },
+        { "name": "Tokyo", "lng": 139.6917, "lat": 35.6895, "size": 1617, "group": "GDP" },
+        { "name": "Paris", "lng": 2.3522, "lat": 48.8566, "size": 709, "group": "GDP" }
+      ],
+      "style": {
+        "fillOpacity": 0.5,
+        "stroke": "#ff7f0e",
+        "lineWidth": 2
+      },
+      "scale": {
+        "size": {
+          "range": [10, 45]
+        }
+      }
+    },
+    {
+      "name": "Population Layer",
+      "data": [
+        { "name": "New York", "lng": -74.0059, "lat": 40.7128, "size": 851, "group": "Population" },
+        { "name": "London", "lng": -0.1276, "lat": 51.5074, "size": 898, "group": "Population" },
+        { "name": "Tokyo", "lng": 139.6917, "lat": 35.6895, "size": 1396, "group": "Population" },
+        { "name": "Paris", "lng": 2.3522, "lat": 48.8566, "size": 1068, "group": "Population" }
+      ],
+      "style": {
+        "fillOpacity": 0.4,
+        "stroke": "#2ca02c",
+        "lineWidth": 2
+      },
+      "scale": {
+        "size": {
+          "range": [10, 40]
+        }
+      }
+    }
+  ],
+  "legend": {
+    "size": false,
+    "color": true
+  },
+  "mapBackgroundStyle": {
+    "fill": "#f5f5f5",
+    "stroke": "#cccccc",
+    "lineWidth": 1
+  },
+  "width": 900,
+  "height": 600
+}
