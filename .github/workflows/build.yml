@@ -23,3 +23,6 @@ jobs:
         run: |
           npm install
           npm run build
+      - name: Verify tools export (area present)
+        run: |
+          node -e "const charts=require('./build/charts/index.js'); const tools=(Object.values(charts)||[]).map(m=>m&&m.tool&&m.tool.name).filter(Boolean); console.log('tools:', tools.length); if(!tools.includes('generate_area_chart')){ console.error('ERROR: generate_area_chart missing from build exports'); process.exit(1); }"
