@@ -43,6 +43,31 @@ export function getDisabledTools(): string[] {
 }
 
 /**
+ * Get an explicit allowlist of chart types to expose.
+ * Chart type names correspond to `src/charts/index.ts` export keys
+ * (e.g., 'area-chart', 'district-map', 'path-map', 'pin-map').
+ *
+ * Env vars:
+ * - ENABLED_CHART_TYPES: comma-separated list of chart type ids
+ * - ALLOWED_CHART_TYPES: alias of ENABLED_CHART_TYPES
+ *
+ * Defaults to a minimal set while 2.0.x migrations complete.
+ */
+export function getEnabledChartTypes(): string[] {
+  const val = process.env.ENABLED_CHART_TYPES || process.env.ALLOWED_CHART_TYPES || "";
+  const normalize = (s: string) => s.trim().toLowerCase().replace(/\s+/g, "-");
+  const lower = val.trim().toLowerCase();
+  // Special values meaning "allow all"
+  if (lower === "*" || lower === "all" || lower === "any") {
+    return [];
+  }
+  const parsed = val
+    ? val.split(",").map(normalize).filter(Boolean)
+    : ["area", "district-map", "path-map", "pin-map"];
+  return parsed;
+}
+
+/**
  * Get the RENDER_MODE from environment variables.
  */
 export function getRenderMode() {

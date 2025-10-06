@@ -15,8 +15,21 @@ import {
   startStdioMcpServer,
 } from "./services";
 import { callTool } from "./utils/callTool";
-import { getDisabledTools } from "./utils/env";
+import { getDisabledTools, getEnabledChartTypes } from "./utils/env";
 import { startRendererServer } from "./renderer/server";
+import fs from "node:fs";
+import path from "node:path";
+
+// Resolve server version from package.json (keeps runtime version in sync)
+function resolveServerVersion(): string {
+  try {
+    const pkgPath = path.resolve("package.json");
+    const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
+    return pkg.version || "unknown";
+  } catch {
+    return "unknown";
+  }
+}
 
 /**
  * Creates and configures an MCP server for chart generation.
@@ -25,7 +38,7 @@ export async function createServer(): Promise<Server> {
   const server = new Server(
     {
       name: "charts-mcp",
-      version: "0.8.x",
+      version: resolveServerVersion(),
     },
     {
       capabilities: {
@@ -56,13 +69,16 @@ export async function createServer(): Promise<Server> {
  */
 function getEnabledTools() {
   const disabledTools = getDisabledTools();
-  const allCharts = Object.values(Charts).map((module) => module.tool);
-
-  if (disabledTools.length === 0) {
-    return allCharts;
-  }
-
-  return allCharts.filter((tool) => !disabledTools.includes(tool.name));
+  const enabledList = getEnabledChartTypes();
+  const enabledTypes = new Set(enabledList);
+  // Collect entries with their chart type keys
+  const entries = Object.entries(Charts).filter(([, mod]) => (mod as any)?.tool);
+  // Restrict by enabled chart types (allowlist)
+  const allowedEntries = enabledTypes.size > 0 ? entries.filter(([key]) => enabledTypes.has(key)) : entries;
+  // Map to tool descriptors
+  const tools = allowedEntries.map(([, mod]) => (mod as any).tool);
+  if (disabledTools.length === 0) return tools;
+  return tools.filter((tool) => !disabledTools.includes(tool.name));
 }
 
 /**
@@ -91,8 +107,12 @@ function setupResourceHandlers(server: Server): void {
       },
     ];
 
-    // Add schema resources for each chart type
-    const chartTypes = Object.keys(Charts).filter((k) => (Charts as any)[k]?.tool);
+    // Add schema resources for each enabled chart type
+    const enabledList = getEnabledChartTypes();
+    const enabledTypes = new Set(enabledList);
+    const chartTypes = Object.keys(Charts)
+      .filter((k) => (Charts as any)[k]?.tool)
+      .filter((k) => (enabledTypes.size > 0 ? enabledTypes.has(k) : true));
     for (const type of chartTypes) {
       resources.push({
         name: `Schema: ${type}`,
@@ -157,7 +177,11 @@ function setupResourceHandlers(server: Server): void {
 
   // Resource Templates listing (static)
   server.setRequestHandler(ListResourceTemplatesRequestSchema as any, async () => {
-    const chartTypes = Object.keys(Charts).filter((k) => (Charts as any)[k]?.tool);
+    const enabledList = getEnabledChartTypes();
+    const enabledTypes = new Set(enabledList);
+    const chartTypes = Object.keys(Charts)
+      .filter((k) => (Charts as any)[k]?.tool)
+      .filter((k) => (enabledTypes.size > 0 ? enabledTypes.has(k) : true));
     // collect example variants from examples/charts directory
     const fs = await import("node:fs");
     const path = await import("node:path");
