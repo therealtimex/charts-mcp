@@ -37,16 +37,28 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Bump version and create tag
+      - name: Bump version
         id: bump-version
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          # npm version patch will create a new commit and a new tag
-          npm version patch -m "chore(release): v%s"
+          # This will update package.json but not create a commit or tag
+          npm version --no-git-tag-version patch
           VERSION=$(node -p "require('./package.json').version")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "tag=v$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Update server.json version
+        run: |
+          VERSION=${{ steps.bump-version.outputs.version }}
+          # This will replace all lines with "version": "..." with the new version
+          sed -i 's/"version": ".*"/"version": "'$VERSION'"/' server.json
+
+      - name: Commit and tag version bump
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add package.json server.json
+          git commit -m "chore(release): v${{ steps.bump-version.outputs.version }}"
+          git tag ${{ steps.bump-version.outputs.tag }}
 
       - name: Push changes and tag
         run: |
