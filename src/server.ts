@@ -23,12 +23,21 @@ import path from "node:path";
 // Resolve server version from package.json (keeps runtime version in sync)
 function resolveServerVersion(): string {
   try {
-    const pkgPath = path.resolve("package.json");
-    const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
-    return pkg.version || "unknown";
-  } catch {
-    return "unknown";
-  }
+    const here = typeof __dirname !== "undefined" ? __dirname : process.cwd();
+    const candidates = [
+      path.resolve(here, "../package.json"), // typical when running from build/
+      path.resolve(here, "../../package.json"),
+      path.resolve(process.cwd(), "node_modules/@realtimex/charts-mcp/package.json"),
+      path.resolve(process.cwd(), "package.json"),
+    ];
+    for (const p of candidates) {
+      if (fs.existsSync(p)) {
+        const pkg = JSON.parse(fs.readFileSync(p, "utf8"));
+        if (pkg?.version) return pkg.version as string;
+      }
+    }
+  } catch {}
+  return "unknown";
 }
 
 /**

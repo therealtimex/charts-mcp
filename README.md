@@ -173,6 +173,7 @@ Options:
 | `MAP_REQUEST_SERVER` | Map rendering endpoint | `http://localhost:3210/map` | `http://localhost:3210/map` |
 | `SERVICE_ID` | Service identifier for chart generation records | - | `your-service-id-123` |
 | `DISABLED_TOOLS` | Comma-separated list of tool names to disable | - | `generate_fishbone_diagram,generate_mind_map` |
+| `ENABLED_CHART_TYPES` | Comma-separated list of chart type ids to allow (empty or `*` = all) | `*` (all) | `area,district-map,path-map,pin-map` |
 | `RENDER_PORT` | Port for built-in renderer proxy | `3210` | `3210` |
 | `RENDER_INTERACTIVE` | When "true", return interactive HTML by default | - | `true` |
 | `RENDER_FORMAT` | Force default output format for tools | - | `html` or `png` |

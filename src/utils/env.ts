@@ -61,10 +61,9 @@ export function getEnabledChartTypes(): string[] {
   if (lower === "*" || lower === "all" || lower === "any") {
     return [];
   }
-  const parsed = val
-    ? val.split(",").map(normalize).filter(Boolean)
-    : ["area", "district-map", "path-map", "pin-map"];
-  return parsed;
+  // Default: allow all (no restriction) so new tools are auto-discoverable.
+  if (!val) return [];
+  return val.split(",").map(normalize).filter(Boolean);
 }
 
 /**
