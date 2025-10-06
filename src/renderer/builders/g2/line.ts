@@ -43,10 +43,25 @@ export class LineChartBuilder extends ChartBuilder {
     const chartScript = `
   const { Chart } = G2;
 
+  // Dynamic height helper to maintain aspect ratio and avoid scroll
+  const __container = document.getElementById('container');
+  const __ratio = ${height} / ${width};
+  const __minH = 200; // sensible minimum
+  const __vhCap = 0.85; // cap height to 85% of viewport height to avoid scroll
+  function __fitHeight() {
+    if (!__container) return;
+    const maxH = Math.max(__minH, Math.floor(window.innerHeight * __vhCap));
+    const target = Math.min(maxH, Math.max(__minH, Math.round(__container.clientWidth * __ratio)));
+    __container.style.height = target + 'px';
+  }
+  // Initial sizing before chart creation so G2 reads correct size
+  __fitHeight();
+  window.addEventListener('resize', __fitHeight);
+
   const chartOptions = {
     container: 'container',
     ${spec.autoFit === true ? '' : `width: ${width},`}
-    height: ${height},
+    ${spec.autoFit === true ? '' : `height: ${height},`}
     theme: ${JSON.stringify((theme as any) === 'default' ? 'classic' : theme)},
     autoFit: ${JSON.stringify(spec.autoFit === true)}
   };

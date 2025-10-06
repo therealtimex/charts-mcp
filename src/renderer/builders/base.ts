@@ -67,7 +67,7 @@ export abstract class ChartBuilder {
     const height = spec.height || 400;
     const containerWidth = spec.autoFit ? '100%' : `${width}px`;
     const titleWidth = spec.autoFit ? '100%' : `${width}px`;
-    const containerHeight = `${height}px`;
+    const containerHeight = spec.autoFit ? 'auto' : `${height}px`;
 
     return `<style>
   html, body {
@@ -85,6 +85,7 @@ export abstract class ChartBuilder {
   #container {
     width: ${containerWidth};
     height: ${containerHeight};
+    ${spec.autoFit ? 'min-height: 200px;' : ''}
     margin: 0 auto;
   }
 </style>`;
