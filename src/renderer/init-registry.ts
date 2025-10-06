@@ -98,15 +98,43 @@ const barSchema = z.object({
 });
 
 // Line Chart
+// Be flexible like areaSchema: allow generic records + encode mapping
 const lineSchema = z.object({
   type: z.literal('line'),
-  data: z.array(z.object({
-    time: z.string(),
-    value: z.number(),
-    group: z.string().optional()
-  })),
+  data: z.union([
+    // Basic x/y
+    z.array(z.object({
+      x: z.union([z.string(), z.number()]),
+      y: z.number(),
+      group: z.string().optional()
+    })),
+    // Legacy time/value (common G2 pattern)
+    z.array(z.object({
+      time: z.union([z.string(), z.number()]),
+      value: z.number(),
+      group: z.string().optional()
+    })),
+    // Remote data via fetch connector
+    z.object({ type: z.literal('fetch'), value: z.string().url() }),
+    // Fallback: arbitrary records (builder will honor encode fields)
+    z.array(z.record(z.any()))
+  ]),
   ...baseChartSchema,
-  smooth: z.boolean().optional()
+  // Common encodings used by builder
+  encode: z.object({
+    x: z.string().optional(),
+    y: z.union([z.string(), z.array(z.string())]).optional(),
+    color: z.union([z.string(), z.array(z.string())]).optional(),
+    series: z.string().optional()
+  }).optional(),
+  // Shape variants supported by G2 line mark
+  shape: z.enum(['line', 'smooth', 'hv', 'vh', 'hvh', 'vhv']).optional(),
+  // Optional point overlay config (consumed by builder)
+  point: z.object({
+    show: z.boolean().optional(),
+    shape: z.string().optional(),
+    size: z.number().optional()
+  }).optional()
 });
 
 // Pie Chart

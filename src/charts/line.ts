@@ -13,21 +13,63 @@ import {
   WidthSchema,
 } from "./base";
 
-// Line chart data schema
-const data = z.object({
-  time: z.string(),
-  value: z.number(),
-  group: z.string().optional(),
-});
+// Line chart data schema - flexible schema that accepts any object
+const data = z.record(z.any()).describe("Data object. Use default fields (time, value, group) or provide custom fields with encode parameter");
+
+// Line shape types
+const LineShapeSchema = z
+  .enum(["line", "smooth", "hv", "vh", "hvh", "vhv"])
+  .optional()
+  .describe(
+    "Line shape type: 'line' (straight lines), 'smooth' (curved), 'hv' (step horizontal-vertical), 'vh' (step vertical-horizontal), 'hvh' (horizontal-vertical-horizontal), 'vhv' (vertical-horizontal-vertical)"
+  );
+
+// Point marker configuration
+const PointSchema = z
+  .object({
+    show: z.boolean().optional().describe("Whether to show point markers on the line"),
+    shape: z.enum(["circle", "square", "diamond", "triangle", "hollow-circle", "hollow-square"]).optional().describe("Shape of point markers"),
+    size: z.number().optional().describe("Size of point markers"),
+  })
+  .optional()
+  .describe("Configuration for point markers on the line");
+
+// Line dash configuration
+const LineDashSchema = z
+  .union([
+    z.array(z.number()).describe("Dash pattern array, e.g., [4, 4] for dashed line, [10, 5] for longer dashes"),
+    z.null()
+  ])
+  .optional()
+  .describe("Line dash pattern. Use [4, 4] for dashed line, null or undefined for solid line");
+
+// Axis formatter
+const AxisFormatterSchema = z
+  .string()
+  .optional()
+  .describe("Format string for axis labels, e.g., '~s' for SI-prefix, '.2f' for 2 decimal places, or custom format");
+
+// Encode schema for field mapping
+const EncodeSchema = z
+  .object({
+    x: z.string().optional().describe("Field name for x-axis (defaults to 'time')"),
+    y: z.string().optional().describe("Field name for y-axis (defaults to 'value')"),
+    color: z.string().optional().describe("Field name for color/series (defaults to 'group')"),
+  })
+  .optional()
+  .describe("Optional field name mapping. If not specified, defaults to { x: 'time', y: 'value', color: 'group' }");
 
 // Line chart input schema
 const schema = {
   data: z
     .array(data)
     .describe(
-      "Data for line chart, it should be an array of objects, each object contains a `time` field and a `value` field, such as, [{ time: '2015', value: 23 }, { time: '2016', value: 32 }].",
+      "Data for line chart. For single series: [{ time: '2015', value: 23 }, { time: '2016', value: 32 }]. For multi-series: [{ time: 'Jan', value: 7, group: 'Tokyo' }, { time: 'Jan', value: 3.9, group: 'London' }]. With encode: [{ month: 'Jan', temperature: 7, city: 'Tokyo' }].",
     )
     .nonempty({ message: "Line chart data cannot be empty." }),
+  encode: EncodeSchema,
+  shape: LineShapeSchema,
+  point: PointSchema,
   style: z
     .object({
       texture: TextureSchema,
@@ -36,10 +78,25 @@ const schema = {
       lineWidth: z
         .number()
         .optional()
-        .describe("Line width for the lines of chart, such as 4."),
+        .describe("Line width for the lines of chart, such as 2 or 4."),
+      lineDash: LineDashSchema,
+      stroke: z.string().optional().describe("Line color, e.g., '#1890ff' (only applies to single-series charts)"),
     })
     .optional()
     .describe("Custom style configuration for the chart."),
+  axis: z
+    .object({
+      x: z.object({
+        title: z.union([z.string(), z.boolean()]).optional().describe("X-axis title or false to hide"),
+        labelFormatter: AxisFormatterSchema,
+      }).optional(),
+      y: z.object({
+        title: z.union([z.string(), z.boolean()]).optional().describe("Y-axis title or false to hide"),
+        labelFormatter: AxisFormatterSchema,
+      }).optional(),
+    })
+    .optional()
+    .describe("Axis configuration for formatting and titles"),
   theme: ThemeSchema,
   width: WidthSchema,
   height: HeightSchema,
@@ -53,7 +110,7 @@ const schema = {
 const tool = {
   name: "generate_line_chart",
   description:
-    "Generate a line chart to show trends over time, such as, the ratio of Apple computer sales to Apple's profits changed from 2000 to 2016. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, a URL to an interactive HTML page (format='html-url'), or a static PNG image URL (format='png') for reports and documents.",
+    "Generate a line chart to show trends over time or ordered categories. Supports single or multi-series data, different line shapes (straight, smooth, step), point markers, and dashed lines. Perfect for displaying continuous time series data changes, comparing multiple data series, and showing subtle data fluctuations. Examples: stock prices over time, temperature trends across cities, sales changes by month. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, a URL to an interactive HTML page (format='html-url'), or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 
