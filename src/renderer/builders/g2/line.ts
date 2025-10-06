@@ -43,13 +43,15 @@ export class LineChartBuilder extends ChartBuilder {
     const chartScript = `
   const { Chart } = G2;
 
-  const chart = new Chart({
+  const chartOptions = {
     container: 'container',
-    width: ${width},
+    ${spec.autoFit === true ? '' : `width: ${width},`}
     height: ${height},
     theme: ${JSON.stringify((theme as any) === 'default' ? 'classic' : theme)},
     autoFit: ${JSON.stringify(spec.autoFit === true)}
-  });
+  };
+
+  const chart = new Chart(chartOptions);
 
   const line = chart
     .line()

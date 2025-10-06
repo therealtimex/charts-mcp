@@ -66,6 +66,8 @@ export abstract class ChartBuilder {
     const width = spec.width || 600;
     const height = spec.height || 400;
     const containerWidth = spec.autoFit ? '100%' : `${width}px`;
+    const titleWidth = spec.autoFit ? '100%' : `${width}px`;
+    const containerHeight = `${height}px`;
 
     return `<style>
   html, body {
@@ -74,7 +76,7 @@ export abstract class ChartBuilder {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, Helvetica, Arial, sans-serif;
   }
   #title {
-    width: ${width}px;
+    width: ${titleWidth};
     margin: 8px auto 0;
     font: 600 16px/1.3 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, Helvetica, Arial, sans-serif;
     color: #111;
@@ -82,7 +84,7 @@ export abstract class ChartBuilder {
   }
   #container {
     width: ${containerWidth};
-    height: ${height}px;
+    height: ${containerHeight};
     margin: 0 auto;
   }
 </style>`;
