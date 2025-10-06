@@ -48,7 +48,7 @@ export class LineChartBuilder extends ChartBuilder {
     width: ${width},
     height: ${height},
     theme: ${JSON.stringify((theme as any) === 'default' ? 'classic' : theme)},
-    autoFit: false
+    autoFit: ${JSON.stringify(spec.autoFit === true)}
   });
 
   const line = chart

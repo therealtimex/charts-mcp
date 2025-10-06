@@ -120,6 +120,7 @@ const lineSchema = z.object({
     z.array(z.record(z.any()))
   ]),
   ...baseChartSchema,
+  autoFit: z.boolean().optional(),
   // Common encodings used by builder
   encode: z.object({
     x: z.string().optional(),

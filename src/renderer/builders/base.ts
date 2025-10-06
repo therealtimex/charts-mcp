@@ -8,6 +8,7 @@ export interface ChartSpec {
   data?: any; // Optional since some charts (gauge, liquid) don't require array data
   width?: number;
   height?: number;
+  autoFit?: boolean;
   theme?: 'default' | 'dark' | 'academy';
   title?: string;
   axisXTitle?: string;
@@ -64,6 +65,7 @@ export abstract class ChartBuilder {
   protected buildStyles(spec: ChartSpec): string {
     const width = spec.width || 600;
     const height = spec.height || 400;
+    const containerWidth = spec.autoFit ? '100%' : `${width}px`;
 
     return `<style>
   html, body {
@@ -79,7 +81,7 @@ export abstract class ChartBuilder {
     text-align: center;
   }
   #container {
-    width: ${width}px;
+    width: ${containerWidth};
     height: ${height}px;
     margin: 0 auto;
   }

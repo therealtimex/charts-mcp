@@ -1,25 +1,45 @@
 {
   "title": "Basic Line Chart with Points (G2 Example 1)",
+  "type": "view",
+  "autoFit": true,
   "data": [
-    { "time": "1991", "value": 3 },
-    { "time": "1992", "value": 4 },
-    { "time": "1993", "value": 3.5 },
-    { "time": "1994", "value": 5 },
-    { "time": "1995", "value": 4.9 },
-    { "time": "1996", "value": 6 },
-    { "time": "1997", "value": 7 },
-    { "time": "1998", "value": 9 },
-    { "time": "1999", "value": 13 }
+    { "year": "1991", "value": 3 },
+    { "year": "1992", "value": 4 },
+    { "year": "1993", "value": 3.5 },
+    { "year": "1994", "value": 5 },
+    { "year": "1995", "value": 4.9 },
+    { "year": "1996", "value": 6 },
+    { "year": "1997", "value": 7 },
+    { "year": "1998", "value": 9 },
+    { "year": "1999", "value": 13 }
   ],
-  "point": {
-    "show": true,
-    "shape": "circle",
-    "size": 3
+  "encode": {
+    "x": "year",
+    "y": "value"
   },
-  "style": {
-    "lineWidth": 2
+  "scale": {
+    "x": { "range": [0, 1] },
+    "y": { "domainMin": 0, "nice": true }
   },
-  "width": 800,
-  "height": 400,
-  "format": "html-url"
+  "children": [
+    {
+      "type": "line",
+      "labels": [
+        {
+          "text": "value",
+          "style": {
+            "dx": -10,
+            "dy": -12
+          }
+        }
+      ]
+    },
+    {
+      "type": "point",
+      "style": {
+        "fill": "white"
+      },
+      "tooltip": false
+    }
+  ]
 }

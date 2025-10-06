@@ -16,6 +16,16 @@ import {
 // Line chart data schema - flexible schema that accepts any object
 const data = z.record(z.any()).describe("Data object. Use default fields (time, value, group) or provide custom fields with encode parameter");
 
+// G2 data fetch descriptor (supports example 5 style)
+const FetchDataSchema = z
+  .object({
+    type: z.literal("fetch"),
+    value: z.string().describe("URL to fetch data from (CSV/JSON)"),
+    // Optional extra fields are allowed for forward compatibility
+  })
+  .passthrough()
+  .describe("Use G2 fetch pipeline: { type: 'fetch', value: '<url>' }");
+
 // Line shape types
 const LineShapeSchema = z
   .enum(["line", "smooth", "hv", "vh", "hvh", "vhv"])
@@ -62,11 +72,16 @@ const EncodeSchema = z
 // Line chart input schema
 const schema = {
   data: z
-    .array(data)
-    .describe(
-      "Data for line chart. For single series: [{ time: '2015', value: 23 }, { time: '2016', value: 32 }]. For multi-series: [{ time: 'Jan', value: 7, group: 'Tokyo' }, { time: 'Jan', value: 3.9, group: 'London' }]. With encode: [{ month: 'Jan', temperature: 7, city: 'Tokyo' }].",
-    )
-    .nonempty({ message: "Line chart data cannot be empty." }),
+    .union([
+      z
+        .array(data)
+        .describe(
+          "Array data. Single series: [{ time: '2015', value: 23 }]. Multi-series: [{ time: 'Jan', value: 7, group: 'Tokyo' }]. With encode: [{ month: 'Jan', temperature: 7, city: 'Tokyo' }].",
+        )
+        .nonempty({ message: "Line chart data cannot be empty." }),
+      FetchDataSchema,
+    ])
+    .describe("Data can be an array or a G2 fetch descriptor (example 5)."),
   encode: EncodeSchema,
   shape: LineShapeSchema,
   point: PointSchema,
@@ -100,6 +115,7 @@ const schema = {
   theme: ThemeSchema,
   width: WidthSchema,
   height: HeightSchema,
+  autoFit: z.boolean().optional().describe("Enable G2's responsive autoFit; container width becomes 100%"),
   title: TitleSchema,
   axisXTitle: AxisXTitleSchema,
   axisYTitle: AxisYTitleSchema,
