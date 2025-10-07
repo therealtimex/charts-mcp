@@ -39,6 +39,9 @@ export class LineChartBuilder extends ChartBuilder {
     // Palette configuration (type-safe)
     const palette = style?.palette;
     const paletteConfig = (hasGroup && palette) ? `.scale('color', { range: ${JSON.stringify(palette)} })` : '';
+    const transformConfig = Array.isArray((spec as any).transform) && (spec as any).transform.length > 0
+      ? (spec as any).transform.map((t: any) => `line.transform(${JSON.stringify(t)});`).join('\n  ')
+      : '';
 
     const chartScript = `
   const { Chart } = G2;
@@ -97,6 +100,9 @@ export class LineChartBuilder extends ChartBuilder {
   if (${hasGroup} && ${palette ? 'true' : 'false'}) {
     line.scale('color', { range: ${JSON.stringify(palette)} });
   }
+
+  // Apply custom transforms (e.g., sample)
+  ${transformConfig}
 
   ${this.buildLineAxisConfig(spec)}
 

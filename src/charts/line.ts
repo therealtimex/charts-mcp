@@ -26,6 +26,25 @@ const FetchDataSchema = z
   .passthrough()
   .describe("Use G2 fetch pipeline: { type: 'fetch', value: '<url>' }");
 
+// Transform options (support G2 sampling for downsampling large series)
+const TransformSchema = z
+  .array(
+    z
+      .object({
+        type: z.literal("sample").describe("Downsample a series using G2's sample transform"),
+        thresholds: z.number().optional().describe("Target number of samples (e.g., 200)"),
+        strategy: z
+          .string()
+          .optional()
+          .describe("Sampling strategy, e.g., 'max', 'min', or implementation-specific options"),
+      })
+      .passthrough(),
+  )
+  .optional()
+  .describe(
+    "Data transformations pipeline. Supports { type: 'sample', thresholds, strategy } to reduce points for performance (e.g., large time series).",
+  );
+
 // Line shape types
 const LineShapeSchema = z
   .enum(["line", "smooth", "hv", "vh", "hvh", "vhv"])
@@ -83,6 +102,7 @@ const schema = {
     ])
     .describe("Data can be an array or a G2 fetch descriptor (example 5)."),
   encode: EncodeSchema,
+  transform: TransformSchema,
   shape: LineShapeSchema,
   point: PointSchema,
   style: z
@@ -126,7 +146,7 @@ const schema = {
 const tool = {
   name: "generate_line_chart",
   description:
-    "Generate a line chart to show trends over time or ordered categories. Supports single or multi-series data, different line shapes (straight, smooth, step), point markers, and dashed lines. Perfect for displaying continuous time series data changes, comparing multiple data series, and showing subtle data fluctuations. Examples: stock prices over time, temperature trends across cities, sales changes by month. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, a URL to an interactive HTML page (format='html-url'), or a static PNG image URL (format='png') for reports and documents.",
+    "Generate a line chart to show trends over time or ordered categories. Supports single or multi-series data, different line shapes (straight, smooth, step), point markers, dashed lines, remote data via G2 fetch, and sampling transform to downsample large series. Perfect for displaying continuous time series data changes, comparing multiple data series, and showing subtle data fluctuations. Examples: stock prices over time, temperature trends across cities, sales changes by month. Returns an interactive MCP-UI resource by default (format='html') that renders directly in compatible clients, a URL to an interactive HTML page (format='html-url'), or a static PNG image URL (format='png') for reports and documents.",
   inputSchema: zodToJsonSchema(schema),
 };
 
