@@ -26,23 +26,28 @@ const FetchDataSchema = z
   .passthrough()
   .describe("Use G2 fetch pipeline: { type: 'fetch', value: '<url>' }");
 
-// Transform options (support G2 sampling for downsampling large series)
+// Transform options (support sample + map/filter like G2 options examples)
 const TransformSchema = z
   .array(
     z
       .object({
-        type: z.literal("sample").describe("Downsample a series using G2's sample transform"),
-        thresholds: z.number().optional().describe("Target number of samples (e.g., 200)"),
-        strategy: z
+        type: z
+          .enum(["sample", "map", "filter"]) // keep it simple and compatible with G2 options
+          .describe("Transform type: 'sample' (downsample), 'map' (transform rows), or 'filter' (predicate)"),
+        thresholds: z.number().optional().describe("Target number of samples for 'sample' transform (e.g., 200)"),
+        strategy: z.string().optional().describe("Sampling strategy for 'sample' transform, e.g., 'max', 'min'"),
+        callback: z
           .string()
           .optional()
-          .describe("Sampling strategy, e.g., 'max', 'min', or implementation-specific options"),
+          .describe(
+            "Function as string for 'map'/'filter' (e.g., (d)=>({...d, close: isNaN(d.close)?null:d.close})). Will be embedded as a function."
+          ),
       })
       .passthrough(),
   )
   .optional()
   .describe(
-    "Data transformations pipeline. Supports { type: 'sample', thresholds, strategy } to reduce points for performance (e.g., large time series).",
+    "Data transform pipeline. Supports 'sample' plus G2-style 'map' and 'filter' with callback functions (as strings).",
   );
 
 // Line shape types
@@ -116,9 +121,24 @@ const schema = {
         .describe("Line width for the lines of chart, such as 2 or 4."),
       lineDash: LineDashSchema,
       stroke: z.string().optional().describe("Line color, e.g., '#1890ff' (only applies to single-series charts)"),
+      // Missing-data connectors
+      connect: z.boolean().optional().describe("Whether to draw connector segments across missing values (NaN/null)."),
+      connectStroke: z.string().optional().describe("Stroke color for connector segments across missing data."),
+      connectStrokeOpacity: z
+        .number()
+        .min(0)
+        .max(1)
+        .optional()
+        .describe("Stroke opacity for connector segments."),
+      connectLineWidth: z.number().optional().describe("Line width for connector segments."),
     })
     .optional()
     .describe("Custom style configuration for the chart."),
+  // Also support connectNulls at top-level as an alternative toggle
+  connectNulls: z
+    .boolean()
+    .optional()
+    .describe("Whether to connect points across null/NaN values (applies style('connectNulls', true))."),
   axis: z
     .object({
       x: z.object({

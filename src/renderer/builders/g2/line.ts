@@ -39,9 +39,11 @@ export class LineChartBuilder extends ChartBuilder {
     // Palette configuration (type-safe)
     const palette = style?.palette;
     const paletteConfig = (hasGroup && palette) ? `.scale('color', { range: ${JSON.stringify(palette)} })` : '';
-    const transformConfig = Array.isArray((spec as any).transform) && (spec as any).transform.length > 0
-      ? (spec as any).transform.map((t: any) => `line.transform(${JSON.stringify(t)});`).join('\n  ')
-      : '';
+    // Build top-level mark transforms, preserving function-like callbacks
+    const transformConfig = this.buildTransformChain((spec as any).transform);
+
+    // Build data expression: preserve function callbacks in fetch.transform
+    const dataExpr = this.buildDataExpression((spec as any).data);
 
     const chartScript = `
   const { Chart } = G2;
@@ -73,7 +75,7 @@ export class LineChartBuilder extends ChartBuilder {
 
   const line = chart
     .line()
-    .data(${JSON.stringify(data)})
+    .data(${dataExpr})
     .encode('x', ${JSON.stringify(xField)})
     .encode('y', ${JSON.stringify(yField)});
 
@@ -95,6 +97,12 @@ export class LineChartBuilder extends ChartBuilder {
   if (${JSON.stringify(lineDash)}) {
     line.style('lineDash', ${JSON.stringify(lineDash)});
   }
+  // Missing-data connector support (G2 line)
+  ${typeof (style as any)?.connect !== 'undefined' ? `line.style('connect', ${(style as any).connect});` : ''}
+  ${typeof (spec as any)?.connectNulls !== 'undefined' ? `line.style('connectNulls', ${(spec as any).connectNulls});` : ''}
+  ${typeof (style as any)?.connectStroke !== 'undefined' ? `line.style('connectStroke', ${JSON.stringify((style as any).connectStroke)});` : ''}
+  ${typeof (style as any)?.connectStrokeOpacity !== 'undefined' ? `line.style('connectStrokeOpacity', ${(style as any).connectStrokeOpacity});` : ''}
+  ${typeof (style as any)?.connectLineWidth !== 'undefined' ? `line.style('connectLineWidth', ${(style as any).connectLineWidth});` : ''}
   
   // Apply palette
   if (${hasGroup} && ${palette ? 'true' : 'false'}) {
@@ -146,6 +154,73 @@ export class LineChartBuilder extends ChartBuilder {
       return JSON.stringify(palette[0]);
     }
     return JSON.stringify('#5B8FF9'); // Default G2 blue
+  }
+
+  // Build a chain of line.transform({...}) preserving function-like callbacks
+  private buildTransformChain(transforms?: any[]): string {
+    if (!Array.isArray(transforms) || transforms.length === 0) return '';
+    const toObjCode = (t: any) => {
+      if (!t || typeof t !== 'object') return JSON.stringify(t);
+      const entries: string[] = [];
+      Object.keys(t).forEach((k) => {
+        const v: any = t[k];
+        if (k === 'callback' && this.isFunctionLike(v)) {
+          entries.push(`callback: ${String(v)}`);
+        } else if (typeof v === 'string') {
+          entries.push(`${k}: ${JSON.stringify(v)}`);
+        } else if (Array.isArray(v)) {
+          entries.push(`${k}: ${JSON.stringify(v)}`);
+        } else {
+          entries.push(`${k}: ${JSON.stringify(v)}`);
+        }
+      });
+      return `{ ${entries.join(', ')} }`;
+    };
+    return transforms.map((t) => `line.transform(${toObjCode(t)});`).join('\n  ');
+  }
+
+  // Build data expression preserving function callbacks within fetch.transform
+  private buildDataExpression(data: any): string {
+    // Array data can be directly JSON stringified
+    if (Array.isArray(data)) return JSON.stringify(data);
+    // Non-object or already-stringified
+    if (!data || typeof data !== 'object') return JSON.stringify(data);
+
+    if (data.type === 'fetch') {
+      const parts: string[] = ["type: 'fetch'"];
+      if (typeof data.value === 'string') parts.push(`value: ${JSON.stringify(data.value)}`);
+      if (Array.isArray(data.transform) && data.transform.length > 0) {
+        const tr = data.transform
+          .map((t: any) => {
+            if (!t || typeof t !== 'object') return JSON.stringify(t);
+            const ent: string[] = [];
+            Object.keys(t).forEach((k) => {
+              const v: any = t[k];
+              if (k === 'callback' && this.isFunctionLike(v)) ent.push(`callback: ${String(v)}`);
+              else ent.push(`${k}: ${JSON.stringify(v)}`);
+            });
+            return `{ ${ent.join(', ')} }`;
+          })
+          .join(', ');
+        parts.push(`transform: [${tr}]`);
+      }
+      // Pass through unknown fields
+      Object.keys(data).forEach((k) => {
+        if (['type', 'value', 'transform'].includes(k)) return;
+        const v = (data as any)[k];
+        parts.push(`${k}: ${JSON.stringify(v)}`);
+      });
+      return `{ ${parts.join(', ')} }`;
+    }
+
+    // Generic object fallback
+    return JSON.stringify(data);
+  }
+
+  private isFunctionLike(v: unknown): boolean {
+    return (
+      typeof v === 'string' && (/=>/.test(v) || /function\s*\(/.test(v.trim()) || /^\s*\(/.test(v.trim()))
+    );
   }
 
   /**
